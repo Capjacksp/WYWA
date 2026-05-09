@@ -21,33 +21,10 @@
     />
     <meta property="og:type" content="website" />
     <meta name="robots" content="index, follow" />
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   </head>
 
   <body>
     <div id="root"></div>
-
     <script type="module" src="/client/App.tsx"></script>
-
-    <!-- Handle Netlify Identity invites and redirects -->
-    <script>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", user => {
-          if (!user) {
-            window.netlifyIdentity.on("login", () => {
-              // Redirect to admin after login
-              document.location.href = "/updates/admin/";
-            });
-          }
-        });
-
-        // Handle invite tokens
-        if (window.location.hash.includes('invite_token') ||
-            window.location.hash.includes('recovery_token')) {
-          // Show the modal for password reset
-          window.netlifyIdentity.open();
-        }
-      }
-    </script>
   </body>
 </html>
