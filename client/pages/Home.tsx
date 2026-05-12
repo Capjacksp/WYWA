@@ -1,7 +1,19 @@
+import PageLayout from "@/components/layout/PageLayout";
+import Hero from "@/components/ui/home-hero";
+import {
+  FusionSection,
+  WildfireMapSection,
+} from "@/components/ui/home-sections";
+
 export default function Home() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-4xl font-bold">Home</h1>
-    </div>
+    <PageLayout>
+      {/* ===== HERO SECTION ===== */}
+      <Hero />
+
+      {/* ===== NEW SECTIONS ===== */}
+      <FusionSection />
+      <WildfireMapSection />
+    </PageLayout>
   );
 }

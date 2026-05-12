@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./client/**/*.{ts,tsx}"],
+  content: ["./client/**/*.{ts,tsx}", "./index.html"],
   prefix: "",
   theme: {
     container: {
@@ -13,6 +13,30 @@ export default {
       },
     },
     extend: {
+      /* ===== FONT FAMILIES ===== */
+      fontFamily: {
+        heading: ["var(--font-heading)", "Georgia", "serif"],
+        body: ["var(--font-body)", "system-ui", "sans-serif"],
+        wide: ["var(--font-wide)", "system-ui", "sans-serif"],
+        semiwide: ["var(--font-semiwide)", "system-ui", "sans-serif"],
+        condensed: ["var(--font-condensed)", "system-ui", "sans-serif"],
+        compressed: ["var(--font-compressed)", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "monospace"],
+      },
+
+      /* ===== FLUID FONT SIZES ===== */
+      fontSize: {
+        display: ["var(--text-display)", { lineHeight: "var(--leading-tight)" }],
+        h1: ["var(--text-h1)", { lineHeight: "var(--leading-tight)" }],
+        h2: ["var(--text-h2)", { lineHeight: "var(--leading-snug)" }],
+        h3: ["var(--text-h3)", { lineHeight: "var(--leading-snug)" }],
+        "body-lg": ["var(--text-body-lg)", { lineHeight: "var(--leading-normal)" }],
+        body: ["var(--text-body)", { lineHeight: "var(--leading-normal)" }],
+        sm: ["var(--text-sm)", { lineHeight: "var(--leading-normal)" }],
+        xs: ["var(--text-xs)", { lineHeight: "var(--leading-normal)" }],
+      },
+
+      /* ===== COLORS ===== */
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -47,74 +71,28 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        earth: {
-          50: "#f8f7f4",
-          100: "#eeebc3",
-          200: "#ddd192",
-          300: "#c4b361",
-          400: "#a89530",
-          500: "#8c7700",
-          600: "#745f00",
-          700: "#5c4700",
-          800: "#442f00",
-          900: "#2c1700",
-        },
-        forest: {
-          50: "#f2f8f5",
-          100: "#d9ece0",
-          200: "#b8d9c5",
-          300: "#8cc19e",
-          400: "#5aa372",
-          500: "#3d7c47",
-          600: "#2a5f32",
-          700: "#1f4426",
-          800: "#15291a",
-          900: "#0b140d",
-        },
-        sky: {
-          50: "#f0f9ff",
-          100: "#e0f2fe",
-          200: "#bae6fd",
-          300: "#7dd3fc",
-          400: "#38bdf8",
-          500: "#0ea5e9",
-          600: "#0284c7",
-          700: "#0369a1",
-          800: "#075985",
-          900: "#0c4a6e",
-        },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
-        },
+        /* Named brand colors */
+        "bg-light": "#F5F5F5",
+        "bg-dark": "#242425",
+        cta: "#90E8FF",
       },
+
+      /* ===== BORDER RADIUS ===== */
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+
+      /* ===== ANIMATIONS ===== */
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {

@@ -1,7 +1,11 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import PageLayout from "@/components/layout/PageLayout";
+import Section from "@/components/common/Section";
+import { Button } from "@/components/common/Button";
 
-const NotFound = () => {
+export default function NotFound() {
   const location = useLocation();
 
   useEffect(() => {
@@ -12,16 +16,16 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">404</h1>
-        <p className="text-xl text-gray-600 mb-4">Oops! Page not found</p>
-        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
-          Return to Home
-        </a>
-      </div>
-    </div>
+    <PageLayout>
+      <Section className="py-24 text-center">
+        <h1 className="text-display font-bold">404</h1>
+        <p className="text-body-lg text-muted-foreground mt-4 mb-8">
+          Page not found
+        </p>
+        <Link to="/">
+          <Button variant="outline">Return to Home</Button>
+        </Link>
+      </Section>
+    </PageLayout>
   );
-};
-
-export default NotFound;
+}
