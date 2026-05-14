@@ -33,7 +33,7 @@ export default function Header({ onConnectClick }: HeaderProps) {
           }`}
       >
         <div className="mx-auto px-[50px] max-md:px-5">
-          <div className="flex items-center justify-between h-16 pt-[40px]">
+          <div className="flex items-center justify-between h-16 pt-[40px] mix-blend-difference">
             {/* Logo */}
             <Link
               to="/"

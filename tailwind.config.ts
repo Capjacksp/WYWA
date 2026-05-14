@@ -17,6 +17,7 @@ export default {
       fontFamily: {
         heading: ["var(--font-heading)", "Georgia", "serif"],
         body: ["var(--font-body)", "system-ui", "sans-serif"],
+        figtree: ["var(--font-figtree)", "system-ui", "sans-serif"],
         wide: ["var(--font-wide)", "system-ui", "sans-serif"],
         semiwide: ["var(--font-semiwide)", "system-ui", "sans-serif"],
         condensed: ["var(--font-condensed)", "system-ui", "sans-serif"],
@@ -26,6 +27,7 @@ export default {
 
       /* ===== FLUID FONT SIZES ===== */
       fontSize: {
+        huge: ["var(--text-huge)", { lineHeight: "var(--leading-vtight)" }],
         display: ["var(--text-display)", { lineHeight: "var(--leading-tight)" }],
         h1: ["var(--text-h1)", { lineHeight: "var(--leading-tight)" }],
         h2: ["var(--text-h2)", { lineHeight: "var(--leading-snug)" }],

@@ -1,8 +1,13 @@
 import Section from "@/components/common/Section";
 import Logo, { WavyLogo } from "@/components/common/Logo";
-import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 import { cn } from "@/lib/utils";
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 /**
  * FusionSection - The white section with the sensor exploded view.
@@ -19,17 +24,19 @@ export function FusionSection() {
         }}
       />
 
-      <div className="relative z-10 text-center max-w-[1200px] mx-auto px-6 mb-[-80px]">
-        <h2 className="text-display text-[#FF5A5A] mb-4">
+      <div className="relative z-10 text-center max-w-[1800px] mx-auto mb-[-80px]">
+        <h2 className="text-huge text-[#F15D59]">
           MULTIMODAL FUSION
         </h2>
-        <h3 className="text-display leading-tight">
-          THREE SIGNALS.<br />
+        <h3 className="text-huge text-dark">
+          THREE SIGNALS.
+        </h3>
+        <h3 className="text-huge text-dark">
           ONE INTELLIGENCE.
         </h3>
       </div>
 
-      <div className="relative z-30 w-full overflow-visible max-w-[1150px] mx-auto pointer-events-none">
+      <div className="relative z-30 w-full h-full overflow-visible mx-auto pointer-events-none align-top">
         <img
           src="/images/sensor.png"
           alt="Exploded view of the sensor"
@@ -42,23 +49,23 @@ export function FusionSection() {
         <img
           src="/images/red-steps.png"
           alt="Red jagged landscape"
-          className="absolute  bottom-0 w-full h-auto object-cover object-bottom"
+          className="absolute bottom-0 w-full h-[80vh] object-cover object-bottom"
         />
       </div>
 
-      <div className="relative z-10 max-w-[1700px] mx-auto px-[50px] max-md:px-5 flex max-lg:flex-col items-end gap-12 mb-20">
+      <div className="relative z-10 max-w-[1700px] gap-32 mx-auto px-[50px] max-md:px-5 flex max-lg:flex-col items-end  mb-0 mt-auto">
         {/* Large Text Block */}
-        <div className="flex-[2]">
-          <h2 className="text-h1 text-white leading-[1.1] uppercase font-heading">
+        <div className="flex-[1.5] max-w-[850px]">
+          <h2 className="text-[48px] text-justify text-balance [word-spacing:1.5rem] tracking-[0.02em] text-white leading-[1.05] uppercase">
             SENSING SUBTLE SHIFTS IN THE ENVIRONMENT ACROSS
-            <span className="text-bg-dark font-bold"> CHEMICAL, VISUAL, AND TEMPORAL SIGNALS,</span>
-            DETECTING IGNITION BEFORE CATASTROPHE UNFOLDS.
+            <span className=" text-justify text-balance tracking-[0.02em] text-bg-dark font-bold"> CHEMICAL, VISUAL, AND TEMPORAL SIGNALS,</span><br />
+            <span className=" text-justify text-balance tracking-[0.02em]">DETECTING IGNITION BEFORE CATASTROPHE UNFOLDS.</span>
           </h2>
         </div>
 
         {/* Small Paragraph Block */}
-        <div className="flex-1 max-w-[400px]">
-          <p className="text-white text-sm leading-relaxed opacity-90">
+        <div className="flex-1 max-w-[250px] ml-auto">
+          <p className="text-white align-right font-figtree text-sm leading-relaxed opacity-90">
             Our models are trained on VOC signatures from fast-igniting fuels like Red Brome, Medusahead, Cheatgrass, and Wild Oats to detect wildfire-specific combustion signatures in real time, filtering out false triggers like diesel emissions or dust. Edge AI then verifies ignition by interpreting motion patterns in flame and rising smoke. Trained in simulated wildfire environments using real-world and simulated data, the system detects fire alerts within a minute, providing a critical 15-minute head start.
           </p>
         </div>
@@ -72,62 +79,113 @@ export function FusionSection() {
  */
 export function WildfireMapSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
-  const introX = useTransform(scrollYProgress, [0, 0.34], ["0vw", "-24vw"]);
-  const introOpacity = useTransform(scrollYProgress, [0, 0.2, 0.34], [1, 1, 0]);
-  const calloutOpacity = useTransform(scrollYProgress, [0.36, 0.5], [0, 1]);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const introRef = useRef<HTMLDivElement>(null);
+  const calloutLayerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      const section = sectionRef.current;
+      const panel = panelRef.current;
+      const intro = introRef.current;
+      const calloutLayer = calloutLayerRef.current;
+
+      if (!section || !panel || !intro || !calloutLayer) return;
+
+      const callouts = gsap.utils.toArray<HTMLElement>(".fire-callout");
+
+      gsap.set(intro, { x: "0vw", autoAlpha: 1 });
+      gsap.set(calloutLayer, { autoAlpha: 0 });
+      callouts.forEach((callout) => {
+        gsap.set(callout, {
+          autoAlpha: 0,
+          x: callout.dataset.enterFrom === "left" ? "-10vw" : "10vw",
+        });
+      });
+
+      const timeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          pin: panel,
+          start: "top top",
+          end: "+=180%",
+          scrub: 1,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      timeline
+        .to(intro, { x: "-24vw", duration: 0.34, ease: "none" }, 0)
+        .to(intro, { autoAlpha: 0, duration: 0.14, ease: "none" }, 0.2)
+        .to(calloutLayer, { autoAlpha: 1, duration: 0.14, ease: "none" }, 0.36);
+
+      callouts.forEach((callout) => {
+        const start = Number(callout.dataset.start ?? 0.4);
+        const end = Number(callout.dataset.end ?? start + 0.12);
+
+        timeline.to(
+          callout,
+          {
+            autoAlpha: 1,
+            x: "0vw",
+            duration: end - start,
+            ease: "none",
+          },
+          start,
+        );
+      });
+    },
+    { scope: sectionRef },
+  );
 
   return (
     <section
       ref={sectionRef}
-      className="relative h-[250vh] bg-bg-dark"
+      className="relative bg-transparent"
       style={{ position: "relative" }}
     >
-      <div className="sticky top-0 h-screen overflow-hidden text-white">
+      <div ref={panelRef} className="relative h-screen overflow-hidden text-white">
         <img
-          src="/images/map.png"
+          src="/images/home-map.png"
           alt="California wildfire spread map"
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
 
-        <div className="absolute inset-0 bg-[#111111]/35" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-black/5 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/35 to-transparent" />
+        <div className="absolute inset-0 bg-[#24242578]" />
 
-        <motion.div
+
+        <div
+          ref={introRef}
           className="absolute inset-0 z-10 flex flex-col justify-between px-[50px] pb-12 pt-28 max-md:px-5 max-md:pb-8 max-md:pt-24"
-          style={{ x: introX, opacity: introOpacity }}
         >
           <div className="max-w-[1120px]">
-            <h2 className="font-heading text-[clamp(3rem,6vw,5.5rem)] font-[300] uppercase leading-[0.92] text-white">
+            <h2 className="font-display text-h1 font-[350] uppercase leading-[1] text-white">
               A Decade of Wildfires.
               <br />
               Minutes to Spread.
               <br />
-              <span className="text-cta">California, USA</span>
+              <span className="text-cta font-[500]">California, USA</span>
             </h2>
           </div>
 
           <div className="max-w-[800px]">
             <div
               aria-hidden="true"
-              className="mb-10 ml-5 h-0 w-0 border-y-[28px] border-l-[28px] border-y-transparent border-l-white max-md:mb-8 max-md:ml-0 max-md:border-y-[18px] max-md:border-l-[18px]"
+              className="mb-10 ml-5 h-0 w-0 border-y-[18px] border-l-[18px] border-y-transparent border-l-white max-md:mb-8 max-md:ml-0 max-md:border-y-[18px] max-md:border-l-[18px]"
             />
-            <p className="max-w-[780px] font-heading text-[clamp(1.5rem,2.1vw,2rem)] font-[350] uppercase leading-[1.05] text-white">
+            <p className="max-w-[780px] font-heading text-h3 font-[350] uppercase leading-[1.2] text-white">
               We detect at ignition, providing a{" "}
               <span className="font-bold">15-minute</span>
               <br className="hidden md:block" /> head start before the invisible becomes
               <br className="hidden md:block" /> inevitable, because every minute counts.
             </p>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div
+        <div
+          ref={calloutLayerRef}
           className="absolute inset-0 z-20"
-          style={{ opacity: calloutOpacity }}
         >
           <FireCallout
             label="Tubbs Complex (2017)"
@@ -136,11 +194,10 @@ export function WildfireMapSection() {
               delay: "15-60 mins to detect",
               impact: "5,636 structures destroyed | $1B+ losses",
             }}
-            className="left-[4%] top-[37%]"
-            progress={scrollYProgress}
+            className="left-[30%] top-[37%]"
             enterFrom="left"
             range={[0.4, 0.52]}
-            markerPosition="left"
+            markerPosition="right"
           />
           <FireCallout
             label="Camp Fire (2018)"
@@ -149,8 +206,7 @@ export function WildfireMapSection() {
               delay: "15-60 mins to detect",
               impact: "18,804 structures destroyed",
             }}
-            className="left-[34%] top-[11%]"
-            progress={scrollYProgress}
+            className="left-[56%] top-[11%]"
             enterFrom="right"
             range={[0.46, 0.58]}
           />
@@ -161,10 +217,10 @@ export function WildfireMapSection() {
               delay: "15-60 mins to detect",
               impact: "935 structures destroyed",
             }}
-            className="left-[36%] top-[24%]"
-            progress={scrollYProgress}
+            className="left-[35%] top-[25%]"
             enterFrom="left"
             range={[0.52, 0.64]}
+            markerPosition="left"
           />
           <FireCallout
             label="Dixie Fire (2021)"
@@ -173,10 +229,10 @@ export function WildfireMapSection() {
               delay: "15-60 mins to detect",
               impact: "1,329 structures destroyed",
             }}
-            className="left-[66%] top-[13%]"
-            progress={scrollYProgress}
+            className="left-[65%] top-[13%]"
             enterFrom="right"
             range={[0.58, 0.72]}
+            markerPosition="left"
           />
           <FireCallout
             label="Palisades Fire (2025*)"
@@ -185,15 +241,14 @@ export function WildfireMapSection() {
               delay: "15-60 mins to detect",
               impact: "6,800+ structures destroyed",
             }}
-            className="left-[38%] top-[90%]"
-            progress={scrollYProgress}
+            className="left-[40%] top-[87%]"
             enterFrom="left"
             range={[0.7, 0.86]}
             markerPosition="left"
             expandDirection="up"
             doesHaveAsterisk="*Recent incident context; figures may evolve with final reporting"
           />
-        </motion.div>
+        </div>
 
         <WavyLogo
           width={500}
@@ -216,7 +271,6 @@ interface FireCalloutProps {
     impact: string;
   };
   className: string;
-  progress: MotionValue<number>;
   enterFrom: "left" | "right";
   range: [number, number];
   markerPosition?: "left" | "right";
@@ -228,7 +282,6 @@ function FireCallout({
   label,
   stats,
   className,
-  progress,
   enterFrom,
   range,
   markerPosition = "right",
@@ -236,15 +289,16 @@ function FireCallout({
   doesHaveAsterisk = ""
 }: FireCalloutProps) {
   const offset = enterFrom === "left" ? "-10vw" : "10vw";
-  const x = useTransform(progress, range, [offset, "0vw"]);
-  const opacity = useTransform(progress, range, [0.2, 1]);
   const isMarkerLeft = markerPosition === "left";
   const isExpandUp = expandDirection === "up";
 
   return (
-    <motion.div
-      className={cn("group absolute h-0 w-0 hover:z-40", className)}
-      style={{ x, opacity }}
+    <div
+      className={cn("fire-callout group absolute h-0 w-0 hover:z-40", className)}
+      data-enter-from={enterFrom}
+      data-start={range[0]}
+      data-end={range[1]}
+      style={{ opacity: 0, transform: `translateX(${offset})` }}
     >
       <div className={cn(
         "absolute w-[300px] rounded-[6px] bg-[#24211f]/95 text-white shadow-[0_20px_45px_rgba(0,0,0,0.35)] backdrop-blur-sm transition-all duration-300 max-md:w-[235px] flex flex-col",
@@ -274,7 +328,7 @@ function FireCallout({
               key={i}
               className="absolute inset-0 rounded-full border-[4px] border-white/90"
               initial={{ scale: 0.4, opacity: 0 }}
-              animate={{ scale: [0.4, 1.2], opacity: [1, 0] }}
+              animate={{ scale: [0.4, 1.2], opacity: [0, 1] }}
               transition={{
                 duration: 2.5,
                 repeat: Infinity,
@@ -290,13 +344,13 @@ function FireCallout({
 
         {/* Header Content */}
         <div className="px-5 py-5">
-          <h3 className="font-heading text-body font-body uppercase leading-none text-white">
+          <h3 className="font-heading font-figtree uppercase leading-none text-white">
             {label}
           </h3>
         </div>
 
         {/* Expandable Stats */}
-        <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 group-hover:grid-rows-[1fr]">
+        <div className="grid grid-rows-[0fr] font-figtree transition-[grid-template-rows] duration-300 group-hover:grid-rows-[1fr]">
           <div className="overflow-hidden">
             <div className="space-y-5  pb-6 pt-5 text-[12px] leading-tight">
               <div className="grid grid-cols-[64px_1fr] px-5 gap-3">
@@ -325,6 +379,6 @@ function FireCallout({
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

@@ -69,49 +69,35 @@ export function WavyLogo({
   color = "#ffffff",
   className,
   loops = 3,
-  strokWidth = 12,
-  gap = 4
+  strokWidth = 34,
+  gap = 133,
 }: LogoProps) {
   const strokeWidth = strokWidth;
   const halfStroke = strokeWidth / 2;
-  const startX = 20;
-  const topY = 0;
-  const bottomY = 80;
-  const radius = gap / 2;
+  const segment = gap;
+  const radius = segment / 2;
+  const topY = halfStroke;
+  const bottomY = topY + segment + strokeWidth * 0.8;
 
-  // Build repeating wave path dynamically
-  let d = `M ${startX} ${topY + 5} V ${bottomY}`;
-
-  let x = startX;
+  let x = halfStroke;
+  let d = `M ${x} ${bottomY} V ${topY + radius}`;
 
   for (let i = 0; i < loops; i++) {
-    d += `
-      C ${x} ${bottomY + 20}
-        ${x + radius} ${bottomY + 20}
-        ${x + radius} ${bottomY}
+    d += ` A ${radius} ${radius} 0 0 1 ${x + segment} ${topY + radius}`;
+    x += segment;
 
-      V ${topY + 20}
-
-      C ${x + radius} ${topY - 2}
-        ${x + gap} ${topY - 2}
-        ${x + gap} ${topY + 18}
-
-      V ${bottomY}
-    `;
-
-    x += gap;
+    if (i < loops - 1) {
+      d += ` V ${bottomY - radius}`;
+      d += ` A ${radius} ${radius} 0 0 0 ${x + segment} ${bottomY - radius}`;
+      d += ` V ${topY + radius}`;
+      x += segment;
+    }
   }
 
-  // Final vertical line
-  d += ` V ${bottomY + 15}`;
+  d += ` V ${bottomY}`;
 
-  const widestX = startX + gap * loops;
-  const highestY = topY - 2;
-  const lowestY = bottomY + 20;
-  const viewX = startX - halfStroke;
-  const viewY = highestY - halfStroke;
-  const viewWidth = widestX - startX + strokeWidth;
-  const viewHeight = lowestY - highestY + strokeWidth;
+  const viewWidth = x + halfStroke;
+  const viewHeight = bottomY + halfStroke;
   const computedHeight = height ?? (width / viewWidth) * viewHeight;
 
   return (
@@ -119,12 +105,12 @@ export function WavyLogo({
       className={cn(className)}
       width={width}
       height={computedHeight}
-      viewBox={`${viewX} ${viewY} ${viewWidth} ${viewHeight}`}
+      viewBox={`0 0 ${viewWidth} ${viewHeight}`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
       aria-label="Wave WAYA logo"
-      preserveAspectRatio="none"
+      preserveAspectRatio="xMidYMid meet"
     >
       <path
         d={d}

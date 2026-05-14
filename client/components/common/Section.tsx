@@ -22,7 +22,7 @@ export default function Section({
 }: SectionProps) {
   return (
     <Tag id={id} className={cn("w-full", className)}>
-      <div className="max-w-[1280px] mx-auto px-16 max-md:px-5">
+      <div className="w-full mx-auto px-16 max-md:px-5">
         {children}
       </div>
     </Tag>

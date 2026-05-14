@@ -21,7 +21,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
     <div className="flex flex-col min-h-screen">
       <Header onConnectClick={() => setConnectOpen(true)} />
 
-      <main className="flex-1 p-0 m-0">{children}</main>
+      <main className="flex-1 p-0 m-0 relative">{children}</main>
 
       <Footer />
 
