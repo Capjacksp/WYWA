@@ -1,11 +1,11 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Linkedin } from "lucide-react";
 import { useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
 
 type TeamMember = {
   id: string;
   name: string;
+  count: number;
   role: string;
   image: string;
   activeImage?: string;
@@ -19,6 +19,7 @@ const teamMembers: TeamMember[] = [
   {
     id: "anirudh",
     name: "Anirudh Sharma",
+    count: 1,
     role: "Co-Founder",
     image: "/images/team-anirudh-sharma.png",
     activeImage: "/images/team-anirudh-sharma-active.png",
@@ -30,33 +31,39 @@ const teamMembers: TeamMember[] = [
   },
   {
     id: "ravi",
-    name: "Ravi Menon",
-    role: "Edge AI Lead",
-    image: "/images/team-member-top.png",
+    name: "Jaspreet Riar",
+    count: 2,
+    role: "Hardware Lead",
+    image: "/images/team-rajdeep-s.png",
+    activeImage: "/images/team-rajdeep-s-active.png",
     stageClassName:
       "left-[50%] top-[10.95%] z-10 w-[24.85%] bg-[#D9D9D9]",
-    panelClassName: "left-[24.6%] top-[20.6%] h-[50%] w-[41.4%]",
-    bio: "Ravi works across embedded intelligence, sensing, and low-power compute, helping WYWA fuse chemical, visual, and temporal signals at the edge.",
+    panelClassName: "left-[8.6%] top-[11.1%] h-[50%] w-[41.4%]",
+    bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
   },
   {
     id: "dev",
-    name: "Dev Shah",
-    role: "Systems Lead",
-    image: "/images/team-member-right.png",
+    name: "Rajdeep S",
+    count: 4,
+    role: "Design Engineering",
+    image: "/images/team-jaspreet-riar.png",
+    activeImage: "/images/team-jaspreet-riar-active.png",
     stageClassName:
       "right-[0.55%] top-[31.35%] z-20 w-[24.85%] bg-[#D4D4D4]",
-    panelClassName: "left-[33.8%] top-[31.35%] h-[46%] w-[41.6%]",
-    bio: "Dev leads ruggedized system design and communications, making sure WYWA nodes can operate reliably in remote terrain without depending on continuous internet access.",
+    panelClassName: "left-[30.4%] top-[31.35%] h-[43.4%] w-[45%]",
+    bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
   },
   {
     id: "isha",
-    name: "Isha Patel",
-    role: "Research and Product",
-    image: "/images/team-member-bottom.png",
+    name: "Navya Veeturi",
+    count: 3,
+    role: "Co-Founder",
+    image: "/images/team-navya-veeturi.png",
+    activeImage: "/images/team-navya-veeturi-active.png",
     stageClassName:
       "left-[25%] top-[52.1%] z-30 w-[24.85%] bg-[#DADADA]",
-    panelClassName: "left-[49.85%] top-[39.4%] h-[49%] w-[41.6%]",
-    bio: "Isha shapes WYWA's field research and product direction, translating responder needs into practical interfaces, clear workflows, and deployment-ready systems for high-risk wildfire regions.",
+    panelClassName: "left-[49.85%] top-[34.4%] h-[59%] w-[45%]",
+    bio: "Navya Veeturi is a San Francisco-based engineering leader and applied AI specialist working at the convergence of AI systems, data platforms, and physical AI. Currently a Software Engineering Manager at NVIDIA, where she leads personalization, data integration, and production AI systems. \n\nShe co-founded WYWA.ai to build low-cost, multimodal sensors powered by edge and generative AI that detect wildfires early and deliver real-time alerts to first responders, before small sparks become disasters.\n\nBeyond tech, Navya serves on the board of the Learning Rights Law Center and is an active mentor in the AI and climate tech ecosystem. She holds a Master's from Carnegie Mellon University.",
   },
 ] as const;
 
@@ -94,9 +101,8 @@ function TeamStageCard({
       type="button"
       onMouseEnter={() => setActiveId(member.id)}
       onFocus={() => setActiveId(member.id)}
-      className={`absolute overflow-hidden text-left transition duration-300 focus:outline-none ${member.stageClassName} ${
-        isActive ? "grayscale-0" : "grayscale"
-      }`}
+      className={`absolute overflow-hidden text-left transition duration-300 focus:outline-none ${member.stageClassName} ${isActive ? "grayscale-0" : "grayscale"
+        }`}
     >
       <img
         src={isActive && member.activeImage ? member.activeImage : member.image}
@@ -117,33 +123,46 @@ function TeamOverlay({ member }: { member: TeamMember }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
-          className={`pointer-events-none absolute z-40 rounded-[18px] bg-[rgba(45,45,45,0.97)] px-[2.35vw] py-[2.75vw] text-white shadow-[0_18px_60px_rgba(0,0,0,0.22)] ${member.panelClassName}`}
+          className={` absolute z-40 flex flex-col overflow-hidden rounded-[18px] ${member.count % 2 != 0 ? (member.count == 3 ? "rounded-bl-none" : "rounded-tl-none") : "rounded-br-none rounded-tr-none"}  bg-[#242425ED] px-[clamp(1rem,2vw,2.8rem)] py-[clamp(1rem,2.15vw,3.25rem)] text-white shadow-[0_18px_60px_rgba(0,0,0,0.22)] ${member.panelClassName}`}
         >
-          <div className="flex items-start justify-between gap-5">
-            <div className="flex items-start gap-[1.7vw]">
+          <div className="flex shrink-0 items-start justify-between gap-5">
+            <div className="flex min-w-0 items-start gap-[clamp(0.75rem,1.4vw,2rem)]">
               <span
                 aria-hidden="true"
-                className="mt-[0.45vw] block h-0 w-0 border-y-[1.12vw] border-l-[1.12vw] border-y-transparent border-l-cta"
+                className="mt-[clamp(0.15rem,0.35vw,0.5rem)] block h-0 w-0 shrink-0 border-y-[clamp(0.5rem,0.9vw,1.25rem)] border-l-[clamp(0.5rem,0.9vw,1.25rem)] border-y-transparent border-l-cta"
               />
-              <div>
+              <div className="min-w-0">
                 <h2
-                  className="font-body text-[clamp(1.7rem,2.2vw,2.75rem)] font-normal uppercase leading-none tracking-normal"
+                  className="font-body text-h3 font-normal uppercase leading-none tracking-normal"
                   style={{ color: member.panelTitleColor ?? "#90E8FF" }}
                 >
                   {member.name}
                 </h2>
-                <p className="mt-[0.35vw] font-body text-[clamp(0.95rem,1.12vw,1.35rem)] uppercase leading-none tracking-[0.18em] text-white">
+                <p className="mt-[clamp(0.25rem,0.35vw,0.45rem)] font-figtree text-body-lg font-normal uppercase leading-none tracking-[0.18em] text-white">
                   {member.role}
                 </p>
               </div>
             </div>
-            <Linkedin
-              className="mt-[0.15vw] h-[2.1vw] w-[2.1vw] shrink-0 text-white"
-              fill="currentColor"
-            />
+            <a
+              href="https://www.linkedin.com/company/wywa"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WYWA on LinkedIn"
+              className="text-white hover:text-white transition-colors"
+            >
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+              </svg>
+            </a>
           </div>
 
-          <div className="mt-[4.7vw] max-w-[90%] whitespace-pre-line font-figtree text-[clamp(0.95rem,1.05vw,1.32rem)] leading-[1.32] text-white">
+          <div className="mt-[clamp(1rem,2.6vw,4.5rem)] max-w-[94%] overflow-hidden whitespace-pre-line font-figtree text-body font-normal leading-[clamp(1.08rem,1.45vw,1.625rem)] text-white">
             {member.bio}
           </div>
         </motion.div>
@@ -183,12 +202,12 @@ function TeamHero() {
       </div>
 
       <div className="lg:hidden">
-        <h1 className="pt-20 font-body text-[clamp(4.8rem,20vw,8rem)] uppercase leading-[0.88] tracking-normal text-bg-dark">
+        <h1 className="pt-20 font-body text-huge uppercase leading-[0.88] tracking-normal text-bg-dark">
           Our Team
         </h1>
         <div className="mt-8 grid gap-5 pb-14">
           {teamMembers.map((member) => (
-            <article key={member.id} className="overflow-hidden bg-[#D4D4D4]">
+            <article key={member.id} className="overflow-hidden bg-[#242425ED]">
               <img
                 src={member.image}
                 alt={member.name}
@@ -204,7 +223,23 @@ function TeamHero() {
                       {member.role}
                     </p>
                   </div>
-                  <Linkedin className="h-8 w-8 shrink-0" fill="currentColor" />
+                  <a
+                    href="https://www.linkedin.com/company/wywa"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="WYWA on LinkedIn"
+                    className="text-white/80 hover:text-white transition-colors"
+                  >
+                    <svg
+                      width="28"
+                      height="28"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                    </svg>
+                  </a>
                 </div>
                 <p className="mt-5 font-figtree text-body leading-snug">
                   {member.bio.split("\n\n")[0]}
@@ -222,7 +257,7 @@ function AdvisorsSection() {
   return (
     <section className="bg-[#F7F7F7] px-[50px] pb-28 pt-20 max-md:px-5 max-md:pt-10">
       <div className="mx-auto max-w-[1920px]">
-        <h2 className="text-center font-body text-[clamp(4.4rem,6vw,6.8rem)] font-normal uppercase leading-[0.9] tracking-normal text-bg-dark">
+        <h2 className="text-center font-body text-display font-normal uppercase leading-[0.9] tracking-normal text-bg-dark">
           Our Advisors
         </h2>
 
@@ -235,14 +270,30 @@ function AdvisorsSection() {
                   alt={advisor.name}
                   className="aspect-[1.365/1] w-full object-cover"
                 />
-                <div className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-[4px] bg-bg-dark text-cta">
-                  <Linkedin className="h-7 w-7" fill="currentColor" />
+                <div className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-[4px]">
+                  <a
+                    href="https://www.linkedin.com/company/wywa"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="WYWA on LinkedIn"
+                    className="text-bg-dark/80 hover:text-bg-dark transition-colors"
+                  >
+                    <svg
+                      width="28"
+                      height="28"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                    </svg>
+                  </a>
                 </div>
               </div>
-              <h3 className="mt-8 font-body text-[clamp(2rem,2.15vw,2.65rem)] font-bold uppercase leading-none tracking-normal text-bg-dark">
+              <h3 className="mt-8 font-body text-h3 font-[500] uppercase leading-none tracking-normal text-bg-dark">
                 {advisor.name}
               </h3>
-              <p className="mt-2 font-body text-[clamp(1rem,1.15vw,1.4rem)] uppercase leading-none tracking-[0.18em] text-bg-dark">
+              <p className="mt-2 font-figtree text-body font-[400] uppercase leading-none tracking-[0.18em] text-bg-dark">
                 {advisor.role}
               </p>
             </article>
@@ -255,7 +306,7 @@ function AdvisorsSection() {
 
 export default function People() {
   return (
-    <PageLayout>
+    <PageLayout headerClassName="header-dark">
       <TeamHero />
       <AdvisorsSection />
     </PageLayout>

@@ -53,7 +53,7 @@ export default function Blog() {
     });
 
   return (
-    <PageLayout>
+    <PageLayout headerClassName="header-dark">
       <section
         ref={sectionRef}
         className="relative bg-[#F7F7F7]"

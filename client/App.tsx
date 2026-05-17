@@ -8,14 +8,19 @@ import People from "./pages/People";
 import Blog from "./pages/Blog";
 import NotFound from "./pages/NotFound";
 
+
+
+
+import ScrollToTop from "./components/common/ScrollToTop";
+
 const App = () => (
   <BrowserRouter>
+    <ScrollToTop />
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/technology" element={<Technology />} />
       <Route path="/people" element={<People />} />
       <Route path="/blog" element={<Blog />} />
-      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   </BrowserRouter>

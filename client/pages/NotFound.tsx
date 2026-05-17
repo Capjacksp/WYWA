@@ -16,14 +16,14 @@ export default function NotFound() {
   }, [location.pathname]);
 
   return (
-    <PageLayout>
+    <PageLayout headerClassName="header-dark">
       <Section className="py-24 text-center">
         <h1 className="text-display font-bold">404</h1>
         <p className="text-body-lg text-muted-foreground mt-4 mb-8">
           Page not found
         </p>
         <Link to="/">
-          <Button variant="outline">Return to Home</Button>
+          <Button>Return to Home</Button>
         </Link>
       </Section>
     </PageLayout>

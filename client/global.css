@@ -388,13 +388,14 @@
     --text-huge: clamp(4rem, 8vw, 7rem);
 
     --text-display: clamp(2.5rem, 5vw, 4.9025rem);
-    /* 40px → 78.44px */
-    --text-h1: clamp(2rem, 4vw, 3.5rem);
     /* 32px → 56px */
-    --text-h2: clamp(1.5rem, 3vw, 2.25rem);
+    --text-h1: clamp(2rem, 4vw, 3.5rem);
+    /* 28px → 48px */
+    --text-h1-md: clamp(1.75rem, 3.5vw, 3rem);
     /* 24px → 36px */
-    --text-h3: clamp(1.25rem, 2vw, 1.5rem);
+    --text-h2: clamp(1.5rem, 3vw, 2.25rem);
     /* 20px → 24px */
+    --text-h3: clamp(1.25rem, 2vw, 1.5rem);
     --text-body-lg: clamp(1rem, 1.2vw, 1.125rem);
     /* 16px → 18px */
     --text-body: clamp(0.9375rem, 1vw, 1rem);

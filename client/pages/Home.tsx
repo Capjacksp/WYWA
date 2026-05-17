@@ -13,6 +13,9 @@ export default function Home() {
 
       {/* ===== NEW SECTIONS ===== */}
       <FusionSection />
+      <div className="min-h-[500px] h-full w-full">
+        <video width="100%" src="/videos/Wywa.mp4" autoPlay loop poster="/images/video-overlay.png" controls ></video>
+      </div>
       <WildfireMapSection />
     </PageLayout>
   );

@@ -30,6 +30,7 @@ export default {
         huge: ["var(--text-huge)", { lineHeight: "var(--leading-vtight)" }],
         display: ["var(--text-display)", { lineHeight: "var(--leading-tight)" }],
         h1: ["var(--text-h1)", { lineHeight: "var(--leading-tight)" }],
+        "h1-md": ["var(--text-h1-md)", { lineHeight: "var(--leading-tight)" }],
         h2: ["var(--text-h2)", { lineHeight: "var(--leading-snug)" }],
         h3: ["var(--text-h3)", { lineHeight: "var(--leading-snug)" }],
         "body-lg": ["var(--text-body-lg)", { lineHeight: "var(--leading-normal)" }],

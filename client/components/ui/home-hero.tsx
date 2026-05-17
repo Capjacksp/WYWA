@@ -2,7 +2,7 @@ import { Button } from "@/components/common/Button";
 
 function Hero() {
     return (
-        <section className="relative w-full h-screen overflow-hidden -mt-16">
+        <section data-header-class="" className="relative w-full h-screen overflow-hidden -mt-16">
             {/* Left: Aerial image background (~70%) */}
             <div className="absolute inset-0 w-[70%] max-lg:w-full">
                 <img
@@ -111,7 +111,7 @@ function Hero() {
                 className="absolute top-0 right-0 w-[30%] max-lg:hidden h-full flex flex-col justify-end p-10 bg-bg-dark"
             >
                 <div className="mb-12">
-                    <h2 className="font-heading text-h3 text-white leading-vtight" style={{ fontWeight: 300 }}>
+                    <h2 className="font-heading font-[300] text-[28px] text-white leading-[1]">
                         SYSTEMS THAT
                         <br />
                         DETECT WILDFIRES
@@ -147,7 +147,7 @@ function Hero() {
                         <br />
                         BEFORE THEY BECOME VISIBLE
                     </h2>
-                    <Button variant="primary" size="sm" className="mt-4">
+                    <Button variant="primary" className="mt-4">
                         <a href="#book-demo">BOOK A DEMO</a>
                     </Button>
                 </div>

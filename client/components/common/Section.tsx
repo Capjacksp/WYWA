@@ -1,10 +1,8 @@
 import { cn } from "@/lib/utils";
 
-interface SectionProps {
+interface SectionProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
-  className?: string;
   as?: "section" | "div" | "header" | "footer";
-  id?: string;
 }
 
 /**
@@ -19,9 +17,10 @@ export default function Section({
   className,
   as: Tag = "section",
   id,
+  ...props
 }: SectionProps) {
   return (
-    <Tag id={id} className={cn("w-full", className)}>
+    <Tag id={id} className={cn("w-full", className)} {...props}>
       <div className="w-full mx-auto px-16 max-md:px-5">
         {children}
       </div>

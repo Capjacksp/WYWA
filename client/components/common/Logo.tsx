@@ -26,7 +26,7 @@ export default function Logo({
   const height = (width / 138) * 37
   return (
     <svg
-      className={cn(className)}
+      className={cn("transition-colors duration-300", className)}
       width={width}
       height={height}
       viewBox="0 0 138 37"

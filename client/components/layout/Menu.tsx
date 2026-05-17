@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const menuLinks = [
   { label: "HOME", path: "/" },
@@ -22,6 +22,8 @@ interface MenuProps {
  * - Copyright bottom-right
  */
 export default function Menu({ isOpen, onClose, onConnectClick }: MenuProps) {
+  const location = useLocation();
+
   const handleLinkClick = (path: string) => {
     if (path === "/connect") {
       onClose();
@@ -42,15 +44,17 @@ export default function Menu({ isOpen, onClose, onConnectClick }: MenuProps) {
       {/* Navigation links */}
       <nav className="absolute left-[50px] max-md:left-6 top-1/2 -translate-y-1/2 flex flex-col gap-2">
         {menuLinks.map((link, index) => {
+          const isActive = location.pathname === link.path;
+
           if (link.path === "/connect") {
             return (
               <button
                 key={link.path}
                 onClick={() => handleLinkClick(link.path)}
-                className={`text-left font-heading text-white uppercase transition-all duration-500 ease-out hover:opacity-70 ${isOpen
+                className={`text-left text-huge font-[350] font-heading uppercase transition-all duration-500 ease-out hover:opacity-70 ${isOpen
                   ? "translate-y-0 opacity-100"
                   : "translate-y-8 opacity-0"
-                  }`}
+                  } ${isActive ? "text-cta" : "text-white"}`}
                 style={{
                   fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
                   lineHeight: 1.15,
@@ -69,10 +73,10 @@ export default function Menu({ isOpen, onClose, onConnectClick }: MenuProps) {
               key={link.path}
               to={link.path}
               onClick={() => handleLinkClick(link.path)}
-              className={`font-heading text-white uppercase transition-all duration-500 ease-out hover:opacity-70 ${isOpen
+              className={`font-heading uppercase transition-all duration-500 ease-out hover:opacity-70 ${isOpen
                 ? "translate-y-0 opacity-100"
                 : "translate-y-8 opacity-0"
-                }`}
+                } ${isActive ? "text-cta" : "text-white"}`}
               style={{
                 fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
                 lineHeight: 1.15,
