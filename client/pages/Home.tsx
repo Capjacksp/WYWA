@@ -4,8 +4,14 @@ import {
   FusionSection,
   WildfireMapSection,
 } from "@/components/ui/home-sections";
+import { useCallback } from "react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function Home() {
+  const handleVideoReady = useCallback(() => {
+    ScrollTrigger.refresh();
+  }, []);
+
   return (
     <PageLayout>
       {/* ===== HERO SECTION ===== */}
@@ -13,8 +19,19 @@ export default function Home() {
 
       {/* ===== NEW SECTIONS ===== */}
       <FusionSection />
-      <div className="min-h-[500px] h-full w-full">
-        <video width="100%" src="/videos/Wywa.mp4" autoPlay loop poster="/images/video-overlay.png" controls ></video>
+      <div className="w-full h-[100vh] min-h-[500px]">
+        <video
+          className="w-full h-full object-cover"
+          src="/videos/Wywa.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          poster="/images/video-overlay.png"
+          controls
+          onLoadedMetadata={handleVideoReady}
+        />
       </div>
       <WildfireMapSection />
     </PageLayout>
