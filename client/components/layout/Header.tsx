@@ -34,7 +34,7 @@ export default function Header({ onConnectClick, className }: HeaderProps) {
     <>
       <header
         className={cn(
-          "sticky top-10 z-50 w-full bg-transparent transition-colors duration-300",
+          "sticky top-8 z-50 w-full bg-transparent transition-colors duration-300",
           className
         )}
       >

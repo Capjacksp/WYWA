@@ -1,4 +1,6 @@
 import { Button } from "@/components/common/Button";
+import { LoadTextLines } from "@/components/ui/scroll-text-lines";
+import { motion } from "framer-motion";
 
 function Hero() {
     return (
@@ -111,45 +113,62 @@ function Hero() {
                 className="absolute top-0 right-0 w-[30%] max-lg:hidden h-full flex flex-col justify-end p-10 bg-bg-dark"
             >
                 <div className="mb-12">
-                    <h2 className="font-heading font-[300] text-[28px] text-white leading-[1]">
-                        SYSTEMS THAT
-                        <br />
-                        DETECT WILDFIRES
-                        <br />
-                        BEFORE THEY
-                        <br />
-                        BECOME VISIBLE
-                    </h2>
+                    <LoadTextLines
+                        as="h2"
+                        className="font-heading font-[300] text-[28px] text-white leading-[1]"
+                        lines={[
+                            "SYSTEMS THAT",
+                            "DETECT WILDFIRES",
+                            "BEFORE THEY",
+                            "BECOME VISIBLE",
+                        ]}
+                    />
 
-                    <Button variant="primary" className="mt-6">
-                        <a href="#book-demo">BOOK A DEMO</a>
-                    </Button>
+                    <motion.div
+                        initial={{ opacity: 0, x: 160 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.85, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                        <Button variant="primary" className="mt-6">
+                            <a href="#book-demo">BOOK A DEMO</a>
+                        </Button>
+                    </motion.div>
                 </div>
             </div>
 
             {/* Hero heading — positioned over the image */}
             <div className="absolute left-[50px] max-md:left-6 top-[20%] max-lg:top-[40%] z-10">
-                <h1 className="font-heading text-h1" style={{ fontWeight: 350 }}>
-                    <span className="block text-white">
-                        BUILDING NATURE&rsquo;S
-                    </span>
-                    <span className="block text-cta">
-                        SIXTH SENSE
-                    </span>
-                </h1>
+                <LoadTextLines
+                    as="h1"
+                    className="font-heading text-h1"
+                    style={{ fontWeight: 350 }}
+                    lines={[
+                        <span className="text-white">BUILDING NATURE&rsquo;S</span>,
+                        <span className="text-cta">SIXTH SENSE</span>,
+                    ]}
+                />
             </div>
 
             {/* Mobile-only tagline (visible when right panel is hidden) */}
             <div className="hidden max-lg:flex absolute bottom-10 left-6 right-6 z-10">
                 <div>
-                    <h2 className="text-h2 text-white">
-                        SYSTEMS THAT DETECT WILDFIRES
-                        <br />
-                        BEFORE THEY BECOME VISIBLE
-                    </h2>
-                    <Button variant="primary" className="mt-4">
-                        <a href="#book-demo">BOOK A DEMO</a>
-                    </Button>
+                    <LoadTextLines
+                        as="h2"
+                        className="text-h2 text-white"
+                        lines={[
+                            "SYSTEMS THAT DETECT WILDFIRES",
+                            "BEFORE THEY BECOME VISIBLE",
+                        ]}
+                    />
+                    <motion.div
+                        initial={{ opacity: 0, x: 160 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.85, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                        <Button variant="primary" className="mt-4">
+                            <a href="#book-demo">BOOK A DEMO</a>
+                        </Button>
+                    </motion.div>
                 </div>
             </div>
         </section>

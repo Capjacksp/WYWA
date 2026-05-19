@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { cn } from "@/lib/utils";
+import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -17,32 +18,38 @@ export function FusionSection() {
     <Section data-header-class="header-dark" className="bg-bg-light pt-28 pb-16 overflow-hidden relative min-h-[200vh] flex flex-col items-center justify-center">
       {/* Subtle Grid Background */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.15]"
+        className="absolute inset-0 pointer-events-none opacity-[0.10]"
         style={{
           backgroundImage: `linear-gradient(#242425 1px, transparent 1px), linear-gradient(90deg, #242425 1px, transparent 1px)`,
-          backgroundSize: '40px 40px'
+          backgroundSize: '32px 32px'
         }}
       />
 
-      <div className="relative z-10 text-center max-w-[1800px] mx-auto mb-[-80px]">
-        <h2 className="text-huge text-[#F15D59]">
-          MULTIMODAL FUSION
-        </h2>
-        <h3 className="text-huge text-dark">
-          THREE SIGNALS.
-        </h3>
-        <h3 className="text-huge text-dark">
-          ONE INTELLIGENCE.
-        </h3>
-      </div>
+      <ScrollTextLines
+        className="relative z-10 text-center max-w-[1800px] mx-auto mb-[-80px]"
+        lineClassName="block text-huge"
+        lines={[
+          <span className="text-[#F15D59]">MULTIMODAL FUSION</span>,
+          <span className="text-dark">THREE SIGNALS.</span>,
+          <span className="text-dark">ONE INTELLIGENCE.</span>,
+        ]}
+      />
 
-      <div className="relative z-30 w-full h-full -top-20 overflow-visible mx-auto pointer-events-none align-top">
+      <motion.div
+        className="relative z-30 w-full h-full -top-20 overflow-visible mx-auto pointer-events-none align-top"
+        animate={{ y: [-10, 12, -10], rotate: [-0.4, 0.4, -0.4] }}
+        transition={{
+          duration: 6.5,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      >
         <img
           src="/images/sensor.png"
           alt="Exploded view of the sensor"
           className="w-full h-auto object-contain rotate-[-30deg]"
         />
-      </div>
+      </motion.div>
 
       {/* Jagged red background image - aligned to bottom */}
       <div className="absolute  bottom-0 left-0 w-full h-full pointer-events-none z-0">
@@ -58,18 +65,31 @@ export function FusionSection() {
       <div className="relative z-10 max-w-[1700px] gap-32 mx-auto px-[50px] max-md:px-5 flex max-lg:flex-col items-end  mb-0 mt-auto">
         {/* Large Text Block */}
         <div className="flex-[1.5] max-w-[850px]">
-          <h2 className="text-h1-md text-justify text-balance text-white uppercase">
-            SENSING SUBTLE SHIFTS IN THE ENVIRONMENT ACROSS
-            <span className=" text-justify text-balance text-bg-dark font-bold"> CHEMICAL, VISUAL, AND TEMPORAL SIGNALS,</span><br />
-            <span className=" text-justify text-balance">DETECTING IGNITION BEFORE CATASTROPHE UNFOLDS.</span>
-          </h2>
+          <ScrollTextLines
+            as="h2"
+            className="text-h1-md text-justify text-balance text-white uppercase"
+            lines={[
+              <>
+                SENSING SUBTLE SHIFTS IN THE ENVIRONMENT ACROSS
+                <span className=" text-bg-dark font-bold"> CHEMICAL, VISUAL, AND TEMPORAL SIGNALS,</span>
+              </>,
+              "DETECTING IGNITION BEFORE CATASTROPHE UNFOLDS.",
+            ]}
+          />
         </div>
 
         {/* Small Paragraph Block */}
         <div className="flex-1 max-w-[260px] ml-auto">
-          <p className="text-white align-right font-figtree font-[400] text-body leading-relaxed opacity-90">
-            Our models are trained on VOC signatures from fast-igniting fuels like Red Brome, Medusahead, Cheatgrass, and Wild Oats to detect wildfire-specific combustion signatures in real time, filtering out false triggers like diesel emissions or dust. Edge AI then verifies ignition by interpreting motion patterns in flame and rising smoke. Trained in simulated wildfire environments using real-world and simulated data, the system detects fire alerts within a minute, providing a critical 15-minute head start.
-          </p>
+          <ScrollTextLines
+            as="p"
+            className="text-white align-right font-figtree font-[400] text-body leading-relaxed opacity-90"
+            delay={0.1}
+            lines={[
+              "Our models are trained on VOC signatures from fast-igniting fuels like Red Brome, Medusahead, Cheatgrass, and Wild Oats to detect wildfire-specific combustion signatures in real time, filtering out false triggers like diesel emissions or dust.",
+              "Edge AI then verifies ignition by interpreting motion patterns in flame and rising smoke.",
+              "Trained in simulated wildfire environments using real-world and simulated data, the system detects fire alerts within a minute, providing a critical 15-minute head start.",
+            ]}
+          />
         </div>
       </div>
     </Section>
