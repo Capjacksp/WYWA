@@ -2,9 +2,9 @@ import { Button } from "@/components/common/Button";
 import { LoadTextLines } from "@/components/ui/scroll-text-lines";
 import { motion } from "framer-motion";
 
-function Hero() {
+function HomeHero() {
     return (
-        <section data-header-class="" className="relative w-full h-screen overflow-hidden -mt-16">
+        <section data-header-class="" className="relative w-full h-screen overflow-hidden -mt-12">
             {/* Left: Aerial image background (~70%) */}
             <div className="absolute inset-0 w-[70%] max-lg:w-full">
                 <img
@@ -175,4 +175,4 @@ function Hero() {
     )
 }
 
-export default Hero
+export default HomeHero

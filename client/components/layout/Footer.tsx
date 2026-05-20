@@ -9,8 +9,8 @@ const footerNavLinks = [
 ] as const;
 
 const partners = [
-  { name: "GRAVIKY LABS", logo: "/images/graviky.png" },
-  { name: "", logo: "/images/aikiran.png" },
+  { name: "GRAVIKY LABS", logo: "/images/graviky.png", link: "https://graviky.com/" },
+  { name: "AI KIRAN", logo: "/images/aikiran.png", link: "https://www.aikiran.org/" },
 ] as const;
 
 export default function Footer() {
@@ -48,16 +48,18 @@ export default function Footer() {
                 OUR PARTNERS
               </span>
               {partners.map((partner, index) => (
-                <span
+                <a
                   key={partner.name}
                   className="text-sm tracking-[0.1em] text-white/80 uppercase font-body flex items-center gap-2"
+                  href={partner.link}
+                  target="_blank"
                 >
                   <img
                     src={partner.logo}
                     className="h-[36px] w-auto object-cover"
                     alt={partner.name}
                   />
-                </span>
+                </a>
               ))}
             </div>
           </div>

@@ -7,6 +7,23 @@ import {
 } from "framer-motion";
 import { useRef, type ElementType, type ReactNode } from "react";
 
+const motionComponents = {
+  div: motion.div,
+  h1: motion.h1,
+  h2: motion.h2,
+  h3: motion.h3,
+  p: motion.p,
+  span: motion.span,
+} as const;
+
+function getMotionComponent(as?: ElementType) {
+  if (typeof as === "string" && as in motionComponents) {
+    return motionComponents[as as keyof typeof motionComponents];
+  }
+
+  return motion.div;
+}
+
 type ScrollTextLinesProps<T extends ElementType> = {
   as?: T;
   lines: ReactNode[];
@@ -24,7 +41,7 @@ export function ScrollTextLines<T extends ElementType = "div">({
   ...props
 }: ScrollTextLinesProps<T>) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const Component = motion(as ?? "div");
+  const Component = getMotionComponent(as);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "center center"],
@@ -61,7 +78,7 @@ export function LoadTextLines<T extends ElementType = "div">({
   delay = 0,
   ...props
 }: ScrollTextLinesProps<T>) {
-  const Component = motion(as ?? "div");
+  const Component = getMotionComponent(as);
 
   return (
     <Component
