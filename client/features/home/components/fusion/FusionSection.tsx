@@ -46,9 +46,9 @@ function DesktopFusionSection() {
         }}
       >
         <img
-          src="/images/sensor.png"
+          src="/images/sensor-mob.png"
           alt="Exploded view of the sensor"
-          className="h-auto w-full rotate-[-30deg] object-contain"
+          className="mx-auto block h-auto w-[700px] object-contain"
         />
       </motion.div>
 

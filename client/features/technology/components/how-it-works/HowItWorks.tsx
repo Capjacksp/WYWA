@@ -1,7 +1,12 @@
-import { AnimatePresence, motion, useScroll } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { howItWorksSteps } from "@/features/technology/data/howItWorksSteps";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
+import { cn } from "@/lib/utils";
+
+// ─── shared spring config ─────────────────────────────────────────────────────
+const SPRING = { type: "spring" as const, stiffness: 380, damping: 36, mass: 0.8 };
+const EASE_EXPO = [0.16, 1, 0.3, 1] as const;
 
 export function HowItWorks() {
   return (
@@ -12,6 +17,7 @@ export function HowItWorks() {
   );
 }
 
+// ─── Desktop ──────────────────────────────────────────────────────────────────
 function DesktopHowItWorks() {
   const sectionRef = useRef<HTMLElement>(null);
   const [activeStep, setActiveStep] = useState(0);
@@ -20,6 +26,14 @@ function DesktopHowItWorks() {
     target: sectionRef,
     offset: ["start start", "end end"],
   });
+
+  // Smooth spring-driven progress for the step indicator bar
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+  const indicatorWidth = useTransform(
+    smoothProgress,
+    [0, 1],
+    ["0%", "100%"],
+  );
 
   const thresholds = useMemo(
     () => howItWorksSteps.map((_, index) => index / howItWorksSteps.length),
@@ -73,22 +87,30 @@ function DesktopHowItWorks() {
               <span className="shrink-0 font-body font-normal text-sm uppercase tracking-[0.22em] text-bg-dark">
                 How it works
               </span>
-              <div className="h-px flex-1 bg-[#000000]" />
+              {/* Animated progress bar replacing the static line */}
+              <div className="relative h-px flex-1 bg-black/15">
+                <motion.div
+                  className="absolute inset-y-0 left-0 bg-[#F15D59] origin-left"
+                  style={{ width: indicatorWidth }}
+                />
+              </div>
             </div>
+
             <div className="relative flex min-h-0 flex-1 items-end max-md:items-center max-md:pt-8">
 
-              <div className="pointer-events-none absolute inset-x-0 left-12 bottom-[70px] min-h-[70%] overflow-hidden" aria-hidden="true">
+              {/* Skyline fill — clip-path wipe */}
+              <div className="pointer-events-none absolute inset-x-0 left-8 bottom-[15%] min-h-[70%] overflow-hidden" aria-hidden="true">
                 <AnimatePresence mode="wait">
                   <motion.svg
                     key={activeStep}
                     viewBox="0 0 1085 573"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className={"absolute h-full w-[55%]"}
+                    initial={{ clipPath: "inset(0 100% 0 0)", opacity: 0.6 }}
+                    animate={{ clipPath: "inset(0 0% 0 0)", opacity: 1 }}
+                    exit={{ clipPath: "inset(0 0 0 100%)", opacity: 0.4 }}
+                    transition={{ duration: 0.7, ease: EASE_EXPO }}
+                    className={"absolute h-full w-[60%]"}
                     preserveAspectRatio="none"
                   >
                     <path
@@ -99,67 +121,90 @@ function DesktopHowItWorks() {
                 </AnimatePresence>
               </div>
 
-              <div className="relative z-10 grid w-full grid-cols-[0.7fr_1.6fr_0.7fr] items-center gap-0 max-lg:grid-cols-[0.8fr_1fr] max-md:grid-cols-1 max-md:gap-6">
+              {/* Product image — spring scale + fade */}
+              <div className=" absolute left-[27%] h-[60vh] w-[30vw]">
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={step.image}
+                    src={step.image}
+                    alt=""
+                    initial={{ opacity: 0, scale: 0.88, filter: "blur(6px)" }}
+                    animate={{ opacity: 1, scale: 1.15, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, scale: 1.08, filter: "blur(4px)" }}
+                    transition={{ ...SPRING, duration: 0.6 }}
+                    className={cn("h-full w-full max-w-[400px] object-contain drop-shadow-2xl max-md:h-auto max-md:w-[92vw]", step.customCSS)}
+                  />
+                </AnimatePresence>
+              </div>
+
+              {activeStep + 1 < howItWorksSteps.length &&
+                <div
+                  aria-hidden="true"
+                  className="absolute bottom-[15%] h-0 w-0 border-y-[18px] border-l-[18px] border-y-transparent border-l-[#F15D59] max-md:mb-8 max-md:ml-0 max-md:border-y-[18px] max-md:border-l-[18px]"
+                />
+              }
+              {activeStep > 0 &&
+                <div
+                  aria-hidden="true"
+                  className="absolute bottom-[15%] right-0 h-0 w-0 border-y-[18px] border-r-[18px] border-y-transparent border-r-[#F15D59] max-md:mb-8 max-md:ml-0 max-md:border-y-[18px] max-md:border-r-[18px]"
+                />
+              }
+
+              {/* Text grid — staggered children via variants */}
+              <div className="relative z-10 grid w-full grid-cols-[1fr_1fr] h-full items-center gap-0 max-lg:grid-cols-[1fr_1fr] max-md:grid-cols-1 max-md:gap-6">
                 <AnimatePresence mode="wait" custom={direction}>
                   <motion.div
                     key={`${step.number}-${step.title}`}
                     custom={direction}
-                    initial={{ opacity: 0, x: direction > 0 ? -80 : 80 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: direction > 0 ? 80 : -80 }}
-                    transition={{ duration: 0.45, ease: "easeOut" }}
+                    variants={desktopTitleVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.55, ease: EASE_EXPO }}
                     className="self-end"
                   >
-                    <div className="flex items-start gap-10">
-                      <div
-                        aria-hidden="true"
-                        className="mt-10 h-0 w-0 border-y-[18px] border-l-[18px] border-y-transparent border-l-[#F15D59] max-md:mb-8 max-md:ml-0 max-md:border-y-[18px] max-md:border-l-[18px]"
-                      />
+                    <div className="flex ml-10 items-start gap-10">
                       <div>
-                        <p className={`font-body font-normal text-display uppercase tracking-normal ${activeStep % 2 === 0 ? "text-bg-dark" : "text-bg-light"}`}>
+                        {/* Number — clip-path wipe from bottom */}
+                        <motion.p
+                          className={`font-body font-normal text-display uppercase tracking-normal ${activeStep % 2 === 0 ? "text-bg-dark" : "text-bg-light"}`}
+                          initial={{ clipPath: "inset(0 0 100% 0)" }}
+                          animate={{ clipPath: "inset(0 0 0% 0)" }}
+                          transition={{ duration: 0.55, ease: EASE_EXPO, delay: 0.05 }}
+                        >
                           {step.number}
-                        </p>
-                        <h3 className="font-body font-normal text-display uppercase tracking-normal text-bg-dark">
+                        </motion.p>
+                        {/* Title — clip-path wipe from bottom with slight delay */}
+                        <motion.h3
+                          className="mt-3 font-body font-normal text-display uppercase tracking-normal text-bg-dark"
+                          initial={{ clipPath: "inset(0 0 100% 0)" }}
+                          animate={{ clipPath: "inset(0 0 0% 0)" }}
+                          transition={{ duration: 0.6, ease: EASE_EXPO, delay: 0.12 }}
+                        >
                           {step.title}
-                        </h3>
+                        </motion.h3>
                       </div>
                     </div>
                   </motion.div>
                 </AnimatePresence>
 
-                <div className="relative flex min-h-[520px] items-center top-0 justify-start max-lg:order-3 max-lg:col-span-2 max-md:order-none max-md:col-span-1 max-md:min-h-[360px]">
-                  <div className=" absolute h-[60vh] w-[30vw]">
-                    <AnimatePresence mode="wait">
-                      <motion.img
-                        key={step.image}
-                        src={step.image}
-                        alt=""
-                        initial={{ opacity: 0, scale: 0.95, rotate: 0 }}
-                        animate={{ opacity: 1, scale: 1.15, rotate: 0 }}
-                        exit={{ opacity: 0, scale: 1.05, rotate: 0 }}
-                        transition={{ duration: 0.55, ease: "easeOut" }}
-                        className="absolute h-full w-full max-w-none object-contain drop-shadow-2xl max-md:h-auto max-md:w-[92vw]"
-                      />
-                    </AnimatePresence>
-                  </div>
-                </div>
-
                 <AnimatePresence mode="wait" custom={direction}>
                   <motion.p
                     key={step.body}
                     custom={direction}
-                    initial={{ opacity: 0, x: direction > 0 ? 80 : -80 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: direction > 0 ? -80 : 80 }}
-                    transition={{ duration: 0.45, ease: "easeOut" }}
-                    className="self-center justify-self-center max-w-[300px] font-figtree text-body font-normal leading-snug text-bg-dark max-lg:justify-self-start max-md:max-w-none"
+                    variants={desktopBodyVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.5, ease: EASE_EXPO, delay: 0.08 }}
+                    className="self-center justify-self-end max-w-[300px] font-figtree text-body font-normal leading-snug text-bg-dark max-lg:justify-self-start max-lg:text-left max-md:max-w-none"
                   >
                     {step.body}
                   </motion.p>
                 </AnimatePresence>
               </div>
 
-              <div className="absolute right-0 top-16 h-[82%] w-[40%] bg-[linear-gradient(to_right,rgba(36,36,37,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(36,36,37,0.08)_1px,transparent_1px)] bg-[size:34px_34px] max-md:hidden" />
+              <div className="absolute -right-8 top-10 h-full w-[45%] bg-[linear-gradient(to_right,rgba(36,36,37,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(36,36,37,0.08)_1px,transparent_1px)] bg-[size:34px_34px] [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent),linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] [mask-composite:intersect] max-md:hidden" />
             </div>
 
             <div className="mt-5 flex justify-center gap-3 md:hidden">
@@ -178,6 +223,20 @@ function DesktopHowItWorks() {
   );
 }
 
+// ─── Desktop animation variants ───────────────────────────────────────────────
+const desktopTitleVariants = {
+  enter: (dir: number) => ({ opacity: 0, y: dir > 0 ? 40 : -40, filter: "blur(4px)" }),
+  center: { opacity: 1, y: 0, filter: "blur(0px)" },
+  exit: (dir: number) => ({ opacity: 0, y: dir > 0 ? -30 : 30, filter: "blur(3px)" }),
+};
+
+const desktopBodyVariants = {
+  enter: (dir: number) => ({ opacity: 0, y: dir > 0 ? 28 : -28 }),
+  center: { opacity: 1, y: 0 },
+  exit: (dir: number) => ({ opacity: 0, y: dir > 0 ? -20 : 20 }),
+};
+
+// ─── Mobile ───────────────────────────────────────────────────────────────────
 function MobileHowItWorks() {
   const sectionRef = useRef<HTMLElement>(null);
   const [activeStep, setActiveStep] = useState(0);
@@ -186,6 +245,9 @@ function MobileHowItWorks() {
     target: sectionRef,
     offset: ["start start", "end end"],
   });
+
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+  const indicatorWidth = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
 
   useEffect(() => {
     return scrollYProgress.on("change", (latest) => {
@@ -233,84 +295,118 @@ function MobileHowItWorks() {
             <span className="shrink-0 font-heading text-[14px] font-[400] uppercase tracking-[0.22em] text-bg-dark">
               How it works
             </span>
-            <span className="h-px flex-1 bg-bg-dark" />
+            <div className="relative h-px flex-1 bg-black/15">
+              <motion.div
+                className="absolute inset-y-0 left-0 bg-[#F55656] origin-left"
+                style={{ width: indicatorWidth }}
+              />
+            </div>
           </div>
 
-          <span
-            aria-hidden="true"
-            className="mt-1 ml-[-8px] block h-0 w-0 border-y-[13px] border-l-[13px] border-y-transparent border-l-[#F55656]"
-          />
+          {activeStep + 1 < howItWorksSteps.length &&
+            <span
+              aria-hidden="true"
+              className="absolute top-[28%] left-0 ml-5 block h-0 w-0 border-y-[13px] border-l-[13px] border-y-transparent border-l-[#F55656]"
+            />
+          }
 
+          {activeStep > 0 &&
+            <span
+              aria-hidden="true"
+              className="absolute right-[0] top-[28%] mr-5 block h-0 w-0 border-y-[13px] border-r-[13px] border-y-transparent border-r-[#F55656]"
+            />
+          }
+
+          {/* Skyline — clip-path horizontal wipe */}
           <AnimatePresence mode="wait">
             <motion.div
               key={`skyline-${activeStep}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
+              className={`absolute w-full pr-10 bottom-[40%] z-0 h-[200px] ${activeStep % 2 === 0 ? "text-cta" : "text-[#4101F5]"}`}
+              initial={{ clipPath: "inset(0 100% 0 0)", opacity: 0.5 }}
+              animate={{ clipPath: "inset(0 0% 0 0)", opacity: 1 }}
+              exit={{ clipPath: "inset(0 0 0 100%)", opacity: 0.3 }}
+              transition={{ duration: 0.65, ease: EASE_EXPO }}
             >
-              <MobileSkyline
-                className={`absolute w-full pr-10 bottom-[35%] z-0 h-[200px] ${activeStep % 2 === 0 ? "text-cta" : "text-[#4101F5]"
-                  }`}
-              />
+              <MobileSkyline className="w-full h-full" />
             </motion.div>
           </AnimatePresence>
 
+          {/* Product image — spring blur + scale */}
           <AnimatePresence mode="wait" custom={direction}>
             <motion.img
               key={step.image}
               src={step.image}
               alt=""
               custom={direction}
-              className="absolute top-[25%] left-[10%] mx-auto z-10 h-[300px] w-[300px] max-w-none -translate-x-1/2 object-contain drop-shadow-xl"
+              className="absolute top-[28%] right-[10%] mx-auto z-10 h-[300px] w-auto max-w-none -translate-x-1/2 object-contain drop-shadow-xl"
               initial={{
                 opacity: 0,
-                scale: 0.92,
-                rotate: direction > 0 ? -14 : 24,
-                x: direction > 0 ? 60 : -60,
+                scale: 0.88,
+                filter: "blur(8px)",
+                x: direction > 0 ? 50 : -50,
               }}
               animate={{
                 opacity: 1,
-                scale: 1,
-                rotate: activeStep % 2 === 0 ? -6 : 10,
+                scale: activeStep === 2 ? 1.1 : 1,
+                filter: "blur(0px)",
                 x: 0,
               }}
               exit={{
                 opacity: 0,
-                scale: 0.96,
-                rotate: direction > 0 ? 14 : -16,
-                x: direction > 0 ? -80 : 80,
+                scale: 0.94,
+                filter: "blur(5px)",
+                x: direction > 0 ? -50 : 50,
               }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
+              transition={{ ...SPRING, duration: 0.55 }}
             />
           </AnimatePresence>
 
-          <div className="absolute bottom-0 left-0 right-0 h-[35%] z-20 px-5 pt-4 pb-6">
+          {/* Bottom text panel */}
+          <div className="absolute bottom-0 left-0 right-0 h-[40%] z-0 px-5 pt-4 pb-6">
             <MobileGridBackground />
+
+            {/* Title — clip-path wipe from bottom */}
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={`${step.number}-${step.title}`}
                 custom={direction}
-                initial={{ opacity: 0, x: direction > 0 ? -64 : 64 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: direction > 0 ? 64 : -64 }}
-                transition={{ duration: 0.38, ease: "easeOut" }}
+                variants={mobileTitleVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.5, ease: EASE_EXPO }}
               >
                 <h3 className="font-heading text-[32px] font-[400] -mt-12 uppercase leading-[1.2] tracking-normal text-bg-dark">
-                  <span className={`${activeStep % 2 === 1 ? 'text-[#FFFFFF]' : ''} block`}>{step.number}</span>
-                  <span className="block">{step.title}</span>
+                  <motion.span
+                    className={`${activeStep % 2 === 1 ? 'text-[#FFFFFF]' : ''} block`}
+                    initial={{ clipPath: "inset(0 0 100% 0)" }}
+                    animate={{ clipPath: "inset(0 0 0% 0)" }}
+                    transition={{ duration: 0.5, ease: EASE_EXPO, delay: 0.05 }}
+                  >
+                    {step.number}
+                  </motion.span>
+                  <motion.span
+                    className="block"
+                    initial={{ clipPath: "inset(0 0 100% 0)" }}
+                    animate={{ clipPath: "inset(0 0 0% 0)" }}
+                    transition={{ duration: 0.55, ease: EASE_EXPO, delay: 0.13 }}
+                  >
+                    {step.title}
+                  </motion.span>
                 </h3>
               </motion.div>
             </AnimatePresence>
 
+            {/* Body — fade + vertical spring */}
             <AnimatePresence mode="wait" custom={direction}>
               <motion.p
                 key={step.body}
                 custom={direction}
-                initial={{ opacity: 0, x: direction > 0 ? 64 : -64 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: direction > 0 ? -64 : 64 }}
-                transition={{ duration: 0.38, ease: "easeOut" }}
+                variants={mobileBodyVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.45, ease: EASE_EXPO, delay: 0.1 }}
                 className="ml-[24px] mt-8 max-w-[255px] font-figtree text-[14px] font-[400] leading-[1.12] text-bg-dark"
               >
                 {step.body}
@@ -324,14 +420,34 @@ function MobileHowItWorks() {
   );
 }
 
+// ─── Mobile animation variants ────────────────────────────────────────────────
+const mobileTitleVariants = {
+  enter: (dir: number) => ({ opacity: 0, y: dir > 0 ? 32 : -32 }),
+  center: { opacity: 1, y: 0 },
+  exit: (dir: number) => ({ opacity: 0, y: dir > 0 ? -24 : 24 }),
+};
+
+const mobileBodyVariants = {
+  enter: (dir: number) => ({ opacity: 0, y: dir > 0 ? 20 : -20 }),
+  center: { opacity: 1, y: 0 },
+  exit: (dir: number) => ({ opacity: 0, y: dir > 0 ? -16 : 16 }),
+};
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
 function MobileGridBackground() {
   return (
     <div
-      className="pointer-events-none absolute inset-0 opacity-[0.10]"
+      className="pointer-events-none absolute inset-0 -top-6"
       style={{
         backgroundImage:
-          "linear-gradient(#242425 1px, transparent 1px), linear-gradient(90deg, #242425 0.21px, transparent 1px)",
+          "linear-gradient(to right, rgba(36,36,37,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(36,36,37,0.08) 1px, transparent 1px)",
         backgroundSize: "16px 16px",
+        maskImage:
+          "linear-gradient(to right, transparent, black 10%, black 90%, transparent), linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)",
+        maskComposite: "intersect",
+        WebkitMaskImage:
+          "linear-gradient(to right, transparent, black 10%, black 90%, transparent), linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)",
+        WebkitMaskComposite: "source-in",
       }}
     />
   );
