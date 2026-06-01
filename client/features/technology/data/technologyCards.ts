@@ -2,7 +2,7 @@ export const fusionCards = [
   {
     eyebrow: "Encoder 1",
     title: "Chemical",
-    body: "VOC, CO2, and particulate signatures identify early combustion chemistry before visible smoke forms.",
+    body: "The VOC time series is processed with 1D convolutions to capture gas-concentration slopes, enabling visual detection 45 seconds earlier.",
     iconSrc: "/images/tech-multi-1.png",
   },
   {

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
 import {
   labTestCards,
@@ -8,6 +8,15 @@ import {
 import { RedArrow } from "@/features/technology/components/RedArrow";
 
 export function WildfireDetectionShowcase() {
+  return (
+    <>
+      <DesktopWildfireDetectionShowcase />
+      <MobileWildfireDetectionShowcase />
+    </>
+  );
+}
+
+function DesktopWildfireDetectionShowcase() {
   const { sectionRef, sectionHeight, trackWidth, trackX, slideWidth } =
     useHorizontalScroll({
       slideCount: 2,
@@ -17,7 +26,7 @@ export function WildfireDetectionShowcase() {
     <section
       ref={sectionRef}
       data-header-class="header-dark"
-      className="relative bg-[#F7F7F7]"
+      className="relative bg-[#F7F7F7] max-md:hidden"
       style={{ height: sectionHeight }}
     >
       <div className="sticky top-0 h-screen overflow-hidden bg-[#F7F7F7]">
@@ -81,6 +90,226 @@ export function WildfireDetectionShowcase() {
         </motion.div>
       </div>
     </section>
+  );
+}
+
+function MobileWildfireDetectionShowcase() {
+  return (
+    <section
+      data-header-class="header-dark"
+      className="bg-[#F7F7F7] px-0 pb-20 pt-[96px] md:hidden"
+    >
+      <MobileCardRail
+        title={
+          <>
+            Wildfire
+            <br />
+            Detection
+            <br />
+            Classes
+          </>
+        }
+        cards={wildfireClassCards}
+        renderCard={(card) => (
+          <MobileClassCard key={card.label} card={card} />
+        )}
+      />
+
+      <MobileCardRail
+        className="mt-20"
+        title="Lab Tests"
+        cards={labTestCards}
+        renderCard={(card) => (
+          <MobileLabCard key={card.title} card={card} />
+        )}
+      />
+    </section>
+  );
+}
+
+function MobileCardRail<T>({
+  title,
+  cards,
+  renderCard,
+  className = "",
+}: {
+  title: ReactNode;
+  cards: readonly T[];
+  renderCard: (card: T) => ReactNode;
+  className?: string;
+}) {
+  const railRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const isAutoScrolling = useRef(false);
+  const scrollDebounce = useRef<ReturnType<typeof setTimeout>>();
+
+  const scrollToCard = (index: number) => {
+    const rail = railRef.current;
+    const slot = rail?.querySelectorAll<HTMLElement>("[data-mobile-card-slot]")[
+      index
+    ];
+
+    if (!rail || !slot) return;
+
+    isAutoScrolling.current = true;
+    rail.scrollTo({
+      left: slot.offsetLeft + slot.offsetWidth / 2 - rail.clientWidth / 2,
+      behavior: "smooth",
+    });
+    setTimeout(() => { isAutoScrolling.current = false; }, 700);
+  };
+
+  useEffect(() => {
+    if (cards.length <= 1) return;
+
+    const intervalId = window.setInterval(() => {
+      setActiveIndex((current) => {
+        const next = (current + 1) % cards.length;
+        scrollToCard(next);
+        return next;
+      });
+    }, 3000);
+
+    return () => window.clearInterval(intervalId);
+  }, [cards.length]);
+
+  const handleScroll = () => {
+    if (isAutoScrolling.current) return;
+
+    clearTimeout(scrollDebounce.current);
+    scrollDebounce.current = setTimeout(() => {
+      const rail = railRef.current;
+      if (!rail) return;
+
+      const railCenter = rail.getBoundingClientRect().left + rail.clientWidth / 2;
+      const slots = Array.from(
+        rail.querySelectorAll<HTMLElement>("[data-mobile-card-slot]"),
+      );
+
+      const nearest = slots.reduce(
+        (closest, slot, index) => {
+          const rect = slot.getBoundingClientRect();
+          const distance = Math.abs(rect.left + rect.width / 2 - railCenter);
+          return distance < closest.distance ? { index, distance } : closest;
+        },
+        { index: activeIndex, distance: Number.POSITIVE_INFINITY },
+      );
+
+      if (nearest.index !== activeIndex) {
+        setActiveIndex(nearest.index);
+      }
+    }, 80);
+  };
+
+  return (
+    <div className={className}>
+      <div className="mb-10 flex items-start gap-4 px-7">
+        {
+          activeIndex + 1 < cards.length ?
+            <span
+              aria-hidden="true"
+              className=" h-0 w-0 shrink-0 border-y-[16px] border-l-[16px] border-y-transparent border-l-[#F55656]"
+            /> :
+            <span
+              aria-hidden="true"
+              className=" h-0 w-0  shrink-0 border-y-[16px] border-l-[16px] border-y-transparent border-l-[transparent]"
+            />
+
+        }
+
+        <h2 className="font-heading text-[42px] font-[400] uppercase leading-[0.94] tracking-normal text-bg-dark">
+          {title}
+        </h2>
+        {
+          activeIndex > 0 ?
+            <span
+              aria-hidden="true"
+              className=" h-0 w-0 shrink-0 border-y-[16px] border-r-[16px] border-y-transparent border-r-[#F55656]"
+            />
+            :
+            <span
+              aria-hidden="true"
+              className=" h-0 w-0 shrink-0 border-y-[16px] border-r-[16px] border-y-transparent border-r-[transparent]"
+            />
+
+        }
+
+      </div>
+
+      <div
+        ref={railRef}
+        className="snap-x snap-mandatory overflow-x-auto px-[28px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        onScroll={handleScroll}
+      >
+        <div className="flex w-max gap-7">
+          {cards.map((card, index) => (
+            <div
+              key={index}
+              data-mobile-card-slot
+              className="snap-center"
+            >
+              {renderCard(card)}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-5 flex justify-center gap-3">
+        {cards.map((_, index) => (
+          <span
+            key={index}
+            className={`h-1.5 w-8 transition-colors ${index === activeIndex ? "bg-[#F55656]" : "bg-bg-dark/20"
+              }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MobileClassCard({
+  card,
+}: {
+  card: (typeof wildfireClassCards)[number];
+}) {
+  return (
+    <article className="w-[334px] shrink-0">
+      <img
+        src={card.image}
+        alt=""
+        className="aspect-[334/421] w-full object-cover"
+      />
+      <h3 className="mt-9 font-figtree text-[19px] font-[700] uppercase leading-none tracking-[0.16em] text-bg-dark">
+        <span className="text-[#F55656]">{card.label}</span>
+        <span className="px-2">-</span>
+        {card.title}
+      </h3>
+      <p className="mt-2 font-figtree text-[14px] font-[400] leading-tight text-bg-dark">
+        {card.body}
+      </p>
+    </article>
+  );
+}
+
+function MobileLabCard({
+  card,
+}: {
+  card: (typeof labTestCards)[number];
+}) {
+  return (
+    <article className="w-[334px] shrink-0">
+      <img
+        src={card.image}
+        alt=""
+        className="aspect-[334/421] w-full object-cover"
+      />
+      <h3 className="mt-9 font-figtree text-[19px] font-[700] uppercase leading-none tracking-[0.16em] text-bg-dark">
+        {card.title}
+      </h3>
+      <p className="mt-2 font-figtree text-[19px] font-[700] uppercase leading-none tracking-[0.16em] text-[#F55656]">
+        {card.result}
+      </p>
+    </article>
   );
 }
 

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useRef, useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
 import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
 import { Button } from "@/components/common/Button";
@@ -34,14 +35,25 @@ const posts = [
   },
 ] as const;
 
-function RedArrow({ direction = "right" }: { direction?: "left" | "right" }) {
+function RedArrow({
+  direction = "right",
+  size = { x: 20, y: 20 },
+  className,
+}: {
+  direction?: "left" | "right";
+  size?: { x: number; y: number };
+  className?: string;
+}) {
+  const sideStyle =
+    direction === "right"
+      ? { borderLeftWidth: size.x, borderLeftColor: "#F15D59" }
+      : { borderRightWidth: size.x, borderRightColor: "#F15D59" };
+
   return (
     <span
       aria-hidden="true"
-      className={`block h-0 w-0 border-y-[20px] border-y-transparent ${direction === "right"
-        ? "border-l-[20px] border-l-[#F15D59]"
-        : "border-r-[20px] border-r-[#F15D59]"
-        }`}
+      className={`block h-0 w-0 border-y-transparent${className ? ` ${className}` : ""}`}
+      style={{ borderTopWidth: size.y, borderBottomWidth: size.y, ...sideStyle }}
     />
   );
 }
@@ -54,9 +66,10 @@ export default function Blog() {
 
   return (
     <PageLayout headerClassName="header-dark">
+      {/* ── Desktop ── */}
       <section
         ref={sectionRef}
-        className="relative bg-[#F7F7F7]"
+        className="relative bg-[#F7F7F7] max-md:hidden"
         style={{ height: sectionHeight }}
       >
         <div className="sticky top-0 h-screen overflow-hidden bg-[#F7F7F7] pt-24 max-md:pt-28">
@@ -111,6 +124,102 @@ export default function Blog() {
           </motion.div>
         </div>
       </section>
+
+      {/* ── Mobile ── */}
+      <MobileBlogRail />
     </PageLayout>
+  );
+}
+
+function MobileBlogRail() {
+  const railRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleScroll = () => {
+    const rail = railRef.current;
+    if (!rail) return;
+
+    const railCenter = rail.getBoundingClientRect().left + rail.clientWidth / 2;
+    const slots = Array.from(
+      rail.querySelectorAll<HTMLElement>("[data-blog-card-slot]"),
+    );
+
+    const nearest = slots.reduce(
+      (closest, slot, index) => {
+        const rect = slot.getBoundingClientRect();
+        const distance = Math.abs(rect.left + rect.width / 2 - railCenter);
+        return distance < closest.distance ? { index, distance } : closest;
+      },
+      { index: activeIndex, distance: Number.POSITIVE_INFINITY },
+    );
+
+    if (nearest.index !== activeIndex) {
+      setActiveIndex(nearest.index);
+    }
+  };
+
+
+  return (
+    <section
+      data-header-class="header-dark"
+      className="bg-[#F7F7F7] pb-16 pt-[96px] md:hidden"
+    >
+      {/* Header — "Blogs" label + line, identical to desktop */}
+      <div className="flex items-center gap-14 px-5">
+        <span className="shrink-0 font-heading font-[400] text-body uppercase tracking-[0.14em] text-bg-dark">
+          Blogs
+        </span>
+        <span className="h-px flex-1 bg-bg-dark" />
+      </div>
+
+      {/* Scrollable rail */}
+      <div
+        ref={railRef}
+        className="mt-10 snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        onScroll={handleScroll}
+        aria-label="Blog posts"
+      >
+        <div className="flex">
+          {posts.map((post, index) => (
+            <div key={post.date} data-blog-card-slot className="w-screen shrink-0 snap-center flex justify-center px-5">
+
+              <article className="w-full max-w-[340px]">
+                <img
+                  src={post.image}
+                  alt=""
+                  className="aspect-[1.39/1] w-full h-[250px] object-cover"
+                />
+                <p className="mt-6 pl-6 font-figtree text-[14px] font-[400] uppercase tracking-[0.16em] text-[#24242578]">
+                  {post.date}
+                </p>
+                <div className="mt-6 relative flex items-start gap-0">
+                  {index === 0 && <RedArrow className="absolute -left-4" size={{ x: 16, y: 16 }} direction={index === 0 ? "right" : "left"} />}
+                  <h2 className="font-body text-[42px] pl-6 font-normal uppercase leading-[0.94] tracking-normal text-black">
+                    {post.title}
+                  </h2>
+                  {index === 1 && <RedArrow className="absolute -right-4" size={{ x: 16, y: 16 }} direction={"left"} />}
+                </div>
+                <p className="mt-6 pl-6 font-figtree text-[14px] font-normal leading-snug text-[#24242578] line-clamp-4">
+                  {post.body}
+                </p>
+                <Button variant="primary" className="mt-8 ml-6">
+                  Read More
+                </Button>
+              </article>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Dot pagination */}
+      <div className="mt-6 flex justify-center gap-3">
+        {posts.map((_, index) => (
+          <span
+            key={index}
+            className={`h-1.5 w-8 transition-colors ${index === activeIndex ? "bg-[#F55656]" : "bg-bg-dark/20"}`}
+          />
+        ))}
+      </div>
+    </section>
   );
 }

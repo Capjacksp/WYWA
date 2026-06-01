@@ -74,9 +74,9 @@ export function FireCallout({
           {[0, 1, 2].map((index) => (
             <motion.div
               key={index}
-              className="absolute inset-0 rounded-full border-[2.5px] border-white/80"
+              className="absolute inset-0 rounded-full border-[4px] border-white/85"
               initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: [0.5, 1.6, 2.2], opacity: [0, 0.7, 0] }}
+              animate={{ scale: [0.5, 1.35, 1.75], opacity: [0, 0.7, 0] }}
               transition={{
                 duration: 3,
                 repeat: Infinity,
@@ -86,15 +86,17 @@ export function FireCallout({
             />
           ))}
 
-          <motion.div
-            className="relative z-10 h-6 w-6 rounded-full border-[3.5px] border-white bg-[#F55656] shadow-[0_0_12px_rgba(245,86,86,0.5),0_0_24px_rgba(245,86,86,0.2)] max-md:h-7 max-md:w-7 max-md:border-[3px]"
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{
-              duration: 2.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
+          <div className="relative z-10 flex h-[38px] w-[38px] items-center justify-center rounded-full bg-white">
+            <motion.span
+              className="block h-[24px] w-[24px] rounded-full bg-[#F55656] shadow-[0_0_12px_rgba(245,86,86,0.5),0_0_24px_rgba(245,86,86,0.2)]"
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          </div>
         </div>
 
         <div className="px-5 py-5">

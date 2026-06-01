@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Logo from "@/components/common/Logo";
 import Menu from "./Menu";
 import { useState, useEffect } from "react";
@@ -11,10 +11,26 @@ interface HeaderProps {
 
 export default function Header({ onConnectClick, className }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showAnimatedLogo, setShowAnimatedLogo] = useState(false);
+  const location = useLocation();
 
   const isDark = className?.includes("header-dark") && !isMenuOpen;
   const logoColor = isDark ? "#242425" : "#FFFFFF";
   const barBg = isDark ? "bg-bg-dark" : "bg-white";
+
+  useEffect(() => {
+    if (location.pathname !== "/") {
+      setShowAnimatedLogo(false);
+      return;
+    }
+
+    setShowAnimatedLogo(true);
+    const timeoutId = window.setTimeout(() => {
+      setShowAnimatedLogo(false);
+    }, 4000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -38,12 +54,12 @@ export default function Header({ onConnectClick, className }: HeaderProps) {
           className
         )}
       >
-        <div className="mx-auto px-[20px] max-md:px-5">
+        <div className="mx-auto px-[20px] max-md:px-4">
           <div className={cn(
             "rounded-[16px] bg-[#F1F1F15C] backdrop-blur-[4px] transition-colors duration-300",
             isMenuOpen && "bg-transparent backdrop-blur-none"
           )}>
-            <div className="flex items-center justify-between h-12 px-8 max-md:px-6">
+            <div className="flex items-center justify-between h-12 px-8 max-md:px-4">
               {/* Logo */}
               <Link
                 to="/"
@@ -53,6 +69,7 @@ export default function Header({ onConnectClick, className }: HeaderProps) {
                 <Logo
                   width={100}
                   color={logoColor}
+                  animated={showAnimatedLogo}
                 />
               </Link>
 

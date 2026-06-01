@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useEffect, useRef } from "react";
 
 interface LogoProps {
   /** Width in px (height auto-scales from the 138×37 viewBox) */
@@ -6,6 +7,7 @@ interface LogoProps {
   /** Override the fill color (defaults to white) */
   color?: string;
   className?: string;
+  animated?: boolean;
   gap?: number;
   strokWidth?: number;
   loops?: number;
@@ -22,8 +24,14 @@ export default function Logo({
   width = 138,
   color = "#ffffff",
   className,
+  animated = false,
 }: LogoProps) {
   const height = (width / 138) * 37
+
+  if (animated) {
+    return <AnimatedLogoCanvas width={width} height={height} color={color} className={className} />;
+  }
+
   return (
     <svg
       className={cn("transition-colors duration-300", className)}
@@ -60,6 +68,133 @@ export default function Logo({
       />
     </svg>
   );
+}
+
+function AnimatedLogoCanvas({
+  width,
+  height,
+  color,
+  className,
+}: {
+  width: number;
+  height: number;
+  color: string;
+  className?: string;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const video = document.createElement("video");
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    const pixelRatio = window.devicePixelRatio || 1;
+    const targetWidth = Math.round(width * pixelRatio);
+    const targetHeight = Math.round(height * pixelRatio);
+    const logoColor = parseColor(color);
+    let timeoutId = 0;
+    let isDisposed = false;
+
+    if (!ctx) return;
+
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+
+    video.src = "/videos/WYWA Logo_opt.mp4";
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.preload = "auto";
+
+    const drawFrame = () => {
+      if (isDisposed) return;
+
+      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        const sourceAspect = 138 / 37;
+        const cropWidth = video.videoWidth * 0.18;
+        const cropHeight = cropWidth / sourceAspect;
+        const cropX = (video.videoWidth - cropWidth) / 2;
+        const cropY = (video.videoHeight - cropHeight) / 2;
+
+        ctx.clearRect(0, 0, targetWidth, targetHeight);
+        ctx.drawImage(
+          video,
+          cropX,
+          cropY,
+          cropWidth,
+          cropHeight,
+          0,
+          0,
+          targetWidth,
+          targetHeight,
+        );
+
+        const frame = ctx.getImageData(0, 0, targetWidth, targetHeight);
+        const { data } = frame;
+
+        for (let index = 0; index < data.length; index += 4) {
+          const luminance = data[index] * 0.2126 + data[index + 1] * 0.7152 + data[index + 2] * 0.0722;
+          const alpha = Math.max(0, Math.min(255, (luminance - 54) * 2.1));
+
+          data[index] = logoColor.r;
+          data[index + 1] = logoColor.g;
+          data[index + 2] = logoColor.b;
+          data[index + 3] = alpha;
+        }
+
+        ctx.putImageData(frame, 0, 0);
+      }
+
+      timeoutId = window.setTimeout(drawFrame, 66);
+    };
+
+    video.play().catch(() => {
+      drawFrame();
+    });
+    drawFrame();
+
+    return () => {
+      isDisposed = true;
+      window.clearTimeout(timeoutId);
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+    };
+  }, [color, height, width]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className={cn("block transition-opacity duration-300", className)}
+      style={{ width, height }}
+      role="img"
+      aria-label="WYWA logo"
+    />
+  );
+}
+
+function parseColor(color: string) {
+  if (color.toLowerCase() === "white") {
+    return { r: 255, g: 255, b: 255 };
+  }
+
+  const normalized = color.replace("#", "");
+  const value = normalized.length === 3
+    ? normalized.split("").map((char) => `${char}${char}`).join("")
+    : normalized;
+
+  const parsed = Number.parseInt(value, 16);
+
+  if (Number.isNaN(parsed)) {
+    return { r: 255, g: 255, b: 255 };
+  }
+
+  return {
+    r: (parsed >> 16) & 255,
+    g: (parsed >> 8) & 255,
+    b: parsed & 255,
+  };
 }
 
 

@@ -53,7 +53,7 @@ export const wildfireCallouts = [
     stats: {
       scale: "~20,000-25,000 acres | ~2-3 weeks",
       delay: "~45 mins to detect",
-      impact: "5,636 structures destroyed | $1B+ losses",
+      impact: "~100+ structures destroyed | ~$1M losses",
     },
     className: "left-[40%] top-[87%]",
     enterFrom: "left",

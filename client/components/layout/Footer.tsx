@@ -25,17 +25,19 @@ export default function Footer() {
       >
         <div className="mx-auto mt-0">
           {/* ===== TOP ROW ===== */}
-          <div className="flex items-center justify-between px-[50px] py-8 max-md:flex-col max-md:gap-6 max-md:items-start border-b border-white/20">
+          <div className="flex items-center justify-between px-[50px] py-8 max-md:flex-col max-md:py-0 max-md:gap-0 max-md:px-[0px] max-md:items-stretch border-b border-white/20">
             {/* Left — nav links */}
             <nav
-              className="flex items-center gap-8 max-md:gap-6"
+              className="flex items-center gap-8 max-md:justify-between max-md:px-8 max-md:py-6 max-md:w-full max-md:border-b max-md:border-white/20"
               aria-label="Footer navigation"
             >
               {footerNavLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className="text-body font-[300] tracking-[0.15em] text-white hover:text-white transition-colors uppercase font-body"
+                  className="text-body font-[300] tracking-[0.15em] text-white hover:text-white transition-colors uppercase font-body
+                  max-md:font-heading max-md:font-[350] max-md:text-[12px]
+                  "
                 >
                   {link.label}
                 </Link>
@@ -43,8 +45,11 @@ export default function Footer() {
             </nav>
 
             {/* Right — partners */}
-            <div className="flex items-center gap-8 max-md:gap-6">
-              <span className="text-body font-[300] tracking-[0.15em] text-white uppercase font-body">
+            <div
+              className="flex items-center gap-8 px-8 max-md:py-6 max-md:justify-between max-md:gap-0 max-md:w-full max-md:border-b max-md:border-white/20 md:p-0"
+            >
+              <span className="text-body font-[300] tracking-[0.15em] text-white uppercase font-body
+              max-md:font-heading max-md:font-[350] max-md:text-[10px] ">
                 OUR PARTNERS
               </span>
               {partners.map((partner, index) => (
@@ -56,7 +61,7 @@ export default function Footer() {
                 >
                   <img
                     src={partner.logo}
-                    className="h-[36px] w-auto object-cover"
+                    className="max-md:h-[18px] h-[30px] w-auto object-cover"
                     alt={partner.name}
                   />
                 </a>
@@ -65,16 +70,16 @@ export default function Footer() {
           </div>
 
           {/* ===== BOTTOM ROW ===== */}
-          <div className="flex items-center justify-between px-[50px] py-6 max-md:flex-col max-md:gap-4 max-md:items-start">
+          <div className="flex items-center justify-between px-[50px] py-8 max-md:px-8 max-md:flex-col max-md:gap-4 max-md:justify-center">
             {/* Left — LinkedIn + Connect */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 max-md:w-full max-md:justify-between">
               {/* LinkedIn icon */}
               <a
                 href="https://www.linkedin.com/company/wywa"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WYWA on LinkedIn"
-                className="text-white/80 hover:text-white transition-colors"
+                className="text-white transition-colors"
               >
                 <svg
                   width="24"
@@ -89,14 +94,18 @@ export default function Footer() {
 
               <button
                 onClick={() => setConnectOpen(true)}
-                className="text-body tracking-[0.15em] font-[300] text-white uppercase font-body hover:text-white/80 transition-colors cursor-pointer"
+                className="text-body tracking-[0.15em] font-[300] text-white uppercase font-body hover:text-white/80 transition-colors cursor-pointer
+                max-md:font-heading max-md:font-[350] max-md:text-[12px]
+                "
               >
                 CONNECT
               </button>
             </div>
 
             {/* Right — copyright */}
-            <p className="text-xs tracking-[0.1em] text-white font-[400] uppercase font-body">
+            <p className="text-xs tracking-[0.1em] text-white font-[400] uppercase font-body
+            max-md:font-body max-md:font-[400] max-md:text-[7px] max-md:pt-6
+            ">
               COPYRIGHT © {new Date().getFullYear()} WYWA.COM
             </p>
           </div>

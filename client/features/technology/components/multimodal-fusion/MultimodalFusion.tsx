@@ -1,14 +1,23 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fusionCards } from "@/features/technology/data/technologyCards";
 import { fusionWavePath } from "@/features/technology/data/fusionWavePath";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 
 export function MultimodalFusion() {
+  return (
+    <>
+      <DesktopMultimodalFusion />
+      <MobileMultimodalFusion />
+    </>
+  );
+}
+
+function DesktopMultimodalFusion() {
   const [activeIndex, setActiveIndex] = useState(1);
 
   return (
-    <section className="relative overflow-hidden bg-bg-dark pb-8 pt-28 text-white max-md:px-5 max-md:py-20">
+    <section className="relative overflow-hidden bg-bg-dark pb-8 pt-28 text-white max-md:hidden">
       <div className="mx-auto">
         <div className="text-center">
           <ScrollTextLines
@@ -53,11 +62,10 @@ export function MultimodalFusion() {
                   key={title}
                   onMouseEnter={() => setActiveIndex(index)}
                   onFocus={() => setActiveIndex(index)}
-                  className={`group relative min-h-[120px] overflow-hidden px-7 py-4 text-left transition-colors duration-300 max-md:min-h-[230px] ${
-                    isActive
-                      ? "bg-white text-bg-dark"
-                      : "bg-[#676767] text-white hover:bg-[#777777]"
-                  }`}
+                  className={`group relative min-h-[120px] overflow-hidden px-7 py-4 text-left transition-colors duration-300 max-md:min-h-[230px] ${isActive
+                    ? "bg-white text-bg-dark"
+                    : "bg-[#676767] text-white hover:bg-[#777777]"
+                    }`}
                   animate={{
                     height: isActive ? 360 : 120,
                   }}
@@ -93,6 +101,255 @@ export function MultimodalFusion() {
       </div>
     </section>
   );
+}
+
+function MobileMultimodalFusion() {
+  const railRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const isAutoScrolling = useRef(false);
+  const scrollDebounce = useRef<number>();
+  const intervalRef = useRef<number>();
+
+  // Restart the auto-cycle timer (called on manual interaction)
+  const restartInterval = () => {
+    if (intervalRef.current) window.clearInterval(intervalRef.current);
+    intervalRef.current = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % fusionCards.length);
+    }, 3000);
+  };
+
+  // Scroll active card to center of rail whenever activeIndex changes
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+
+    const cards = Array.from(
+      rail.querySelectorAll<HTMLElement>("[data-fusion-card-slot]"),
+    );
+    const card = cards[activeIndex];
+    if (!card) return;
+
+    const targetScroll =
+      card.offsetLeft + card.offsetWidth / 2 - rail.clientWidth / 2;
+
+    isAutoScrolling.current = true;
+    rail.scrollTo({ left: targetScroll, behavior: "smooth" });
+    const t = window.setTimeout(() => { isAutoScrolling.current = false; }, 700);
+    return () => window.clearTimeout(t);
+  }, [activeIndex]);
+
+  // Auto-cycle on mount
+  useEffect(() => {
+    restartInterval();
+    return () => { if (intervalRef.current) window.clearInterval(intervalRef.current); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Detect nearest card when user manually scrolls and snap to it
+  const handleScroll = () => {
+    if (isAutoScrolling.current) return;
+
+    window.clearTimeout(scrollDebounce.current);
+    scrollDebounce.current = window.setTimeout(() => {
+      const rail = railRef.current;
+      if (!rail) return;
+
+      const railCenter = rail.scrollLeft + rail.clientWidth / 2;
+      const cards = Array.from(
+        rail.querySelectorAll<HTMLElement>("[data-fusion-card-slot]"),
+      );
+
+      let nearest = { index: 0, dist: Infinity };
+      cards.forEach((card, i) => {
+        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+        const dist = Math.abs(cardCenter - railCenter);
+        if (dist < nearest.dist) nearest = { index: i, dist };
+      });
+
+      setActiveIndex(nearest.index);
+      restartInterval(); // reset timer so auto-cycle doesn't interrupt
+    }, 80);
+  };
+
+  return (
+    <section
+      data-header-class=""
+      className="relative overflow-hidden bg-bg-dark pb-0 pt-[104px] text-white md:hidden"
+    >
+      <div className="px-7 text-center">
+        <ScrollTextLines
+          as="h2"
+          className="font-heading text-[42px] font-[400] uppercase leading-[0.94] tracking-normal"
+          lines={[
+            <span className="text-cta">The</span>,
+            <span className="text-cta">Intelligence</span>,
+            <span className="text-cta">Layer</span>,
+            "Multimodal",
+            "Fusion.",
+          ]}
+        />
+
+        <div className="mx-auto mt-[42px] flex max-w-[330px] flex-col items-center gap-2 font-figtree text-[9px] font-[400] uppercase leading-none tracking-[0.18em] text-white">
+          <ScrollTextLines
+            as="span"
+            lineClassName="inline-flex items-center gap-2"
+            lines={[
+              <>
+                <span className="h-4 w-px bg-white" />
+                Three Signal Types
+                <span className="h-4 w-px bg-white" />
+              </>,
+            ]}
+          />
+          <ScrollTextLines
+            as="span"
+            lineClassName="inline-flex items-center gap-2"
+            delay={0.08}
+            lines={[
+              <>
+                <span className="h-4 w-px bg-white" />
+                One Cross-Attention Transformer
+                <span className="h-4 w-px bg-white" />
+              </>,
+            ]}
+          />
+          <ScrollTextLines
+            as="span"
+            lineClassName="inline-flex items-center gap-2"
+            delay={0.16}
+            lines={[
+              <>
+                <span className="h-4 w-px bg-white" />
+                Each Modality Catches What The Others Miss
+                <span className="h-4 w-px bg-white" />
+              </>,
+            ]}
+          />
+        </div>
+      </div>
+
+      <MobileFusionWave activeIndex={activeIndex} />
+
+      <div
+        ref={railRef}
+        className="relative z-10 mt-[132px] flex h-[350px] items-end overflow-x-auto px-[calc(50%-150px)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        aria-label="Multimodal fusion encoders"
+        onScroll={handleScroll}
+      >
+        {fusionCards.map((card, index) => (
+          <MobileFusionCard
+            key={card.title}
+            card={card}
+            index={index}
+            isActive={index === activeIndex}
+          />
+        ))}
+      </div>
+
+      <div className="mt-5 flex justify-center gap-3 pb-8">
+        {fusionCards.map((card, index) => (
+          <span
+            key={card.title}
+            className={`h-1.5 w-8 transition-colors ${index === activeIndex ? "bg-[#F55656]" : "bg-white/20"
+              }`}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function MobileFusionCard({
+  card,
+  index,
+  isActive,
+}: {
+  card: (typeof fusionCards)[number];
+  index: number;
+  isActive: boolean;
+}) {
+  return (
+    <motion.article
+      data-fusion-card-slot
+      className={`overflow-hidden text-left ${isActive ? "bg-white text-bg-dark" : "bg-[#676767] text-white"
+        }`}
+      initial={{
+        width: 300,
+        height: 120,
+        paddingLeft: 14,
+        paddingRight: 14,
+        paddingTop: 14,
+        paddingBottom: 14,
+      }}
+      animate={{
+        width: 300,
+        height: isActive ? 330 : 120,
+        paddingLeft: isActive ? 18 : 14,
+        paddingRight: isActive ? 18 : 14,
+        paddingTop: isActive ? 22 : 14,
+        paddingBottom: isActive ? 22 : 14,
+      }}
+      style={{ flexShrink: 0 }}
+      transition={{ type: "spring", stiffness: 160, damping: 22 }}
+    >
+      <p className="font-figtree text-[10px] font-[500] uppercase tracking-[0.12em]">
+        {card.eyebrow}
+      </p>
+      <h3 className="mt-1 font-heading text-[18px] font-[800] uppercase leading-none tracking-normal">
+        {card.title}
+      </h3>
+
+      <motion.div
+        animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 14 }}
+        transition={{ duration: 0.22 }}
+      >
+        <img
+          src={card.iconSrc}
+          alt=""
+          className="mt-8 h-20 w-20 object-contain"
+          aria-hidden="true"
+        />
+
+        <p className="mt-[48px] max-w-[280px] font-figtree text-[12px] font-[400] leading-[1.45]">
+          {getMobileFusionBody(card.title, card.body)}
+        </p>
+      </motion.div>
+    </motion.article>
+  );
+}
+
+
+
+function MobileFusionWave({ activeIndex }: { activeIndex: number }) {
+  return (
+    <motion.div
+      aria-hidden="true"
+      className="pointer-events-none absolute left-[-24px] top-[490px] z-0 h-[140px] overflow-hidden"
+      animate={{ width: `calc(${(activeIndex + 0.5) * 25}% + 24px)` }}
+      transition={{ type: "spring", stiffness: 130, damping: 20 }}
+    >
+      <svg
+        className="absolute left-0 top-0 h-[130px] w-[340px] text-white/10"
+        viewBox="0 0 430 136"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M-24 98V37C-24 17.7 -8.3 2 11 2C30.3 2 46 17.7 46 37V98C46 117.3 61.7 133 81 133C100.3 133 116 117.3 116 98V37C116 17.7 131.7 2 151 2C170.3 2 186 17.7 186 37V98C186 117.3 201.7 133 221 133C240.3 133 256 117.3 256 98V37C256 17.7 271.7 2 291 2C310.3 2 326 17.7 326 37V98C326 117.3 341.7 133 361 133C380.3 133 396 117.3 396 98V37C396 17.7 411.7 2 431 2"
+          stroke="currentColor"
+          strokeWidth="30"
+        />
+      </svg>
+    </motion.div>
+  );
+}
+
+function getMobileFusionBody(title: string, fallback: string) {
+  if (title === "Chemical") {
+    return "The VOC time series is processed with 1D convolutions to capture gas-concentration slopes, enabling visual detection 45 seconds earlier.";
+  }
+
+  return fallback;
 }
 
 function FusionWave({ activeIndex }: { activeIndex: number }) {
