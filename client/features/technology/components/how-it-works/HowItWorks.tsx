@@ -338,7 +338,7 @@ function MobileHowItWorks() {
               src={step.image}
               alt=""
               custom={direction}
-              className="absolute top-[28%] right-[10%] mx-auto z-10 h-[300px] w-auto max-w-none -translate-x-1/2 object-contain drop-shadow-xl"
+              className="absolute bottom-[38%] right-[10%] mx-auto z-10 h-[250px] w-auto max-w-none -translate-x-1/2 object-contain drop-shadow-xl"
               initial={{
                 opacity: 0,
                 scale: 0.88,
