@@ -105,7 +105,7 @@ function AnimatedLogoCanvas({
     video.muted = true;
     video.loop = true;
     video.playsInline = true;
-    video.preload = "auto";
+    video.preload = "metadata";
 
     const drawFrame = () => {
       if (isDisposed) return;
