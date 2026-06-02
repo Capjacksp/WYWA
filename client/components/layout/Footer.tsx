@@ -75,7 +75,7 @@ export default function Footer() {
             <div className="flex items-center gap-4 max-md:w-full max-md:justify-between">
               {/* LinkedIn icon */}
               <a
-                href="https://www.linkedin.com/company/wywa"
+                href="https://www.linkedin.com/company/wywa-ai"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WYWA on LinkedIn"

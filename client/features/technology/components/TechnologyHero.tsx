@@ -144,7 +144,7 @@ function MobileBlindSpotScreen() {
     >
       <div>
         <EyeIcon className="mb-5 h-[45px] w-[78px] text-cta" />
-        <LoadTextLines
+        <ScrollTextLines
           as="p"
           className="font-figtree text-[15px] font-[400] leading-[1.18] text-white"
           delay={0.04}
@@ -156,7 +156,7 @@ function MobileBlindSpotScreen() {
 
       <div className="mt-[52px]">
         <NoseIcon className="mb-5 h-[58px] w-[54px] text-cta" />
-        <LoadTextLines
+        <ScrollTextLines
           as="p"
           className="font-figtree text-[15px] font-[400] leading-[1.18] text-white"
           delay={0.08}

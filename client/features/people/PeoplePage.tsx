@@ -148,7 +148,7 @@ function TeamOverlay({ member }: { member: TeamMember }) {
               </div>
             </div>
             <a
-              href="https://www.linkedin.com/company/wywa"
+              href="https://www.linkedin.com/company/wywa-ai"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="WYWA on LinkedIn"
@@ -324,7 +324,7 @@ function MobileTeamBioPanel({
         </div>
 
         <a
-          href="https://www.linkedin.com/company/wywa"
+          href="https://www.linkedin.com/company/wywa-ai"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="WYWA on LinkedIn"
@@ -393,7 +393,7 @@ function AdvisorsSection() {
                 />
                 <div className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-[4px]">
                   <a
-                    href="https://www.linkedin.com/company/wywa"
+                    href="https://www.linkedin.com/company/wywa-ai"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="WYWA on LinkedIn"
@@ -459,7 +459,7 @@ function MobileAdvisorsSection() {
                   className="aspect-[1.21/1] w-full object-contain object-top"
                 />
                 <a
-                  href="https://www.linkedin.com/company/wywa"
+                  href="https://www.linkedin.com/company/wywa-ai"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="WYWA on LinkedIn"

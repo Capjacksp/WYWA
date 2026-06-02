@@ -210,7 +210,7 @@ function MobileTubbsSlide({ width }: { width: string }) {
   const camp = wildfireCallouts[1];
   const august = wildfireCallouts[2];
   const palisades = wildfireCallouts[4];
-  const [openCard, setOpenCard] = useState<string | null>(palisades.label);
+  const [openCard, setOpenCard] = useState<string | null>();
 
   const toggleCard = (label: string) => {
     setOpenCard((current) => (current === label ? null : label));
@@ -244,7 +244,6 @@ function MobileTubbsSlide({ width }: { width: string }) {
         style={{ left: "48.7%", top: "26.1%" }}
         title={august.label}
         stats={august.stats}
-        isCompact
         isOpen={openCard === august.label}
         onToggle={() => toggleCard(august.label)}
       />
@@ -264,6 +263,21 @@ function MobileTubbsSlide({ width }: { width: string }) {
         isOpen={openCard === palisades.label}
         onToggle={() => toggleCard(palisades.label)}
       />
+
+      <MobileMapMarker
+        className=""
+        style={{ right: "-35%", top: "10%" }}
+        isActive={openCard === camp.label}
+        onClick={() => toggleCard(camp.label)}
+      />
+      <MobileFireCard
+        className="w-[258px]"
+        style={{ right: "-25%", top: "13%" }}
+        title={camp.label}
+        stats={camp.stats}
+        isOpen={openCard === camp.label}
+        onToggle={() => toggleCard(camp.label)}
+      />
     </MobileMapSlide>
   );
 }
@@ -282,20 +296,7 @@ function MobileCentralFiresSlide({ width }: { width: string }) {
 
   return (
     <MobileMapSlide width={width}>
-      <MobileMapMarker
-        className=""
-        style={{ left: "10%", top: "10%" }}
-        isActive={openCard === camp.label}
-        onClick={() => toggleCard(camp.label)}
-      />
-      <MobileFireCard
-        className="w-[258px]"
-        style={{ right: "83%", top: "13%" }}
-        title={camp.label}
-        stats={camp.stats}
-        isOpen={openCard === camp.label}
-        onToggle={() => toggleCard(camp.label)}
-      />
+
 
       <MobileMapMarker
         className=""
@@ -342,10 +343,10 @@ function MobileFireCard({
     <motion.div
       className={`absolute overflow-hidden rounded-[10px] bg-[#24211f]/90 text-white shadow-[0_18px_42px_rgba(0,0,0,0.32)] backdrop-blur-sm ${className}`}
       style={style}
-      initial={{ opacity: 0, x: 64 }}
+      initial={{ opacity: 0, x: 30 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: false, amount: 0.65 }}
-      transition={{ duration: 0.44, ease: "easeOut" }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
     >
       <button
         type="button"

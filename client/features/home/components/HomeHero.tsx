@@ -6,7 +6,7 @@ function HomeHero() {
   return (
     <section
       data-header-class=""
-      className="relative h-screen p-0 w-full overflow-hidden -mt-12 max-md:flex min-md:h-screen max-md:h-auto max-md:min-h-screen max-md:flex-col max-md:bg-bg-dark max-md:-mt-20"
+      className="relative h-screen w-full overflow-hidden p-0 -mt-12 max-md:flex max-md:h-auto max-md:min-h-screen max-md:flex-col max-md:bg-bg-dark min-md:h-screen"
     >
       <HeroImagePanel />
       <DesktopContentPanel />
@@ -22,7 +22,7 @@ function HeroImagePanel() {
       <img
         src="/images/home-img.png"
         alt="Aerial view of forests and farmland"
-        className="h-full w-full object-cover max-md:object-[47%_top]"
+        className="h-full w-full object-cover max-md:object-[55%_top]"
       />
       <div className="absolute inset-0 bg-black/40 max-md:bg-black/45" />
       <DesktopGeometryOverlay />
@@ -80,7 +80,7 @@ function MobileHeroContent() {
   return (
     <>
       <div className="absolute left-[27px] right-5 top-[104px] z-10 hidden max-md:block">
-        <h1 className="font-heading text-[42px] font-[350] uppercase leading-[0.9] tracking-normal text-white min-[390px]:text-[42px]">
+        <h1 className="font-heading text-[42px] font-[350] uppercase leading-[0.94] tracking-normal text-white min-[390px]:text-[42px]">
           Building
           <br />
           Nature&rsquo;s
@@ -89,8 +89,8 @@ function MobileHeroContent() {
         </h1>
       </div>
 
-      <div className="relative z-10 hidden min-h-[max(266px,calc(100vh-578px))] flex-1 bg-bg-dark px-[26px] pb-8 pt-12 max-md:block">
-        <h2 className="max-w-[340px] font-heading text-[31px] font-[350] uppercase leading-[0.91] tracking-normal text-white">
+      <div className="relative z-10 hidden min-h-[max(266px,calc(100svh-578px))] flex-1 bg-bg-dark px-[26px] pb-8 pt-12 max-md:block">
+        <h2 className="max-w-[340px] font-heading text-[28px] font-[350] uppercase leading-[0.91] tracking-normal text-white">
           Systems that
           <br />
           detect wildfires
@@ -168,8 +168,9 @@ function MobileGeometryOverlay() {
         <line x1="0" y1="232" x2="390" y2="232" />
         <line x1="0" y1="303" x2="19" y2="303" />
         <line x1="0" y1="374" x2="19" y2="374" />
-        <line x1="0" y1="445" x2="204" y2="445" />
-        <line x1="0" y1="488" x2="204" y2="488" />
+        <line x1="0" y1="445" x2="19" y2="445" />
+        <line x1="19" y1="488" x2="204" y2="488" />
+        <line x1="0" y1="530" x2="19" y2="530" />
         <line x1="112" y1="396" x2="112" y2="578" />
         <line x1="204" y1="396" x2="204" y2="578" />
         <line x1="19" y1="396" x2="390" y2="396" />

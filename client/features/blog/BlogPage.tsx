@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
 import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
@@ -59,10 +59,12 @@ function RedArrow({
 }
 
 export default function Blog() {
-  const { sectionRef, sectionHeight, trackWidth, trackX, slideWidth } =
+  const { sectionRef, sectionHeight, trackWidth, trackX, slideWidth, scrollYProgress } =
     useHorizontalScroll({
       slideCount: posts.length,
     });
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+  const indicatorWidth = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
 
   return (
     <PageLayout headerClassName="header-dark">
@@ -77,7 +79,12 @@ export default function Blog() {
             <span className="shrink-0 font-body font-[400] text-body-lg uppercase tracking-[0.14em] text-bg-dark">
               Blogs
             </span>
-            <span className="h-px flex-1 bg-bg-dark" />
+            <div className="relative h-px flex-1 bg-black/15">
+              <motion.div
+                className="absolute inset-y-0 left-0 origin-left bg-[#F15D59]"
+                style={{ width: indicatorWidth }}
+              />
+            </div>
           </div>
 
           <motion.div
@@ -134,10 +141,16 @@ export default function Blog() {
 function MobileBlogRail() {
   const railRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const scrollProgress = useMotionValue(0);
+  const smoothProgress = useSpring(scrollProgress, { stiffness: 200, damping: 30 });
+  const indicatorWidth = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
 
   const handleScroll = () => {
     const rail = railRef.current;
     if (!rail) return;
+
+    const maxScroll = rail.scrollWidth - rail.clientWidth;
+    scrollProgress.set(maxScroll > 0 ? rail.scrollLeft / maxScroll : 0);
 
     const railCenter = rail.getBoundingClientRect().left + rail.clientWidth / 2;
     const slots = Array.from(
@@ -169,7 +182,12 @@ function MobileBlogRail() {
         <span className="shrink-0 font-heading font-[400] text-body uppercase tracking-[0.14em] text-bg-dark">
           Blogs
         </span>
-        <span className="h-px flex-1 bg-bg-dark" />
+        <div className="relative h-px flex-1 bg-black/15">
+          <motion.div
+            className="absolute inset-y-0 left-0 origin-left bg-[#F55656]"
+            style={{ width: indicatorWidth }}
+          />
+        </div>
       </div>
 
       {/* Scrollable rail */}

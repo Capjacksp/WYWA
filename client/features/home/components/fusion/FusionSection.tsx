@@ -15,7 +15,7 @@ function DesktopFusionSection() {
   return (
     <Section
       data-header-class="header-dark"
-      className="relative flex min-h-[200vh] flex-col items-center justify-center overflow-hidden bg-bg-light pb-16 pt-28 max-md:hidden"
+      className="relative flex min-h-200vh flex-col items-center justify-center overflow-hidden bg-bg-light pb-16 pt-28 max-md:hidden"
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.10]"
@@ -102,19 +102,19 @@ function MobileFusionCopyScreen() {
   return (
     <section
       data-header-class=""
-      className="flex min-h-[80vh] flex-col bg-[#F55656] px-3 pb-16 pt-[132px] text-white"
+      className="flex min-h-[80vh] flex-col bg-[#F15D59] px-3 pb-16 pt-[120px] text-white"
     >
       <ScrollTextLines
         as="h2"
-        className="mx-auto max-w-[370px] text-center font-heading text-[28px] font-[400] uppercase leading-[0.95] tracking-normal"
+        className="mx-auto max-w-[370px] text-center font-heading text-[28px] font-[400] uppercase leading-[0.94] tracking-normal"
         lines={[
           "Sensing subtle",
           "shifts in the",
           "environment",
           "across",
-          <span className="font-[800] text-bg-dark">Chemical, visual,</span>,
-          <span className="font-[800] text-bg-dark">and</span>,
-          <span className="font-[800] text-bg-dark">temporal signals,</span>,
+          <span className="font-[700] text-bg-dark">Chemical, visual,</span>,
+          <span className="font-[700] text-bg-dark">and</span>,
+          <span className="font-[700] text-bg-dark">temporal signals,</span>,
           "detecting ignition",
           "before",
           "catastrophe",
@@ -141,16 +141,16 @@ function MobileFusionSensorScreen() {
   return (
     <section
       data-header-class="header-dark"
-      className="relative min-h-screen overflow-hidden bg-[#F7F7F7] px-5 pt-[112px] text-bg-dark"
+      className="relative min-h-[max(800px,100vh)] overflow-hidden bg-[#FFFFFF] px-5 pt-[112px] text-bg-dark"
     >
       <MobileGridBackground />
 
       <ScrollTextLines
         as="h2"
-        className="relative z-10 mx-auto max-w-[360px] text-center font-heading text-[43px] font-[350] uppercase leading-[0.95] tracking-normal"
+        className="relative z-10 mx-auto max-w-[360px] text-center font-heading text-[43px] font-[350] uppercase leading-[0.94] tracking-normal"
         lines={[
-          <span className="text-[#F55656]">Multimodal</span>,
-          <span className="text-[#F55656]">Fusion</span>,
+          <span className="text-[#F15D59]">Multimodal</span>,
+          <span className="text-[#F15D59]">Fusion</span>,
           "Three",
           "Signals.",
           "One",
