@@ -347,7 +347,7 @@ function MobileHowItWorks() {
               }}
               animate={{
                 opacity: 1,
-                scale: activeStep === 2 ? 1.1 : 1,
+                scale: 1,
                 filter: "blur(0px)",
                 x: 0,
               }}
