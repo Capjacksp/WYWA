@@ -58,7 +58,8 @@ function DesktopFusionSection() {
         <div className="max-w-[850px] flex-[1.5]">
           <ScrollTextLines
             as="h2"
-            className="text-justify text-h1-md uppercase text-white text-balance"
+            className="text-justify text-h1-md uppercase text-white"
+            lineClassName="block [text-align-last:justify]"
             lines={[
               <>
                 SENSING SUBTLE SHIFTS IN THE ENVIRONMENT ACROSS
