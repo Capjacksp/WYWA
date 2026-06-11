@@ -12,7 +12,7 @@ function HomeHero() {
   return (
     <section
       data-header-class=""
-      className="relative h-screen w-full overflow-hidden p-0 -mt-12 max-md:flex max-md:h-auto max-md:min-h-screen max-md:flex-col max-md:bg-bg-dark min-md:h-screen"
+      className="relative h-screen w-full overflow-hidden p-0 -mt-16 max-md:flex max-md:h-auto max-md:min-h-screen max-md:flex-col max-md:bg-bg-dark min-md:h-screen"
     >
       <HeroImagePanel />
       <DesktopContentPanel />

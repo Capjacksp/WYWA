@@ -34,16 +34,14 @@ export default function Header({ onConnectClick, className }: HeaderProps) {
     <>
       <header
         className={cn(
-          "sticky top-8 z-50 w-full bg-transparent transition-colors duration-300",
+          "sticky top-0 z-50 w-full bg-[#F1F1F15C] backdrop-blur-[4px] transition-colors duration-300",
+          isMenuOpen && "bg-transparent backdrop-blur-none",
           className
         )}
       >
         <div className="mx-auto px-[20px] max-md:px-4">
-          <div className={cn(
-            "rounded-[16px] bg-[#F1F1F15C] backdrop-blur-[4px] transition-colors duration-300",
-            isMenuOpen && "bg-transparent backdrop-blur-none"
-          )}>
-            <div className="flex items-center justify-between h-12 px-8 max-md:px-4">
+          <div>
+            <div className="flex items-center justify-between h-16 px-8 max-md:px-4">
               {/* Logo */}
               <Link
                 to="/"
