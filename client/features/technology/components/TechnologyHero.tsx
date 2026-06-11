@@ -3,6 +3,12 @@ import {
   ScrollTextLines,
 } from "@/components/ui/scroll-text-lines";
 
+const HERO_TEXT_MOTION = {
+  duration: 1.3,
+  stagger: 0.16,
+  distance: 110,
+} as const;
+
 export function TechnologyHero() {
   return (
     <>
@@ -20,6 +26,8 @@ function DesktopTechnologyHero() {
         <LoadTextLines
           as="h1"
           className="max-w-[1200px] font-body font-normal text-display uppercase tracking-normal"
+          delay={0.12}
+          {...HERO_TEXT_MOTION}
           lines={["Most wildfire detection systems depend on a single sense."]}
         />
         <div className="mt-20 grid max-w-[600px] gap-14 max-md:mt-12 max-md:gap-10">
@@ -48,7 +56,8 @@ function DesktopTechnologyHero() {
             <LoadTextLines
               as="p"
               className="font-figtree font-normal text-h3 leading-snug"
-              delay={0.1}
+              delay={0.42}
+              {...HERO_TEXT_MOTION}
               lines={[
                 "Satellites and ground cameras watch for heat or smoke.",
                 "But satellites can take 15-45 minutes to confirm thermal signatures, while ground cameras must wait for visible smoke.",
@@ -68,7 +77,8 @@ function DesktopTechnologyHero() {
             <LoadTextLines
               as="p"
               className="font-figtree font-normal text-h3 leading-snug"
-              delay={0.18}
+              delay={0.62}
+              {...HERO_TEXT_MOTION}
               lines={[
                 "Other systems monitor gases released during combustion, detecting chemical traces in the air.",
                 "But isolated signals often create noise and false alarms without additional verification.",
@@ -115,6 +125,8 @@ function MobileSingleSenseScreen() {
       <LoadTextLines
         as="h1"
         className="relative z-10 max-w-[335px] font-heading text-[43px] font-[400] uppercase leading-[0.94] tracking-normal text-white"
+        delay={0.12}
+        {...HERO_TEXT_MOTION}
         lines={[
           "Most",
           "wildfire",

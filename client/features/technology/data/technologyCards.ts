@@ -28,18 +28,24 @@ export const fusionCards = [
 export const wildfireClassCards = [
   {
     image: "/images/wildfire-class-fire-flames.png",
+    desktopVideo: "/videos/Class A.webm",
+    mobileVideo: "/videos/Class-A-480p.webm",
     label: "Class A",
     title: "Fire Flames",
     body: "Visible growth or flicker",
   },
   {
     image: "/images/wildfire-class-smoke-plumes.png",
+    desktopVideo: "/videos/Class B.webm",
+    mobileVideo: "/videos/Class-B-480p.webm",
     label: "Class B",
     title: "Smoke Plumes",
     body: "Rising, drifting, expanding",
   },
   {
     image: "/images/wildfire-class-fire-smoke.png",
+    desktopVideo: "/videos/Class C.webm",
+    mobileVideo: "/videos/Class-C-480p.webm",
     label: "Class C",
     title: "Fire and Smoke",
     body: "Combined detection",
@@ -49,11 +55,13 @@ export const wildfireClassCards = [
 export const labTestCards = [
   {
     image: "/images/lab-test-incense-smoke.png",
+    video: "/videos/Incense Smoke Rejected.webm",
     title: "Incense Smoke",
     result: "Rejected",
   },
   {
     image: "/images/lab-test-brush-fire-smoke.png",
+    video: "/videos/Brush Fire Smoke Detected.webm",
     title: "Brush Fire Smoke",
     result: "Detected",
   },

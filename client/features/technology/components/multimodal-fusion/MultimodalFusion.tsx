@@ -14,7 +14,7 @@ export function MultimodalFusion() {
 }
 
 function DesktopMultimodalFusion() {
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   return (
     <section className="relative overflow-hidden bg-bg-dark pb-8 pt-28 text-white max-md:hidden">

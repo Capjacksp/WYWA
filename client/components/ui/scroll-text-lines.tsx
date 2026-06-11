@@ -30,6 +30,9 @@ type ScrollTextLinesProps<T extends ElementType> = {
   className?: string;
   lineClassName?: string;
   delay?: number;
+  duration?: number;
+  stagger?: number;
+  distance?: number;
 } & Omit<HTMLMotionProps<"div">, "children">;
 
 export function ScrollTextLines<T extends ElementType = "div">({
@@ -76,6 +79,9 @@ export function LoadTextLines<T extends ElementType = "div">({
   className,
   lineClassName,
   delay = 0,
+  duration = 0.85,
+  stagger = 0.09,
+  distance = 160,
   ...props
 }: ScrollTextLinesProps<T>) {
   const Component = getMotionComponent(as);
@@ -90,7 +96,7 @@ export function LoadTextLines<T extends ElementType = "div">({
         visible: {
           transition: {
             delayChildren: delay,
-            staggerChildren: 0.09,
+            staggerChildren: stagger,
           },
         },
       }}
@@ -101,12 +107,12 @@ export function LoadTextLines<T extends ElementType = "div">({
           <motion.span
             className={lineClassName ?? "block"}
             variants={{
-              hidden: { opacity: 0, x: 160 },
+              hidden: { opacity: 0, x: distance },
               visible: {
                 opacity: 1,
                 x: 0,
                 transition: {
-                  duration: 0.85,
+                  duration,
                   ease: [0.22, 1, 0.36, 1],
                 },
               },

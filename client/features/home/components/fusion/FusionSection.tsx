@@ -15,7 +15,7 @@ function DesktopFusionSection() {
   return (
     <Section
       data-header-class="header-dark"
-      className="relative flex min-h-200vh flex-col items-center justify-center overflow-hidden bg-bg-light pb-16 pt-28 max-md:hidden"
+      className="relative flex min-h-220vh flex-col items-center justify-center overflow-hidden bg-bg-light pb-20 pt-28 max-md:hidden"
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.10]"

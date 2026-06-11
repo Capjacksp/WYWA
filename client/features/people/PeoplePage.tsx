@@ -187,11 +187,11 @@ function TeamHero() {
         onMouseLeave={() => setActiveId(null)}
       >
         <LoadTextLines
-          className="pointer-events-none absolute left-[1.35%] top-[11.8%] z-0 font-body text-[clamp(8rem,17.6vw,18rem)] uppercase leading-[0.85] tracking-normal text-bg-dark"
+          className="pointer-events-none absolute left-[1.35%] top-[11.8%] z-0 font-body text-[clamp(8rem,17.6vw,18rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
           lines={["Our"]}
         />
         <LoadTextLines
-          className="pointer-events-none absolute bottom-[1.7%] right-[1.1%] z-0 font-body text-[clamp(8rem,17.4vw,18rem)] uppercase leading-[0.85] tracking-normal text-bg-dark"
+          className="pointer-events-none absolute bottom-[1.7%] right-[1.1%] z-0 font-body text-[clamp(8rem,17.4vw,18rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
           delay={0.12}
           lines={["Team"]}
         />

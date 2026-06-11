@@ -2,6 +2,12 @@ import { Button } from "@/components/common/Button";
 import { LoadTextLines } from "@/components/ui/scroll-text-lines";
 import { motion } from "framer-motion";
 
+const HERO_TEXT_MOTION = {
+  duration: 1.3,
+  stagger: 0.16,
+  distance: 110,
+} as const;
+
 function HomeHero() {
   return (
     <section
@@ -38,6 +44,8 @@ function DesktopContentPanel() {
         <LoadTextLines
           as="h2"
           className="font-heading text-[28px] font-[300] leading-[1] text-white"
+          delay={0.38}
+          {...HERO_TEXT_MOTION}
           lines={[
             "SYSTEMS THAT",
             "DETECT WILDFIRES",
@@ -49,7 +57,11 @@ function DesktopContentPanel() {
         <motion.div
           initial={{ opacity: 0, x: 160 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.85, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
+          transition={{
+            duration: 1.1,
+            delay: 1.05,
+            ease: [0.22, 1, 0.36, 1],
+          }}
         >
           <Button variant="primary" className="mt-6">
             <a href="#book-demo">BOOK A DEMO</a>
@@ -67,6 +79,8 @@ function DesktopHeroTitle() {
         as="h1"
         className="font-heading text-h1"
         style={{ fontWeight: 350 }}
+        delay={0.12}
+        {...HERO_TEXT_MOTION}
         lines={[
           <span className="text-white">BUILDING NATURE&rsquo;S</span>,
           <span className="text-cta">SIXTH SENSE</span>,
@@ -140,11 +154,11 @@ function DesktopGeometryOverlay() {
         transform="rotate(180 57 51.75)"
       />
       <path
-        d="M 37.5 100 A 21 15 0 0 0 0 66"
+        d="M 70 66 A 16 18 0 0 0 70 100"
         fill="none"
         stroke="white"
         strokeWidth="0.15"
-        transform="rotate(180 53 83)"
+        transform="translate(-2.3 0)"
       />
     </svg>
   );

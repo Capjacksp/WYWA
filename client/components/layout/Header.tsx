@@ -3,6 +3,7 @@ import Logo from "@/components/common/Logo";
 import Menu from "./Menu";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { usePeriodicAnimation } from "@/hooks/use-periodic-animation";
 
 interface HeaderProps {
   onConnectClick: () => void;
@@ -11,26 +12,16 @@ interface HeaderProps {
 
 export default function Header({ onConnectClick, className }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showAnimatedLogo, setShowAnimatedLogo] = useState(false);
   const location = useLocation();
+  const showAnimatedLogo = usePeriodicAnimation({
+    activeDuration: 4000,
+    pauseDuration: 3500,
+    resetKey: location.pathname,
+  });
 
   const isDark = className?.includes("header-dark") && !isMenuOpen;
   const logoColor = isDark ? "#242425" : "#FFFFFF";
   const barBg = isDark ? "bg-bg-dark" : "bg-white";
-
-  useEffect(() => {
-    if (location.pathname !== "/") {
-      setShowAnimatedLogo(false);
-      return;
-    }
-
-    setShowAnimatedLogo(true);
-    const timeoutId = window.setTimeout(() => {
-      setShowAnimatedLogo(false);
-    }, 4000);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [location.pathname]);
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -67,6 +58,7 @@ export default function Header({ onConnectClick, className }: HeaderProps) {
                 onClick={closeMenu}
               >
                 <Logo
+                  key={`${location.pathname}-${showAnimatedLogo}`}
                   width={100}
                   color={logoColor}
                   animated={showAnimatedLogo}

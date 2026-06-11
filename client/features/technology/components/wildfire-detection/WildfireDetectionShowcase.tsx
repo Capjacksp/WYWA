@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
+import { useResponsiveVideoSource } from "@/hooks/use-responsive-video-source";
 import {
   labTestCards,
   wildfireClassCards,
@@ -45,9 +46,8 @@ function DesktopWildfireDetectionShowcase() {
             <div className="mt-auto grid grid-cols-3 items-end gap-4 max-lg:gap-3 max-md:grid-cols-1">
               {wildfireClassCards.map((card) => (
                 <article key={card.label}>
-                  <img
-                    src={card.image}
-                    alt=""
+                  <ClassVideo
+                    card={card}
                     className="aspect-[1.4/1] max-h-[min(42vh,360px)] w-full object-cover"
                   />
                   <h3 className="mt-5 font-figtree text-h3 font-[600] uppercase leading-none tracking-[0.10em] text-bg-dark">
@@ -72,9 +72,8 @@ function DesktopWildfireDetectionShowcase() {
             <div className="mt-auto grid grid-cols-3 items-end gap-4 max-lg:gap-3 max-md:grid-cols-1">
               {labTestCards.map((card) => (
                 <article key={card.title}>
-                  <img
-                    src={card.image}
-                    alt=""
+                  <LabVideo
+                    card={card}
                     className="aspect-[1.4/1] max-h-[min(42vh,360px)] w-full object-cover"
                   />
                   <h3 className="mt-5 font-figtree text-h3 font-[600] uppercase leading-none tracking-[0.10em] text-bg-dark">
@@ -274,9 +273,8 @@ function MobileClassCard({
 }) {
   return (
     <article className="w-[334px] shrink-0">
-      <img
-        src={card.image}
-        alt=""
+      <ClassVideo
+        card={card}
         className="aspect-[334/421] w-full object-cover"
       />
       <h3 className="mt-9 font-figtree text-[19px] font-[700] uppercase leading-none tracking-[0.16em] text-bg-dark">
@@ -298,9 +296,8 @@ function MobileLabCard({
 }) {
   return (
     <article className="w-[334px] shrink-0">
-      <img
-        src={card.image}
-        alt=""
+      <LabVideo
+        card={card}
         className="aspect-[334/421] w-full object-cover"
       />
       <h3 className="mt-9 font-figtree text-[19px] font-[700] uppercase leading-none tracking-[0.16em] text-bg-dark">
@@ -310,6 +307,55 @@ function MobileLabCard({
         {card.result}
       </p>
     </article>
+  );
+}
+
+function ClassVideo({
+  card,
+  className,
+}: {
+  card: (typeof wildfireClassCards)[number];
+  className: string;
+}) {
+  const source = useResponsiveVideoSource({
+    desktop: card.desktopVideo,
+    mobile: card.mobileVideo,
+  });
+
+  return (
+    <video
+      className={className}
+      src={source}
+      poster={card.image}
+      aria-label={`${card.label}: ${card.title}`}
+      autoPlay
+      loop
+      muted
+      playsInline
+      preload="metadata"
+    />
+  );
+}
+
+function LabVideo({
+  card,
+  className,
+}: {
+  card: (typeof labTestCards)[number];
+  className: string;
+}) {
+  return (
+    <video
+      className={className}
+      src={card.video}
+      poster={card.image}
+      aria-label={`${card.title}: ${card.result}`}
+      autoPlay
+      loop
+      muted
+      playsInline
+      preload="metadata"
+    />
   );
 }
 
