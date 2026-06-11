@@ -1,12 +1,34 @@
 import { Button } from "@/components/common/Button";
-import { LoadTextLines } from "@/components/ui/scroll-text-lines";
-import { motion } from "framer-motion";
+import { ScrambleLoadText } from "@/components/ui/scramble-load-text";
+import { motion, useReducedMotion } from "framer-motion";
 
 const HERO_TEXT_MOTION = {
   duration: 1.3,
   stagger: 0.16,
   distance: 110,
 } as const;
+
+const GEOMETRY_GROUP_VARIANTS = {
+  hidden: {},
+  visible: {
+    transition: {
+      delayChildren: 0.18,
+      staggerChildren: 0.065,
+    },
+  },
+};
+
+const GEOMETRY_LINE_VARIANTS = {
+  hidden: { pathLength: 0, opacity: 0 },
+  visible: {
+    pathLength: 1,
+    opacity: 0.92,
+    transition: {
+      pathLength: { duration: 0.72, ease: [0.22, 1, 0.36, 1] as const },
+      opacity: { duration: 0.18 },
+    },
+  },
+};
 
 function HomeHero() {
   return (
@@ -41,16 +63,16 @@ function DesktopContentPanel() {
   return (
     <div className="absolute right-0 top-0 flex h-full w-[30%] flex-col justify-end bg-bg-dark p-10 max-lg:hidden">
       <div className="mb-12">
-        <LoadTextLines
+        <ScrambleLoadText
           as="h2"
           className="font-heading text-[28px] font-[300] leading-[1] text-white"
           delay={0.38}
           {...HERO_TEXT_MOTION}
           lines={[
-            "SYSTEMS THAT",
-            "DETECT WILDFIRES",
-            "BEFORE THEY",
-            "BECOME VISIBLE",
+            { text: "SYSTEMS THAT" },
+            { text: "DETECT WILDFIRES" },
+            { text: "BEFORE THEY" },
+            { text: "BECOME VISIBLE" },
           ]}
         />
 
@@ -75,15 +97,15 @@ function DesktopContentPanel() {
 function DesktopHeroTitle() {
   return (
     <div className="absolute left-[50px] top-[20%] z-10 max-md:hidden max-lg:top-[40%]">
-      <LoadTextLines
+      <ScrambleLoadText
         as="h1"
         className="font-heading text-h1"
         style={{ fontWeight: 350 }}
         delay={0.12}
         {...HERO_TEXT_MOTION}
         lines={[
-          <span className="text-white">BUILDING NATURE&rsquo;S</span>,
-          <span className="text-cta">SIXTH SENSE</span>,
+          { text: "BUILDING NATURE'S", className: "text-white" },
+          { text: "SIXTH SENSE", className: "text-cta" },
         ]}
       />
     </div>
@@ -126,6 +148,8 @@ function MobileHeroContent() {
 }
 
 function DesktopGeometryOverlay() {
+  const reduceMotion = useReducedMotion();
+
   return (
     <svg
       className="pointer-events-none absolute inset-0 h-full w-full max-md:hidden"
@@ -133,38 +157,34 @@ function DesktopGeometryOverlay() {
       preserveAspectRatio="none"
       viewBox="0 0 100 100"
     >
-      <line x1="0" y1="50%" x2="3%" y2="50%" stroke="white" strokeWidth="0.15" />
-      <line x1="0" y1="12.5%" x2="3%" y2="12.5%" stroke="white" strokeWidth="0.15" />
-      <line x1="0" y1="25%" x2="3%" y2="25%" stroke="white" strokeWidth="0.15" />
-      <line x1="0" y1="37.5%" x2="100%" y2="37.5%" stroke="white" strokeWidth="0.15" />
-      <line x1="0" y1="62.5%" x2="3%" y2="62.5%" stroke="white" strokeWidth="0.15" />
-      <line x1="3%" y1="66%" x2="100%" y2="66%" stroke="white" strokeWidth="0.15" />
-      <line x1="0" y1="75%" x2="3%" y2="75%" stroke="white" strokeWidth="0.15" />
-      <line x1="0" y1="87.5%" x2="3%" y2="87.5%" stroke="white" strokeWidth="0.15" />
-      <line x1="3%" y1="82.5%" x2="30%" y2="82.5%" stroke="white" strokeWidth="0.15" />
-      <line x1="57%" y1="37.5%" x2="57%" y2="100%" stroke="white" strokeWidth="0.15" />
-      <line x1="3%" y1="0" x2="3%" y2="100%" stroke="white" strokeWidth="0.15" />
-      <line x1="30%" y1="66%" x2="30%" y2="100%" stroke="white" strokeWidth="0.15" />
-      <line x1="16%" y1="66%" x2="16%" y2="100%" stroke="white" strokeWidth="0.15" />
-      <path
-        d="M 70 37.5 A 9.1 10 0 0 0 70 66"
-        fill="none"
-        stroke="white"
-        strokeWidth="0.15"
-        transform="rotate(180 57 51.75)"
-      />
-      <path
-        d="M 70 66 A 16 18 0 0 0 70 100"
-        fill="none"
-        stroke="white"
-        strokeWidth="0.15"
-        transform="translate(-2.3 0)"
-      />
+      <motion.g
+        initial={reduceMotion ? false : "hidden"}
+        animate="visible"
+        variants={GEOMETRY_GROUP_VARIANTS}
+      >
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="50%" x2="3%" y2="50%" stroke="white" strokeWidth="0.15" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="12.5%" x2="3%" y2="12.5%" stroke="white" strokeWidth="0.15" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="25%" x2="3%" y2="25%" stroke="white" strokeWidth="0.15" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="37.5%" x2="100%" y2="37.5%" stroke="white" strokeWidth="0.15" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="62.5%" x2="3%" y2="62.5%" stroke="white" strokeWidth="0.15" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="3%" y1="66%" x2="100%" y2="66%" stroke="white" strokeWidth="0.15" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="75%" x2="3%" y2="75%" stroke="white" strokeWidth="0.15" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="87.5%" x2="3%" y2="87.5%" stroke="white" strokeWidth="0.15" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="3%" y1="82.5%" x2="30%" y2="82.5%" stroke="white" strokeWidth="0.15" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="57%" y1="37.5%" x2="57%" y2="100%" stroke="white" strokeWidth="0.15" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="3%" y1="0" x2="3%" y2="100%" stroke="white" strokeWidth="0.15" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="30%" y1="66%" x2="30%" y2="100%" stroke="white" strokeWidth="0.15" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="16%" y1="66%" x2="16%" y2="100%" stroke="white" strokeWidth="0.15" />
+        <motion.path variants={GEOMETRY_LINE_VARIANTS} d="M 70 37.5 A 9.1 10 0 0 0 70 66" fill="none" stroke="white" strokeWidth="0.15" transform="rotate(180 57 51.75)" />
+        <motion.path variants={GEOMETRY_LINE_VARIANTS} d="M 70 66 A 16 16 0 0 0 75 100" fill="none" stroke="white" strokeWidth="0.15" transform="translate(1.6 0)" />
+      </motion.g>
     </svg>
   );
 }
 
 function MobileGeometryOverlay() {
+  const reduceMotion = useReducedMotion();
+
   return (
     <svg
       className="pointer-events-none absolute inset-0 hidden h-full w-full max-md:block"
@@ -174,22 +194,28 @@ function MobileGeometryOverlay() {
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      <g stroke="white" strokeOpacity="0.92" strokeWidth="1">
-        <line x1="19" y1="0" x2="19" y2="578" />
-        <line x1="0" y1="18" x2="19" y2="18" />
-        <line x1="0" y1="90" x2="19" y2="90" />
-        <line x1="0" y1="161" x2="19" y2="161" />
-        <line x1="0" y1="232" x2="390" y2="232" />
-        <line x1="0" y1="303" x2="19" y2="303" />
-        <line x1="0" y1="374" x2="19" y2="374" />
-        <line x1="0" y1="445" x2="19" y2="445" />
-        <line x1="19" y1="488" x2="204" y2="488" />
-        <line x1="0" y1="530" x2="19" y2="530" />
-        <line x1="112" y1="396" x2="112" y2="578" />
-        <line x1="204" y1="396" x2="204" y2="578" />
-        <line x1="19" y1="396" x2="390" y2="396" />
-        <path d="M204 232H306C352.4 232 390 268.7 390 314C390 359.3 352.4 396 306 396H19" />
-      </g>
+      <motion.g
+        initial={reduceMotion ? false : "hidden"}
+        animate="visible"
+        variants={GEOMETRY_GROUP_VARIANTS}
+        stroke="white"
+        strokeWidth="1"
+      >
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="19" y1="0" x2="19" y2="578" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="18" x2="19" y2="18" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="90" x2="19" y2="90" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="161" x2="19" y2="161" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="232" x2="390" y2="232" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="303" x2="19" y2="303" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="374" x2="19" y2="374" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="445" x2="19" y2="445" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="19" y1="488" x2="204" y2="488" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="530" x2="19" y2="530" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="112" y1="396" x2="112" y2="578" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="204" y1="396" x2="204" y2="578" />
+        <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="19" y1="396" x2="390" y2="396" />
+        <motion.path variants={GEOMETRY_LINE_VARIANTS} d="M204 232H306C352.4 232 390 268.7 390 314C390 359.3 352.4 396 306 396H19" />
+      </motion.g>
     </svg>
   );
 }
