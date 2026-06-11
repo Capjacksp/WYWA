@@ -25,10 +25,10 @@ function DesktopTechnologyHero() {
       <div className="relative z-10 max-w-[1340px]">
         <LoadTextLines
           as="h1"
-          className="max-w-[1200px] font-body font-normal text-display uppercase tracking-normal"
+          className="max-w-[1405px] font-body font-normal text-display uppercase tracking-normal"
           delay={0.12}
           {...HERO_TEXT_MOTION}
-          lines={["Most wildfire detection systems depend on a single sense."]}
+          lines={["Most wildfire detection ", "systems depend on a", " single sense."]}
         />
         <div className="mt-20 grid max-w-[600px] gap-14 max-md:mt-12 max-md:gap-10">
           <div>
