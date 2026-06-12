@@ -4,7 +4,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { wildfireCallouts } from "@/features/home/data/wildfireCallouts";
-import { FireCallout } from "@/features/home/components/wildfire-map/FireCallout";
+import { LeafletWildfireMap } from "@/features/home/components/wildfire-map/LeafletWildfireMap";
 import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
 import { WavyLogo } from "@/components/common/Logo";
 
@@ -23,7 +23,8 @@ function DesktopWildfireMapSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
-  const calloutLayerRef = useRef<HTMLDivElement>(null);
+  const mapOverlayRef = useRef<HTMLDivElement>(null);
+  const locationsRef = useRef<HTMLDivElement | null>(null);
 
   useGSAP(
     () => {
@@ -32,27 +33,21 @@ function DesktopWildfireMapSection() {
       const section = sectionRef.current;
       const panel = panelRef.current;
       const intro = introRef.current;
-      const calloutLayer = calloutLayerRef.current;
-
-      if (!section || !panel || !intro || !calloutLayer) return;
-
-      const callouts = gsap.utils.toArray<HTMLElement>(".fire-callout");
+      const mapOverlay = mapOverlayRef.current;
+      const locations = locationsRef.current;
+      if (!section || !panel || !intro || !mapOverlay || !locations) return;
 
       gsap.set(intro, { x: "0vw", autoAlpha: 1 });
-      gsap.set(calloutLayer, { autoAlpha: 0 });
-      callouts.forEach((callout) => {
-        gsap.set(callout, {
-          autoAlpha: 0,
-          x: callout.dataset.enterFrom === "left" ? "-10vw" : "10vw",
-        });
-      });
+      gsap.set(mapOverlay, { autoAlpha: 1 });
+      gsap.set(locations, { autoAlpha: 0 });
 
       const timeline = gsap.timeline({
+        onReverseComplete: () => locations.classList.remove("is-visible"),
         scrollTrigger: {
           trigger: section,
           pin: panel,
           start: "top top",
-          end: "+=180%",
+          end: "+=90%",
           scrub: 1,
           anticipatePin: 1,
           invalidateOnRefresh: true,
@@ -60,25 +55,12 @@ function DesktopWildfireMapSection() {
       });
 
       timeline
-        .to(intro, { x: "-24vw", duration: 0.34, ease: "none" }, 0)
-        .to(intro, { autoAlpha: 0, duration: 0.14, ease: "none" }, 0.2)
-        .to(calloutLayer, { autoAlpha: 1, duration: 0.14, ease: "none" }, 0.36);
-
-      callouts.forEach((callout) => {
-        const start = Number(callout.dataset.start ?? 0.4);
-        const end = Number(callout.dataset.end ?? start + 0.12);
-
-        timeline.to(
-          callout,
-          {
-            autoAlpha: 1,
-            x: "0vw",
-            duration: end - start,
-            ease: "none",
-          },
-          start,
-        );
-      });
+        .to(intro, { x: "-16vw", duration: 0.28, ease: "none" }, 0)
+        .to(intro, { autoAlpha: 0, duration: 0.18, ease: "none" }, 0.1)
+        .to(mapOverlay, { autoAlpha: 0, duration: 0.18, ease: "none" }, 0.1)
+        .call(() => locations.classList.add("is-visible"), [], 0.24)
+        .to(locations, { autoAlpha: 1, duration: 0.18, ease: "none" }, 0.24)
+        .to({}, { duration: 0.72 });
     },
     { scope: sectionRef },
   );
@@ -86,27 +68,20 @@ function DesktopWildfireMapSection() {
   return (
     <section
       ref={sectionRef}
-      data-header-class=""
+      data-header-class="header-dark"
       className="relative bg-transparent max-md:hidden"
       style={{ position: "relative" }}
     >
       <div ref={panelRef} className="relative h-screen overflow-hidden text-white">
-        <img
-          src="/images/home-map.png"
-          alt="California wildfire spread map"
-          className="absolute inset-0 h-full w-full object-cover object-center"
-        />
+        <LeafletWildfireMap locationsLayerRef={locationsRef} />
 
-        <div className="absolute inset-0 bg-[#24242578]" />
+        <div
+          ref={mapOverlayRef}
+          className="pointer-events-none absolute inset-0 z-[500] bg-[#24242578]"
+        />
         <WildfireMapIntro introRef={introRef} />
 
-        <div ref={calloutLayerRef} className="absolute inset-0 z-20">
-          {wildfireCallouts.map((callout) => (
-            <FireCallout key={callout.label} {...callout} />
-          ))}
-        </div>
-
-        <div className="absolute bottom-0 right-0 z-10 hidden w-[600px] lg:block">
+        <div className="pointer-events-none absolute bottom-0 right-0 z-[510] hidden w-[500px] lg:block">
           <img
             src="/images/wave-logo.png"
             className="object-cover align-bottom"
@@ -456,7 +431,7 @@ const WildfireMapIntro = ({
 }) => (
   <div
     ref={introRef}
-    className="absolute inset-0 z-10 flex flex-col justify-between px-[50px] pb-12 pt-28 max-md:px-5 max-md:pb-8 max-md:pt-24"
+    className="pointer-events-none absolute inset-0 z-[520] flex flex-col justify-between px-[50px] pb-12 pt-28 max-md:px-5 max-md:pb-8 max-md:pt-24"
   >
     <div className="max-w-[1120px]">
       <h2 className="font-display text-h1 font-[350] uppercase leading-[1] text-white">

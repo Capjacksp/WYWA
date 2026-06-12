@@ -523,3 +523,202 @@
     pointer-events: none;
   }
 }
+
+/* Leaflet wildfire map */
+.leaflet-container {
+  background: #242425 url('/images/home-map.png') center / cover no-repeat;
+  font-family: var(--font-figtree);
+}
+
+.leaflet-tile-pane {
+  filter: grayscale(0.25) saturate(0.85) brightness(0.92) contrast(1.05);
+}
+
+.leaflet-control-zoom a {
+  background: #242425 !important;
+  border-color: rgb(255 255 255 / 0.16) !important;
+  color: white !important;
+}
+
+.leaflet-control-attribution {
+  background: rgb(36 36 37 / 0.82) !important;
+  color: rgb(255 255 255 / 0.65);
+}
+
+.leaflet-control-attribution a {
+  color: #90e8ff;
+}
+
+.wywa-fire-marker {
+  align-items: center;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+}
+
+.wywa-fire-marker__content {
+  align-items: center;
+  display: flex;
+  height: 48px;
+  justify-content: center;
+  opacity: 0;
+  scale: 0.35;
+}
+
+.leaflet-wywaLocations-pane.is-visible .wywa-fire-marker__content,
+.leaflet-wywaLocations-pane.is-visible .wywa-location-pop .wywa-fire-label__card {
+  animation: wywa-location-pop 420ms cubic-bezier(0.2, 0.9, 0.25, 1.25) forwards;
+  animation-delay: calc(var(--wywa-location-index, 0) * 90ms);
+}
+
+.wywa-location-pop .wywa-fire-label__card {
+  opacity: 0;
+  scale: 0.75;
+  transform-origin: center;
+}
+
+@keyframes wywa-location-pop {
+  0% { opacity: 0; scale: 0.35; }
+  70% { opacity: 1; scale: 1.08; }
+  100% { opacity: 1; scale: 1; }
+}
+
+.wywa-fire-marker__pulse {
+  animation: wywa-marker-pulse 2.4s ease-out infinite;
+  border: 3px solid rgb(255 255 255 / 0.85);
+  border-radius: 9999px;
+  height: 42px;
+  position: absolute;
+  width: 42px;
+}
+
+.wywa-fire-marker__core {
+  background: #f55656;
+  border: 6px solid white;
+  border-radius: 9999px;
+  box-shadow: 0 0 18px rgb(245 86 86 / 0.7);
+  height: 28px;
+  position: relative;
+  width: 28px;
+}
+
+@keyframes wywa-marker-pulse {
+  0% {
+    opacity: 0.85;
+    transform: scale(0.55);
+  }
+
+  75%,
+  100% {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+}
+
+.wywa-fire-label {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: white;
+  cursor: pointer;
+  height: 52px;
+  padding: 0;
+  white-space: normal;
+  width: 300px;
+}
+
+.wywa-fire-label.leaflet-tooltip-right::before {
+  border-right-color: rgb(36 33 31 / 0.96) !important;
+}
+
+.wywa-fire-label.leaflet-tooltip-left::before {
+  border-left-color: rgb(36 33 31 / 0.96) !important;
+}
+
+.wywa-fire-label__card {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-26px);
+  background: rgb(36 33 31 / 0.96);
+  border-radius: 8px;
+  box-shadow: 0 20px 45px rgb(0 0 0 / 0.4);
+  overflow: hidden;
+  width: 300px;
+}
+
+.wywa-fire-label.leaflet-tooltip-right .wywa-fire-label__card {
+  left: 0;
+}
+
+.wywa-fire-label.leaflet-tooltip-left .wywa-fire-label__card {
+  right: 0;
+}
+
+.wywa-fire-label--up .wywa-fire-label__card {
+  bottom: 50%;
+  top: auto;
+  transform: translateY(26px);
+}
+
+.wywa-fire-label--up .wywa-fire-label__details-inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.wywa-fire-label--up .wywa-fire-label__details-inner dl {
+  order: -1;
+}
+
+.wywa-fire-label h3 {
+  margin: 0;
+  padding: 12px 17px;
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.wywa-fire-label__details {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 280ms ease;
+}
+
+.wywa-fire-label:hover .wywa-fire-label__details,
+.wywa-fire-label:focus .wywa-fire-label__details,
+.wywa-fire-label.is-marker-hovered .wywa-fire-label__details,
+.wywa-fire-label.is-expanded .wywa-fire-label__details {
+  grid-template-rows: 1fr;
+}
+
+.wywa-fire-label__details-inner {
+  overflow: hidden;
+}
+
+.wywa-fire-label__details-inner dl {
+  margin: 0;
+}
+
+.wywa-fire-label dl>div {
+  border-top: 1px solid rgb(255 255 255 / 0.12);
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 58px 1fr;
+  padding: 12px 20px;
+}
+
+.wywa-fire-label dt {
+  color: #90e8ff;
+  font-weight: 700;
+}
+
+.wywa-fire-label dd,
+.wywa-fire-label p {
+  margin: 0;
+}
+
+.wywa-fire-label p {
+  color: rgb(255 255 255 / 0.55);
+  font-size: 11px;
+  padding: 4px 20px 16px;
+}

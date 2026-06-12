@@ -34,7 +34,7 @@ export default function Header({ onConnectClick, className }: HeaderProps) {
     <>
       <header
         className={cn(
-          "sticky top-0 z-50 w-full bg-[#F1F1F15C] backdrop-blur-[4px] transition-colors duration-300",
+          "sticky top-0 z-50 w-full bg-[#F1F1F11A] backdrop-blur-[4px] transition-colors duration-300",
           isMenuOpen && "bg-transparent backdrop-blur-none",
           className
         )}

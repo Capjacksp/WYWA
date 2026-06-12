@@ -3,6 +3,7 @@ import type { FireCalloutProps } from "@/features/home/components/wildfire-map/F
 export const wildfireCallouts = [
   {
     label: "Tubbs Complex (2017)",
+    coordinates: [38.6, -122.5],
     stats: {
       scale: "36,807 acres | 23 days",
       delay: "15-60 mins to detect",
@@ -15,6 +16,7 @@ export const wildfireCallouts = [
   },
   {
     label: "Camp Fire (2018)",
+    coordinates: [39.8, -121.5],
     stats: {
       scale: "153,336 acres | 17 days",
       delay: "10-90 mins to detect",
@@ -26,6 +28,7 @@ export const wildfireCallouts = [
   },
   {
     label: "August Complex (2020)",
+    coordinates: [39.2, -122.2],
     stats: {
       scale: "1,032,648 acres | ~87 days",
       delay: "~180 mins to detect",
@@ -38,6 +41,7 @@ export const wildfireCallouts = [
   },
   {
     label: "Dixie Fire (2021)",
+    coordinates: [40.3, -121.3],
     stats: {
       scale: "963,309 acres | ~104 days",
       delay: "~120-180 mins to detect",
@@ -50,6 +54,7 @@ export const wildfireCallouts = [
   },
   {
     label: "Palisades Fire (2025*)",
+    coordinates: [34.1, -118.8],
     stats: {
       scale: "~20,000-25,000 acres | ~2-3 weeks",
       delay: "~45 mins to detect",
@@ -58,7 +63,7 @@ export const wildfireCallouts = [
     className: "left-[40%] top-[87%]",
     enterFrom: "left",
     range: [0.7, 0.86],
-    markerPosition: "left",
+    markerPosition: "right",
     expandDirection: "up",
     doesHaveAsterisk:
       "*Recent incident context; figures may evolve with final reporting",

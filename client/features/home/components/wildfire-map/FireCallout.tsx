@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 
 export interface FireCalloutProps {
   label: string;
+  coordinates: [number, number];
   stats: {
     scale: string;
     delay: string;
