@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { howItWorksSteps } from "@/features/technology/data/howItWorksSteps";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
@@ -100,22 +100,35 @@ function DesktopHowItWorks() {
 
               {/* Skyline fill — clip-path wipe */}
               <div className="pointer-events-none absolute inset-x-0 left-8 bottom-[15%] min-h-[70%] overflow-hidden" aria-hidden="true">
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="sync">
                   <motion.svg
                     key={activeStep}
                     viewBox="0 0 1085 573"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    initial={{ clipPath: "inset(0 100% 0 0)", opacity: 0.6 }}
-                    animate={{ clipPath: "inset(0 0% 0 0)", opacity: 1 }}
-                    exit={{ clipPath: "inset(0 0 0 100%)", opacity: 0.4 }}
-                    transition={{ duration: 0.7, ease: EASE_EXPO }}
+                    initial={{ opacity: 1 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.12 }}
                     className={"absolute h-full w-[60%]"}
                     preserveAspectRatio="none"
                   >
+                    <defs>
+                      <mask
+                        id={`desktop-skyline-pixels-${activeStep}`}
+                        maskUnits="userSpaceOnUse"
+                        x="0"
+                        y="0"
+                        width="1085"
+                        height="573"
+                      >
+                        <PixelSkylineMask columns={16} rows={9} />
+                      </mask>
+                    </defs>
                     <path
                       d="M326.46 362.99L326.68 254.26L348.17 253.78L348.31 207.92L391.65 207.85L391.76 253.55L435.07 253.87L434.62 180.57L478.32 180.75L478.5 253.74C485.97 254.16 492.21 254.22 500.09 253.69L500.17 91.56L565.23 91.47L565.34 154.51C572.46 154.95 578.93 154.93 586.84 154.68L586.97 0.0299988L651.92 0L652.13 154.82L695.34 154.85L695.44 266.82L717.01 267.57L717.2 319.56C725.29 320.36 719.06 318.98 725.76 320.28L725.84 424.98L760.38 425.3L760.59 530.46L782.11 530.8L782.29 642.51L803.83 642.91L804.08 704.43C811.57 705.33 817.05 704.99 825.37 704.79L825.58 587.93L847.11 587.38L847.33 530.75C854.66 530.08 861.27 531.84 868.75 529.74L869.01 587.47C876.19 587.98 882.4 587.83 890.3 587.55L890.67 530.94L912.08 530.5L912.34 473.8L933.9 473.37V339.92L955.51 339.35L955.64 224.61L977.29 224.15L977.41 124.9L1042.59 124.92L1042.73 224.13L1064.29 224.45L1064.4 310.81L1085.83 311.42L1085.85 367.9L1107.53 368.33L1107.58 473.32L1129.27 473.87V745.6L1150.79 746.01L1150.81 803.09L-215.7 803.07L-215.97 738.04L-194.9 737.38C-193.75 733.72 -193.84 730.47 -194.84 726.82L-199.38 730.99L-199.48 707.58C-199.9 706.73 -201.85 705.7 -202.09 707.02C-199.58 717.18 -201.45 709.43 -201.52 720.21L-201.61 733.62C-203.26 734.07 -203.72 734.22 -204.02 734.42C-204.69 734.88 -207.29 734.59 -204.85 733.27L-205.2 689.36C-209.24 687.25 -206.07 721.15 -207.9 716.78C-206.79 719.42 -206.39 723.08 -208.47 724.21C-208.91 724.45 -210.89 724.58 -210.67 723.74C-209.01 717.36 -210.42 711.44 -210.46 705.16L-210.73 662.98C-215.85 661.37 -210.85 670.33 -213.85 671.47C-217.66 672.92 -215.72 642.42 -215.8 637.91L-216.06 623.01L-215.65 554.42C-212.8 554.06 -210.04 554.17 -206.81 554.16C-206.59 557.25 -208.07 559.15 -207.33 562.49C-201.41 560.9 -197.48 559.66 -198.38 554.32L-173.22 554.57L-172.83 537.3L-124.72 537.09L-124.24 487L-102.79 486.16L-102.47 469.34L-40.0599 469.12L-39.8699 385.67L-18.6999 384.86C-17.8399 379.04 -17.9699 373.9 -18.6199 369.61L44.3401 369.79L44.1701 336.35C51.1501 337.1 57.9101 337.1 66.1701 336.4L66.1901 258.6L87.9201 258.06L87.9501 90.35L174.87 90.41L174.85 257.62C182.53 259.06 189.86 258.02 196.76 258.25L196.58 363.1C205.69 363.7 212.68 362.61 218.35 363.64L218.01 557.81L239.66 558.23L239.71 614.62L282.4 614.87L283.42 553.86L304.88 553.5L304.85 362.89C310.85 363.4 316.93 363.54 326.47 362.95L326.46 362.99Z"
                       fill={activeStep % 2 === 0 ? "#90E8FF" : "#4101F5"}
+                      mask={`url(#desktop-skyline-pixels-${activeStep})`}
                     />
                   </motion.svg>
                 </AnimatePresence>
@@ -318,16 +331,19 @@ function MobileHowItWorks() {
           }
 
           {/* Skyline — clip-path horizontal wipe */}
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="sync">
             <motion.div
               key={`skyline-${activeStep}`}
               className={`absolute w-full pr-10 bottom-[40%] z-0 h-[200px] ${activeStep % 2 === 0 ? "text-cta" : "text-[#4101F5]"}`}
-              initial={{ clipPath: "inset(0 100% 0 0)", opacity: 0.5 }}
-              animate={{ clipPath: "inset(0 0% 0 0)", opacity: 1 }}
-              exit={{ clipPath: "inset(0 0 0 100%)", opacity: 0.3 }}
-              transition={{ duration: 0.65, ease: EASE_EXPO }}
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.12 }}
             >
-              <MobileSkyline className="w-full h-full" />
+              <MobileSkyline
+                className="h-full w-full"
+                pixelRevealKey={`mobile-skyline-pixels-${activeStep}`}
+              />
             </motion.div>
           </AnimatePresence>
 
@@ -453,7 +469,56 @@ function MobileGridBackground() {
   );
 }
 
-function MobileSkyline({ className }: { className?: string }) {
+function PixelSkylineMask({
+  columns,
+  rows,
+}: {
+  columns: number;
+  rows: number;
+}) {
+  const reduceMotion = useReducedMotion();
+  const tileWidth = 1085 / columns;
+  const tileHeight = 573 / rows;
+
+  return (
+    <>
+      {Array.from({ length: columns * rows }, (_, index) => {
+        const row = Math.floor(index / columns);
+        const column = index % columns;
+        const delayRank = rows - row + column * 0.35 + ((index * 7) % 5) * 0.55;
+
+        return (
+          <motion.rect
+            key={index}
+            x={column * tileWidth}
+            y={row * tileHeight}
+            width={tileWidth + 1}
+            height={tileHeight + 1}
+            fill="white"
+            initial={reduceMotion ? false : { opacity: 0, scale: 0.15 }}
+            animate={{ opacity: 1, scale: 1 }}
+            style={{ transformBox: "fill-box", transformOrigin: "center" }}
+            transition={{
+              delay: reduceMotion ? 0 : delayRank * 0.065,
+              duration: reduceMotion ? 0 : 0.45,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          />
+        );
+      })}
+    </>
+  );
+}
+
+function MobileSkyline({
+  className,
+  pixelRevealKey,
+}: {
+  className?: string;
+  pixelRevealKey?: string;
+}) {
+  const maskId = pixelRevealKey ?? "mobile-skyline-static";
+
   return (
     <svg
       className={className}
@@ -463,10 +528,25 @@ function MobileSkyline({ className }: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
+      {pixelRevealKey && (
+        <defs>
+          <mask
+            id={maskId}
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="1085"
+            height="573"
+          >
+            <PixelSkylineMask columns={10} rows={6} />
+          </mask>
+        </defs>
+      )}
       <path
         d="M326.46 362.99L326.68 254.26L348.17 253.78L348.31 207.92L391.65 207.85L391.76 253.55L435.07 253.87L434.62 180.57L478.32 180.75L478.5 253.74C485.97 254.16 492.21 254.22 500.09 253.69L500.17 91.56L565.23 91.47L565.34 154.51C572.46 154.95 578.93 154.93 586.84 154.68L586.97 0.0299988L651.92 0L652.13 154.82L695.34 154.85L695.44 266.82L717.01 267.57L717.2 319.56C725.29 320.36 719.06 318.98 725.76 320.28L725.84 424.98L760.38 425.3L760.59 530.46L782.11 530.8L782.29 642.51L803.83 642.91L804.08 704.43C811.57 705.33 817.05 704.99 825.37 704.79L825.58 587.93L847.11 587.38L847.33 530.75C854.66 530.08 861.27 531.84 868.75 529.74L869.01 587.47C876.19 587.98 882.4 587.83 890.3 587.55L890.67 530.94L912.08 530.5L912.34 473.8L933.9 473.37V339.92L955.51 339.35L955.64 224.61L977.29 224.15L977.41 124.9L1042.59 124.92L1042.73 224.13L1064.29 224.45L1064.4 310.81L1085.83 311.42L1085.85 367.9L1107.53 368.33L1107.58 473.32L1129.27 473.87V745.6L1150.79 746.01L1150.81 803.09L-215.7 803.07L-215.97 738.04L-194.9 737.38C-193.75 733.72 -193.84 730.47 -194.84 726.82L-199.38 730.99L-199.48 707.58C-199.9 706.73 -201.85 705.7 -202.09 707.02C-199.58 717.18 -201.45 709.43 -201.52 720.21L-201.61 733.62C-203.26 734.07 -203.72 734.22 -204.02 734.42C-204.69 734.88 -207.29 734.59 -204.85 733.27L-205.2 689.36C-209.24 687.25 -206.07 721.15 -207.9 716.78C-206.79 719.42 -206.39 723.08 -208.47 724.21C-208.91 724.45 -210.89 724.58 -210.67 723.74C-209.01 717.36 -210.42 711.44 -210.46 705.16L-210.73 662.98C-215.85 661.37 -210.85 670.33 -213.85 671.47C-217.66 672.92 -215.72 642.42 -215.8 637.91L-216.06 623.01L-215.65 554.42C-212.8 554.06 -210.04 554.17 -206.81 554.16C-206.59 557.25 -208.07 559.15 -207.33 562.49C-201.41 560.9 -197.48 559.66 -198.38 554.32L-173.22 554.57L-172.83 537.3L-124.72 537.09L-124.24 487L-102.79 486.16L-102.47 469.34L-40.0599 469.12L-39.8699 385.67L-18.6999 384.86C-17.8399 379.04 -17.9699 373.9 -18.6199 369.61L44.3401 369.79L44.1701 336.35C51.1501 337.1 57.9101 337.1 66.1701 336.4L66.1901 258.6L87.9201 258.06L87.9501 90.35L174.87 90.41L174.85 257.62C182.53 259.06 189.86 258.02 196.76 258.25L196.58 363.1C205.69 363.7 212.68 362.61 218.35 363.64L218.01 557.81L239.66 558.23L239.71 614.62L282.4 614.87L283.42 553.86L304.88 553.5L304.85 362.89C310.85 363.4 316.93 363.54 326.47 362.95L326.46 362.99Z"
         fill="currentColor"
         opacity="0.95"
+        mask={pixelRevealKey ? `url(#${maskId})` : undefined}
       />
     </svg>
   );
