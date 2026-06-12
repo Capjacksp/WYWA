@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useRef } from "react";
 import Section from "@/components/common/Section";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 
@@ -12,10 +13,15 @@ export function FusionSection() {
 }
 
 function DesktopFusionSection() {
+  const revealRef = useRef<HTMLDivElement>(null);
+  const redAreaInView = useInView(revealRef, { amount: 0.25 });
+  const reduceMotion = useReducedMotion();
+  const revealCopy = redAreaInView || reduceMotion;
+
   return (
     <Section
       data-header-class="header-dark"
-      className="relative flex min-h-220vh flex-col items-center justify-center overflow-hidden bg-bg-light pb-20 pt-28 max-md:hidden"
+      className="relative z-10 flex min-h-220vh flex-col items-center justify-center overflow-hidden bg-bg-light pb-20 pt-28 shadow-[0_-24px_60px_rgba(0,0,0,0.18)] max-md:hidden"
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.10]"
@@ -52,38 +58,52 @@ function DesktopFusionSection() {
         />
       </motion.div>
 
-      <JaggedRedBackground />
+      <div
+        ref={revealRef}
+        className="pointer-events-none absolute bottom-0 left-0 h-[80vh] w-full"
+      />
+
+      <JaggedRedBackground active={redAreaInView} />
 
       <div className="relative z-10 mx-auto mb-0 mt-auto flex max-w-[1700px] items-end gap-32 px-[50px] max-lg:flex-col max-md:px-5">
         <div className="max-w-[850px] flex-[1.5]">
-          <ScrollTextLines
-            as="h2"
+          <CharacterReveal
             className="text-justify text-h1-md uppercase text-white"
-            lineClassName="block [text-align-last:justify]"
-            lines={[
-              <>
-                SENSING SUBTLE SHIFTS IN THE ENVIRONMENT ACROSS
-                <span className="font-bold text-bg-dark">
-                  {" "}
-                  CHEMICAL, VISUAL, AND TEMPORAL SIGNALS,
-                </span>
-              </>,
-              "DETECTING IGNITION BEFORE CATASTROPHE UNFOLDS.",
+            active={revealCopy}
+            delay={0.7}
+            segments={[
+              { text: "SENSING SUBTLE SHIFTS IN THE ENVIRONMENT ACROSS " },
+              {
+                text: "CHEMICAL, VISUAL, AND TEMPORAL SIGNALS, ",
+                className: "font-bold text-bg-dark",
+              },
+              { text: "DETECTING IGNITION BEFORE CATASTROPHE UNFOLDS." },
             ]}
           />
         </div>
 
         <div className="ml-auto max-w-[260px] flex-1">
-          <ScrollTextLines
-            as="p"
+          <motion.div
             className="align-right font-figtree text-body font-[400] leading-relaxed text-white opacity-90"
-            delay={0.1}
-            lines={[
-              "Our models are trained on VOC signatures from fast-igniting fuels like Red Brome, Medusahead, Cheatgrass, and Wild Oats to detect wildfire-specific combustion signatures in real time, filtering out false triggers like diesel emissions or dust.",
-              "Edge AI then verifies ignition by interpreting motion patterns in flame and rising smoke.",
-              "Trained in simulated wildfire environments using real-world and simulated data, the system detects fire alerts within a minute, providing a critical 15-minute head start.",
-            ]}
-          />
+            initial="hidden"
+            animate={revealCopy ? "visible" : "hidden"}
+            variants={{
+              hidden: { opacity: 0, y: 48 },
+              visible: {
+                opacity: 0.9,
+                y: 0,
+                transition: {
+                  delay: reduceMotion ? 0 : 1,
+                  duration: reduceMotion ? 0 : 0.75,
+                  ease: [0.22, 1, 0.36, 1],
+                },
+              },
+            }}
+          >
+            <p>Our models are trained on VOC signatures from fast-igniting fuels like Red Brome, Medusahead, Cheatgrass, and Wild Oats to detect wildfire-specific combustion signatures in real time, filtering out false triggers like diesel emissions or dust.</p>
+            <p>Edge AI then verifies ignition by interpreting motion patterns in flame and rising smoke.</p>
+            <p>Trained in simulated wildfire environments using real-world and simulated data, the system detects fire alerts within a minute, providing a critical 15-minute head start.</p>
+          </motion.div>
         </div>
       </div>
     </Section>
@@ -92,7 +112,7 @@ function DesktopFusionSection() {
 
 function MobileFusionSection() {
   return (
-    <div className="md:hidden">
+    <div className="relative z-10 shadow-[0_-18px_44px_rgba(0,0,0,0.2)] md:hidden">
       <MobileFusionSensorScreen />
       <MobileFusionCopyScreen />
     </div>
@@ -196,20 +216,28 @@ function MobileGridBackground() {
 
 function MobileRedTerrain() {
   return (
-    <svg
-      className="absolute bottom-0 left-0 z-0 h-[118px] w-full"
-      viewBox="0 0 390 118"
-      preserveAspectRatio="none"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <path d="M147.031 28.3534L147.101 20.7204L153.849 20.6871L153.893 17.4667L167.496 17.4608L167.531 20.6695L181.124 20.691L180.984 15.5443L194.7 15.556L194.753 20.6812C197.099 20.7106 199.06 20.7145 201.528 20.6773L201.554 9.29535L221.975 9.28948L222.01 13.7158C224.242 13.7471 226.273 13.7452 228.759 13.7275L228.803 2.87023L249.189 2.87024L249.25 13.7373L262.817 13.7373L262.852 21.6014L269.627 21.6542L269.688 25.3053C272.227 25.3621 274.354 25.2642 276.454 25.3562L276.481 32.7073L283.247 32.7288L283.308 40.1112L290.066 40.1347L290.118 47.9772L296.884 48.0046L296.963 52.3233C299.318 52.3859 301.033 52.3624 303.641 52.3487L303.712 44.1441L310.469 44.1049L310.539 40.1289C312.841 40.0819 314.915 40.2052 317.261 40.0584L317.34 44.1128C319.598 44.148 321.542 44.1382 324.027 44.1186L324.141 40.1445L330.864 40.1132L330.942 36.1313L337.709 36.1L337.709 26.7305L344.492 26.6913L344.536 18.6355L351.328 18.6041L351.363 11.6367L371.819 11.6367L371.863 18.6041L378.629 18.6257L378.664 24.6886L385.387 24.7317L385.387 28.698L392.197 28.7273L392.214 36.098L399.024 36.1372L399.024 55.2148L405.781 55.2441L405.781 214.814L-23.1734 214.814L-23.2609 54.6862L-16.6435 54.6392C-16.2846 54.3828 -16.3109 54.1537 -16.626 53.8973L-18.0528 54.1909L-18.0791 52.5465C-18.2104 52.4858 -18.823 52.4153 -18.9018 52.5073C-18.114 53.2199 -18.7005 52.6776 -18.7268 53.4333L-18.7531 54.3749C-19.2695 54.4063 -19.4183 54.416 -19.5058 54.4317C-19.7159 54.463 -20.5299 54.4434 -19.7684 54.3514L-19.8822 51.2681C-21.1513 51.1193 -20.1536 53.4998 -20.7313 53.1944C-20.3812 53.3804 -20.2586 53.6369 -20.9151 53.7171C-21.0551 53.7348 -21.6766 53.7426 -21.6066 53.6839C-21.0814 53.2356 -21.5278 52.8205 -21.5365 52.3801L-21.6241 49.4181C-23.2347 49.3045 -21.6591 49.9329 -22.6045 50.0152C-23.8036 50.117 -23.1909 47.9753 -23.2171 47.6601L-23.2958 46.6147L-23.1646 41.7988C-22.2717 41.7733 -21.4053 41.7811 -20.3899 41.7811C-20.3199 41.9984 -20.7838 42.1316 -20.5562 42.3665C-18.7005 42.2549 -17.4663 42.1668 -17.7464 41.7929L-9.85114 41.8105L-9.72858 40.5987L5.37929 40.583L5.52804 37.0671L12.2592 37.0083L12.3555 35.8278L31.945 35.8122L32.0062 29.9528L38.6499 29.8961C38.9212 29.4869 38.8774 29.1267 38.6761 28.8252L58.4406 28.8389L58.3881 26.4916C60.5763 26.5445 62.7034 26.5445 65.2943 26.4956L65.2943 21.0336L72.1217 20.9964L72.1217 9.22096L99.4138 9.22487L99.4138 20.9651C101.821 21.0669 104.114 20.9945 106.285 21.0101L106.233 28.371C109.095 28.4141 111.283 28.3358 113.069 28.4082L112.964 42.0415L119.756 42.0709L119.774 46.0293L133.175 46.0469L133.498 41.7635L140.238 41.7381L140.238 28.3554C142.112 28.3906 144.02 28.4004 147.013 28.3593L147.031 28.3534Z" fill="#F15D59" />
-    </svg>
+    <>
+      <svg
+        className="absolute bottom-0 left-0 z-0 h-[118px] w-full"
+        viewBox="0 0 390 118"
+        preserveAspectRatio="none"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <path d="M147.031 28.3534L147.101 20.7204L153.849 20.6871L153.893 17.4667L167.496 17.4608L167.531 20.6695L181.124 20.691L180.984 15.5443L194.7 15.556L194.753 20.6812C197.099 20.7106 199.06 20.7145 201.528 20.6773L201.554 9.29535L221.975 9.28948L222.01 13.7158C224.242 13.7471 226.273 13.7452 228.759 13.7275L228.803 2.87023L249.189 2.87024L249.25 13.7373L262.817 13.7373L262.852 21.6014L269.627 21.6542L269.688 25.3053C272.227 25.3621 274.354 25.2642 276.454 25.3562L276.481 32.7073L283.247 32.7288L283.308 40.1112L290.066 40.1347L290.118 47.9772L296.884 48.0046L296.963 52.3233C299.318 52.3859 301.033 52.3624 303.641 52.3487L303.712 44.1441L310.469 44.1049L310.539 40.1289C312.841 40.0819 314.915 40.2052 317.261 40.0584L317.34 44.1128C319.598 44.148 321.542 44.1382 324.027 44.1186L324.141 40.1445L330.864 40.1132L330.942 36.1313L337.709 36.1L337.709 26.7305L344.492 26.6913L344.536 18.6355L351.328 18.6041L351.363 11.6367L371.819 11.6367L371.863 18.6041L378.629 18.6257L378.664 24.6886L385.387 24.7317L385.387 28.698L392.197 28.7273L392.214 36.098L399.024 36.1372L399.024 55.2148L405.781 55.2441L405.781 214.814L-23.1734 214.814L-23.2609 54.6862L-16.6435 54.6392C-16.2846 54.3828 -16.3109 54.1537 -16.626 53.8973L-18.0528 54.1909L-18.0791 52.5465C-18.2104 52.4858 -18.823 52.4153 -18.9018 52.5073C-18.114 53.2199 -18.7005 52.6776 -18.7268 53.4333L-18.7531 54.3749C-19.2695 54.4063 -19.4183 54.416 -19.5058 54.4317C-19.7159 54.463 -20.5299 54.4434 -19.7684 54.3514L-19.8822 51.2681C-21.1513 51.1193 -20.1536 53.4998 -20.7313 53.1944C-20.3812 53.3804 -20.2586 53.6369 -20.9151 53.7171C-21.0551 53.7348 -21.6766 53.7426 -21.6066 53.6839C-21.0814 53.2356 -21.5278 52.8205 -21.5365 52.3801L-21.6241 49.4181C-23.2347 49.3045 -21.6591 49.9329 -22.6045 50.0152C-23.8036 50.117 -23.1909 47.9753 -23.2171 47.6601L-23.2958 46.6147L-23.1646 41.7988C-22.2717 41.7733 -21.4053 41.7811 -20.3899 41.7811C-20.3199 41.9984 -20.7838 42.1316 -20.5562 42.3665C-18.7005 42.2549 -17.4663 42.1668 -17.7464 41.7929L-9.85114 41.8105L-9.72858 40.5987L5.37929 40.583L5.52804 37.0671L12.2592 37.0083L12.3555 35.8278L31.945 35.8122L32.0062 29.9528L38.6499 29.8961C38.9212 29.4869 38.8774 29.1267 38.6761 28.8252L58.4406 28.8389L58.3881 26.4916C60.5763 26.5445 62.7034 26.5445 65.2943 26.4956L65.2943 21.0336L72.1217 20.9964L72.1217 9.22096L99.4138 9.22487L99.4138 20.9651C101.821 21.0669 104.114 20.9945 106.285 21.0101L106.233 28.371C109.095 28.4141 111.283 28.3358 113.069 28.4082L112.964 42.0415L119.756 42.0709L119.774 46.0293L133.175 46.0469L133.498 41.7635L140.238 41.7381L140.238 28.3554C142.112 28.3906 144.02 28.4004 147.013 28.3593L147.031 28.3534Z" fill="#F15D59" />
+      </svg>
+      <PixelTransition
+        className="absolute bottom-0 left-0 z-[1] h-[118px] w-full"
+        columns={12}
+        rows={5}
+        tileClassName="bg-white"
+      />
+    </>
   );
 }
 
-function JaggedRedBackground() {
+function JaggedRedBackground({ active }: { active: boolean }) {
   return (
     <div className="pointer-events-none absolute bottom-0 left-0 z-0 h-full w-full">
       <svg
@@ -224,6 +252,137 @@ function JaggedRedBackground() {
           fill="#F15D59"
         />
       </svg>
+      <PixelTransition
+        className="absolute bottom-0 left-0 h-[80vh] w-full"
+        columns={18}
+        rows={10}
+        tileClassName="bg-bg-light"
+        active={active}
+      />
     </div>
+  );
+}
+
+function PixelTransition({
+  className,
+  columns,
+  rows,
+  tileClassName,
+  active,
+}: {
+  className: string;
+  columns: number;
+  rows: number;
+  tileClassName: string;
+  active?: boolean;
+}) {
+  const reduceMotion = useReducedMotion();
+
+  if (reduceMotion) return null;
+
+  return (
+    <motion.div
+      className={`${className} pointer-events-none grid`}
+      style={{
+        gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
+      }}
+      initial="covered"
+      animate={active === undefined ? undefined : active ? "revealed" : "covered"}
+      whileInView={active === undefined ? "revealed" : undefined}
+      viewport={active === undefined ? { once: false, amount: 0.25 } : undefined}
+      aria-hidden="true"
+    >
+      {Array.from({ length: columns * rows }, (_, index) => {
+        const row = Math.floor(index / columns);
+        const column = index % columns;
+        const delayRank = rows - row + column * 0.35 + ((index * 7) % 5) * 0.6;
+
+        return (
+          <motion.span
+            key={index}
+            className={tileClassName}
+            variants={{
+              covered: {
+                opacity: 1,
+                scale: 1,
+                transition: { duration: 0.12 },
+              },
+              revealed: {
+                opacity: 0,
+                scale: 0.15,
+                transition: {
+                  delay: delayRank * 0.075,
+                  duration: 0.5,
+                  ease: [0.22, 1, 0.36, 1],
+                },
+              },
+            }}
+          />
+        );
+      })}
+    </motion.div>
+  );
+}
+
+function CharacterReveal({
+  active,
+  className,
+  delay,
+  segments,
+}: {
+  active: boolean;
+  className: string;
+  delay: number;
+  segments: Array<{ text: string; className?: string }>;
+}) {
+  const reduceMotion = useReducedMotion();
+  let characterIndex = 0;
+
+  return (
+    <motion.h2
+      className={className}
+      initial="hidden"
+      animate={active || reduceMotion ? "visible" : "hidden"}
+    >
+      {segments.map((segment, segmentIndex) =>
+        segment.text.split(/(\s+)/).map((word, wordIndex) => {
+          if (/^\s+$/.test(word)) return " ";
+
+          return (
+            <span
+              key={`${segmentIndex}-${wordIndex}`}
+              className={`inline-block whitespace-nowrap ${segment.className ?? ""}`}
+            >
+              {Array.from(word).map((character) => {
+                const index = characterIndex++;
+
+                return (
+                  <span key={index} className="inline-block overflow-hidden align-bottom">
+                    <motion.span
+                      className="inline-block"
+                      variants={{
+                        hidden: { opacity: 0, y: "110%" },
+                        visible: {
+                          opacity: 1,
+                          y: 0,
+                          transition: {
+                            delay: reduceMotion ? 0 : delay + index * 0.012,
+                            duration: reduceMotion ? 0 : 0.48,
+                            ease: [0.22, 1, 0.36, 1],
+                          },
+                        },
+                      }}
+                    >
+                      {character}
+                    </motion.span>
+                  </span>
+                );
+              })}
+            </span>
+          );
+        }),
+      )}
+    </motion.h2>
   );
 }
