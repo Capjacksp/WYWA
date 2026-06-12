@@ -526,7 +526,7 @@
 
 /* Leaflet wildfire map */
 .leaflet-container {
-  background: #242425 url('/images/home-map.png') center / cover no-repeat;
+  background: #242425 center / cover no-repeat;
   font-family: var(--font-figtree);
 }
 
@@ -578,9 +578,20 @@
 }
 
 @keyframes wywa-location-pop {
-  0% { opacity: 0; scale: 0.35; }
-  70% { opacity: 1; scale: 1.08; }
-  100% { opacity: 1; scale: 1; }
+  0% {
+    opacity: 0;
+    scale: 0.35;
+  }
+
+  70% {
+    opacity: 1;
+    scale: 1.08;
+  }
+
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
 }
 
 .wywa-fire-marker__pulse {
