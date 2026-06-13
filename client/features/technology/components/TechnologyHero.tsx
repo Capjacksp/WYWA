@@ -117,7 +117,7 @@ function MobileSingleSenseScreen() {
         ]}
       />
 
-      <AnimatedEarth className="bottom-0 right-0 w-[320px] max-w-none" mobile />
+      <AnimatedEarth className="bottom-0 right-0 w-[320px] max-w-none" />
     </section>
   );
 }
@@ -194,48 +194,13 @@ function AnimatedIcon({
   );
 }
 
-function AnimatedEarth({ className, mobile = false }: { className: string; mobile?: boolean }) {
-  const reduceMotion = useReducedMotion();
-
+function AnimatedEarth({ className }: { className: string }) {
   return (
-    <motion.div
+    <div
       className={`pointer-events-none absolute ${className}`}
-      initial={reduceMotion ? false : { opacity: 0, x: mobile ? 80 : 180, scale: 0.82, rotate: 8 }}
-      animate={{ opacity: 1, x: 0, scale: 1, rotate: 0 }}
-      transition={{ duration: reduceMotion ? 0 : 1.65, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="technology-earth-glitch relative w-full">
-        <img
-          src="/images/earth.png"
-          alt=""
-          className="technology-earth-glitch__base h-auto w-full"
-        />
-        <img
-          src="/images/earth.png"
-          alt=""
-          aria-hidden="true"
-          className="technology-earth-glitch__layer technology-earth-glitch__layer--one absolute inset-0 h-auto w-full"
-        />
-        <img
-          src="/images/earth.png"
-          alt=""
-          aria-hidden="true"
-          className="technology-earth-glitch__layer technology-earth-glitch__layer--two absolute inset-0 h-auto w-full"
-        />
-        <img
-          src="/images/earth.png"
-          alt=""
-          aria-hidden="true"
-          className="technology-earth-glitch__layer technology-earth-glitch__layer--three absolute inset-0 h-auto w-full"
-        />
-        <img
-          src="/images/earth.png"
-          alt=""
-          aria-hidden="true"
-          className="technology-earth-glitch__layer technology-earth-glitch__layer--flash absolute inset-0 h-auto w-full"
-        />
-      </div>
-    </motion.div>
+      <img src="/images/earth.png" alt="" className="h-auto w-full" />
+    </div>
   );
 }
 

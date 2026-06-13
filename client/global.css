@@ -531,68 +531,51 @@
 }
 
 .hero-image-glitch__layer {
-  mix-blend-mode: screen;
+  mix-blend-mode: multiply;
+  max-width: none;
   opacity: 0;
   pointer-events: none;
 }
 
 .hero-image-glitch__layer--one {
-  filter: sepia(1) saturate(7) hue-rotate(145deg);
+  inset: -3% auto auto -6%;
+  height: 106%;
+  object-position: 35% center;
+  width: 112%;
 }
 
 .hero-image-glitch__layer--two {
-  filter: sepia(1) saturate(8) hue-rotate(305deg);
+  inset: -2% auto auto 4%;
+  height: 104%;
+  object-position: 70% center;
+  width: 108%;
 }
 
 .hero-image-glitch__layer--three {
-  filter: contrast(1.35) saturate(1.7);
+  inset: 4% auto auto -3%;
+  height: 108%;
+  object-position: 42% 65%;
+  width: 106%;
 }
 
-.technology-earth-glitch__base,
-.technology-earth-glitch__layer {
-  will-change: clip-path, opacity, transform;
+.hero-image-glitch__layer--one,
+.hero-image-glitch__layer--two,
+.hero-image-glitch__layer--three {
+  filter: sepia(1) saturate(6) hue-rotate(310deg) brightness(1.08) contrast(1.05);
 }
 
-.technology-earth-glitch__layer {
-  mix-blend-mode: screen;
-  opacity: 0;
-  pointer-events: none;
-}
+@media (max-width: 767px) {
+  .hero-image-glitch__layer--one {
+    object-position: 35% top;
+  }
 
-.technology-earth-glitch__layer--one {
-  filter: sepia(1) saturate(7) hue-rotate(145deg);
-}
+  .hero-image-glitch__layer--two {
+    object-position: 75% top;
+  }
 
-.technology-earth-glitch__layer--two {
-  filter: sepia(1) saturate(8) hue-rotate(305deg);
-}
-
-.technology-earth-glitch__layer--three {
-  filter: contrast(1.35) saturate(1.7);
-}
-
-.technology-earth-glitch__base {
-  animation: hero-glitch-base 6s linear 2.3s infinite;
-}
-
-.technology-earth-glitch__layer--one {
-  animation: hero-glitch-one 6s linear 2.3s infinite;
-}
-
-.technology-earth-glitch__layer--two {
-  animation: hero-glitch-two 6s linear 2.3s infinite;
-}
-
-.technology-earth-glitch__layer--three {
-  animation: hero-glitch-three 6s linear 2.3s infinite;
-}
-
-.technology-earth-glitch__layer--flash {
-  animation: hero-glitch-flash 6s linear 2.3s infinite;
-}
-
-.hero-image-glitch__base {
-  animation: hero-glitch-base 6s linear 2.3s infinite;
+  .hero-image-glitch__layer--three {
+    object-position: 42% 12%;
+  }
 }
 
 .hero-image-glitch__layer--one {
@@ -611,29 +594,60 @@
   animation: hero-glitch-flash 6s linear 2.3s infinite;
 }
 
-@keyframes hero-glitch-base {
-  0%, 2%, 4%, 6%, 8% {
-    transform: translate3d(-8px, 0, 0);
-  }
-  1%, 3%, 5%, 7%, 9% {
-    transform: translate3d(8px, 0, 0);
-  }
-  10%, 100% {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
 @keyframes hero-glitch-one {
   0% {
-    clip-path: polygon(0 2%, 100% 2%, 100% 7%, 0 7%);
-    opacity: 0.8;
-    transform: translate3d(12px, 0, 0);
+    clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%);
+    opacity: 1;
+    transform: translate3d(10px, 0, 0);
   }
-  4% { clip-path: polygon(0 28%, 100% 28%, 100% 39%, 0 39%); }
-  8% { clip-path: polygon(0 63%, 100% 63%, 100% 70%, 0 70%); }
-  12% { clip-path: polygon(0 82%, 100% 82%, 100% 91%, 0 91%); }
-  16% { clip-path: polygon(0 44%, 100% 44%, 100% 47%, 0 47%); }
-  22%, 100% {
+
+  0.667% {
+    clip-path: polygon(0 15%, 100% 15%, 100% 15%, 0 15%);
+  }
+
+  1.333% {
+    clip-path: polygon(0 10%, 100% 10%, 100% 20%, 0 20%);
+  }
+
+  2% {
+    clip-path: polygon(0 1%, 100% 1%, 100% 2%, 0 2%);
+  }
+
+  2.667% {
+    clip-path: polygon(0 33%, 100% 33%, 100% 33%, 0 33%);
+  }
+
+  3.333% {
+    clip-path: polygon(0 44%, 100% 44%, 100% 44%, 0 44%);
+  }
+
+  4% {
+    clip-path: polygon(0 50%, 100% 50%, 100% 20%, 0 20%);
+  }
+
+  4.667% {
+    clip-path: polygon(0 70%, 100% 70%, 100% 70%, 0 70%);
+  }
+
+  5.333% {
+    clip-path: polygon(0 80%, 100% 80%, 100% 80%, 0 80%);
+  }
+
+  6% {
+    clip-path: polygon(0 50%, 100% 50%, 100% 55%, 0 55%);
+  }
+
+  6.667% {
+    clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%);
+  }
+
+  7.3% {
+    opacity: 1;
+    transform: translate3d(10px, 0, 0);
+  }
+
+  7.333%,
+  100% {
     clip-path: polygon(0 0, 0 0, 0 0, 0 0);
     opacity: 0;
     transform: translate3d(0, 0, 0);
@@ -642,15 +656,58 @@
 
 @keyframes hero-glitch-two {
   0% {
-    clip-path: polygon(0 18%, 100% 18%, 100% 25%, 0 25%);
-    opacity: 0.7;
-    transform: translate3d(-14px, 0, 0);
+    clip-path: polygon(0 25%, 100% 25%, 100% 30%, 0 30%);
+    opacity: 1;
+    transform: translate3d(-10px, 0, 0);
   }
-  5% { clip-path: polygon(0 5%, 100% 5%, 100% 17%, 0 17%); }
-  9% { clip-path: polygon(0 51%, 100% 51%, 100% 59%, 0 59%); }
-  13% { clip-path: polygon(0 73%, 100% 73%, 100% 77%, 0 77%); }
-  18% { clip-path: polygon(0 34%, 100% 34%, 100% 48%, 0 48%); }
-  22%, 100% {
+
+  1% {
+    clip-path: polygon(0 3%, 100% 3%, 100% 3%, 0 3%);
+  }
+
+  1.667% {
+    clip-path: polygon(0 5%, 100% 5%, 100% 20%, 0 20%);
+  }
+
+  2.333% {
+    clip-path: polygon(0 20%, 100% 20%, 100% 20%, 0 20%);
+  }
+
+  3% {
+    clip-path: polygon(0 40%, 100% 40%, 100% 40%, 0 40%);
+  }
+
+  3.667% {
+    clip-path: polygon(0 52%, 100% 52%, 100% 59%, 0 59%);
+  }
+
+  4.333% {
+    clip-path: polygon(0 60%, 100% 60%, 100% 60%, 0 60%);
+  }
+
+  5% {
+    clip-path: polygon(0 75%, 100% 75%, 100% 75%, 0 75%);
+  }
+
+  5.667% {
+    clip-path: polygon(0 65%, 100% 65%, 100% 40%, 0 40%);
+  }
+
+  6.333% {
+    clip-path: polygon(0 45%, 100% 45%, 100% 50%, 0 50%);
+  }
+
+  6.667% {
+    clip-path: polygon(0 14%, 100% 14%, 100% 33%, 0 33%);
+  }
+
+  7.3% {
+    opacity: 1;
+    transform: translate3d(-10px, 0, 0);
+  }
+
+  7.333%,
+  100% {
     clip-path: polygon(0 0, 0 0, 0 0, 0 0);
     opacity: 0;
     transform: translate3d(0, 0, 0);
@@ -660,14 +717,89 @@
 @keyframes hero-glitch-three {
   0% {
     clip-path: polygon(0 1%, 100% 1%, 100% 3%, 0 3%);
-    opacity: 0.6;
-    transform: translate3d(0, -6px, 0) scale3d(-1, -1, 1);
+    opacity: 1;
+    transform: translate3d(0, -5px, 0) scale3d(-1, -1, 1);
   }
-  4% { clip-path: polygon(0 22%, 100% 22%, 100% 24%, 0 24%); }
-  8% { clip-path: polygon(0 42%, 100% 42%, 100% 39%, 0 39%); }
-  12% { clip-path: polygon(0 68%, 100% 68%, 100% 72%, 0 72%); }
-  17% { clip-path: polygon(0 94%, 100% 94%, 100% 97%, 0 97%); }
-  22%, 100% {
+
+  0.5% {
+    clip-path: polygon(0 10%, 100% 10%, 100% 9%, 0 9%);
+  }
+
+  0.667% {
+    clip-path: polygon(0 5%, 100% 5%, 100% 6%, 0 6%);
+  }
+
+  0.833% {
+    clip-path: polygon(0 20%, 100% 20%, 100% 20%, 0 20%);
+  }
+
+  1% {
+    clip-path: polygon(0 10%, 100% 10%, 100% 10%, 0 10%);
+  }
+
+  1.667% {
+    clip-path: polygon(0 30%, 100% 30%, 100% 25%, 0 25%);
+  }
+
+  1.833% {
+    clip-path: polygon(0 15%, 100% 15%, 100% 16%, 0 16%);
+  }
+
+  2.333% {
+    clip-path: polygon(0 40%, 100% 40%, 100% 39%, 0 39%);
+  }
+
+  2.667% {
+    clip-path: polygon(0 20%, 100% 20%, 100% 21%, 0 21%);
+  }
+
+  3% {
+    clip-path: polygon(0 60%, 100% 60%, 100% 55%, 0 55%);
+  }
+
+  3.5% {
+    clip-path: polygon(0 30%, 100% 30%, 100% 31%, 0 31%);
+  }
+
+  3.667% {
+    clip-path: polygon(0 70%, 100% 70%, 100% 69%, 0 69%);
+  }
+
+  4.333% {
+    clip-path: polygon(0 40%, 100% 40%, 100% 41%, 0 41%);
+  }
+
+  4.667% {
+    clip-path: polygon(0 80%, 100% 80%, 100% 75%, 0 75%);
+  }
+
+  4.833% {
+    clip-path: polygon(0 50%, 100% 50%, 100% 51%, 0 51%);
+  }
+
+  5% {
+    clip-path: polygon(0 90%, 100% 90%, 100% 90%, 0 90%);
+  }
+
+  5.333% {
+    clip-path: polygon(0 60%, 100% 60%, 100% 60%, 0 60%);
+  }
+
+  6% {
+    clip-path: polygon(0 100%, 100% 100%, 100% 99%, 0 99%);
+  }
+
+  6.667% {
+    clip-path: polygon(0 70%, 100% 70%, 100% 71%, 0 71%);
+  }
+
+  7.3% {
+    opacity: 1;
+    transform: translate3d(0, -5px, 0) scale3d(-1, -1, 1);
+  }
+
+  7.333%,
+  100% {
     clip-path: polygon(0 0, 0 0, 0 0, 0 0);
     opacity: 0;
     transform: translate3d(0, 0, 0);
@@ -675,21 +807,28 @@
 }
 
 @keyframes hero-glitch-flash {
-  0%, 5% {
-    opacity: 0.18;
-    transform: translate3d(8px, 5px, 0);
+
+  0%,
+  1.667% {
+    clip-path: none;
+    filter: sepia(1) saturate(6) hue-rotate(310deg) brightness(1.08) contrast(1.05);
+    mix-blend-mode: multiply;
+    opacity: 0.2;
+    transform: translate3d(10px, 5px, 0);
   }
-  6%, 100% {
+
+  1.833%,
+  100% {
+    clip-path: none;
     opacity: 0;
     transform: translate3d(0, 0, 0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .hero-image-glitch__base,
-  .hero-image-glitch__layer,
-  .technology-earth-glitch__base,
-  .technology-earth-glitch__layer {
+  .hero-image-glitch__layer {
     animation: none;
   }
 }
@@ -938,7 +1077,7 @@
     padding: 15px 14px;
   }
 
-  .wywa-fire-label dl > div {
+  .wywa-fire-label dl>div {
     font-size: 10px;
     gap: 7px;
     grid-template-columns: 43px 1fr;
