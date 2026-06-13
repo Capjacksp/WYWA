@@ -13,6 +13,7 @@ export const wildfireCallouts = [
     enterFrom: "left",
     range: [0.4, 0.52],
     markerPosition: "right",
+    mobileCardPosition: "right",
   },
   {
     label: "Camp Fire (2018)",
@@ -25,6 +26,7 @@ export const wildfireCallouts = [
     className: "left-[56%] top-[11%]",
     enterFrom: "right",
     range: [0.46, 0.58],
+    mobileCardPosition: "left",
   },
   {
     label: "August Complex (2020)",
@@ -38,6 +40,7 @@ export const wildfireCallouts = [
     enterFrom: "left",
     range: [0.52, 0.64],
     markerPosition: "left",
+    mobileCardPosition: "right",
   },
   {
     label: "Dixie Fire (2021)",
@@ -51,6 +54,7 @@ export const wildfireCallouts = [
     enterFrom: "right",
     range: [0.58, 0.72],
     markerPosition: "left",
+    mobileCardPosition: "right",
   },
   {
     label: "Palisades Fire (2025*)",
@@ -64,6 +68,7 @@ export const wildfireCallouts = [
     enterFrom: "left",
     range: [0.7, 0.86],
     markerPosition: "right",
+    mobileCardPosition: "left",
     expandDirection: "up",
     doesHaveAsterisk:
       "*Recent incident context; figures may evolve with final reporting",

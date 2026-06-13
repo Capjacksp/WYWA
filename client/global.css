@@ -591,26 +591,24 @@
   animation: hero-glitch-flash 6s linear 2.3s infinite;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .hero-image-glitch:hover .hero-image-glitch__base {
-    animation: hero-glitch-base 2s linear infinite;
-  }
+.hero-image-glitch__base {
+  animation: hero-glitch-base 6s linear 2.3s infinite;
+}
 
-  .hero-image-glitch:hover .hero-image-glitch__layer--one {
-    animation: hero-glitch-one 2s linear infinite;
-  }
+.hero-image-glitch__layer--one {
+  animation: hero-glitch-one 6s linear 2.3s infinite;
+}
 
-  .hero-image-glitch:hover .hero-image-glitch__layer--two {
-    animation: hero-glitch-two 2s linear infinite;
-  }
+.hero-image-glitch__layer--two {
+  animation: hero-glitch-two 6s linear 2.3s infinite;
+}
 
-  .hero-image-glitch:hover .hero-image-glitch__layer--three {
-    animation: hero-glitch-three 2s linear infinite;
-  }
+.hero-image-glitch__layer--three {
+  animation: hero-glitch-three 6s linear 2.3s infinite;
+}
 
-  .hero-image-glitch:hover .hero-image-glitch__layer--flash {
-    animation: hero-glitch-flash 2s linear infinite;
-  }
+.hero-image-glitch__layer--flash {
+  animation: hero-glitch-flash 6s linear 2.3s infinite;
 }
 
 @keyframes hero-glitch-base {
@@ -688,8 +686,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-image-glitch:hover .hero-image-glitch__base,
-  .hero-image-glitch:hover .hero-image-glitch__layer,
+  .hero-image-glitch__base,
+  .hero-image-glitch__layer,
   .technology-earth-glitch__base,
   .technology-earth-glitch__layer {
     animation: none;
@@ -904,4 +902,56 @@
   color: rgb(255 255 255 / 0.55);
   font-size: 11px;
   padding: 4px 20px 16px;
+}
+
+@media (max-width: 767px) {
+  .wywa-leaflet-map {
+    touch-action: pan-y !important;
+  }
+
+  .wywa-fire-label {
+    height: 44px;
+    width: 210px;
+  }
+
+  .wywa-fire-label.is-expanded,
+  .wywa-fire-label:focus {
+    z-index: 1000 !important;
+  }
+
+  .wywa-fire-label.is-expanded .wywa-fire-label__card,
+  .wywa-fire-label:focus .wywa-fire-label__card {
+    box-shadow: 0 24px 60px rgb(0 0 0 / 0.58);
+  }
+
+  .wywa-fire-label__card {
+    transform: translateY(-22px);
+    width: 210px;
+  }
+
+  .wywa-fire-label--up .wywa-fire-label__card {
+    transform: translateY(22px);
+  }
+
+  .wywa-fire-label h3 {
+    font-size: 13px;
+    padding: 15px 14px;
+  }
+
+  .wywa-fire-label dl > div {
+    font-size: 10px;
+    gap: 7px;
+    grid-template-columns: 43px 1fr;
+    padding: 9px 12px;
+  }
+
+  .wywa-fire-label p {
+    font-size: 9px;
+    padding: 3px 12px 12px;
+  }
+
+  .leaflet-control-attribution {
+    font-size: 8px;
+    max-width: 220px;
+  }
 }

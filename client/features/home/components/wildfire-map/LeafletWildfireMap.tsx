@@ -3,8 +3,10 @@ import { wildfireCallouts } from "@/features/home/data/wildfireCallouts";
 
 export function LeafletWildfireMap({
   locationsLayerRef,
+  mapRef,
 }: {
   locationsLayerRef: MutableRefObject<HTMLDivElement | null>;
+  mapRef?: MutableRefObject<any | null>;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -12,6 +14,7 @@ export function LeafletWildfireMap({
     const container = containerRef.current;
     const leaflet = (window as typeof window & { L?: any }).L;
     if (!container || !leaflet) return;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
     const map = leaflet.map(container, {
       center: [37.2, -100.7],
@@ -21,7 +24,13 @@ export function LeafletWildfireMap({
       scrollWheelZoom: false,
       zoomControl: false,
       worldCopyJump: true,
+      dragging: !isMobile,
+      touchZoom: !isMobile,
+      doubleClickZoom: !isMobile,
+      boxZoom: !isMobile,
+      keyboard: !isMobile,
     });
+    if (mapRef) mapRef.current = map;
 
     leaflet
       .tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -40,10 +49,17 @@ export function LeafletWildfireMap({
     const incidentBounds = leaflet.latLngBounds(
       wildfireCallouts.map((fire) => fire.coordinates),
     );
-    map.fitBounds(incidentBounds, { padding: [110, 110], maxZoom: 6 });
+    map.fitBounds(incidentBounds, {
+      padding: isMobile ? [45, 90] : [110, 110],
+      maxZoom: isMobile ? 5 : 6,
+    });
 
     wildfireCallouts.forEach((fire, index) => {
-      const labelDirection = fire.markerPosition === "left" ? "right" : "left";
+      const labelDirection = isMobile
+        ? fire.mobileCardPosition ?? "auto"
+        : fire.markerPosition === "left"
+          ? "right"
+          : "left";
       const expandsUp = fire.expandDirection === "up";
       const marker = leaflet.marker(fire.coordinates, {
         title: fire.label,
@@ -76,7 +92,7 @@ export function LeafletWildfireMap({
           permanent: true,
           interactive: true,
           direction: labelDirection,
-          offset: [labelDirection === "right" ? 20 : -20, 0],
+          offset: [labelDirection === "right" ? 20 : labelDirection === "left" ? -20 : 0, 0],
           pane: "wywaLocations",
           className: `wywa-fire-label wywa-location-pop${expandsUp ? " wywa-fire-label--up" : ""}`,
         },
@@ -123,9 +139,10 @@ export function LeafletWildfireMap({
     return () => {
       resizeObserver.disconnect();
       locationsLayerRef.current = null;
+      if (mapRef) mapRef.current = null;
       map.remove();
     };
-  }, [locationsLayerRef]);
+  }, [locationsLayerRef, mapRef]);
 
   return (
     <div

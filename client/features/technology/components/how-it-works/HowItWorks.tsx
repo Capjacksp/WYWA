@@ -121,6 +121,7 @@ function DesktopHowItWorks() {
                         y="0"
                         width="1085"
                         height="573"
+                        style={{ maskType: "alpha" }}
                       >
                         <PixelSkylineMask columns={16} rows={9} />
                       </mask>
@@ -486,18 +487,29 @@ function PixelSkylineMask({
         const row = Math.floor(index / columns);
         const column = index % columns;
         const delayRank = rows - row + column * 0.35 + ((index * 7) % 5) * 0.55;
+        const x = column * tileWidth;
+        const y = row * tileHeight;
+        const insetX = tileWidth * 0.425;
+        const insetY = tileHeight * 0.425;
 
         return (
           <motion.rect
             key={index}
-            x={column * tileWidth}
-            y={row * tileHeight}
-            width={tileWidth + 1}
-            height={tileHeight + 1}
             fill="white"
-            initial={reduceMotion ? false : { opacity: 0, scale: 0.15 }}
-            animate={{ opacity: 1, scale: 1 }}
-            style={{ transformBox: "fill-box", transformOrigin: "center" }}
+            initial={reduceMotion ? false : {
+              opacity: 0,
+              x: x + insetX,
+              y: y + insetY,
+              width: tileWidth * 0.15,
+              height: tileHeight * 0.15,
+            }}
+            animate={{
+              opacity: 1,
+              x,
+              y,
+              width: tileWidth + 1,
+              height: tileHeight + 1,
+            }}
             transition={{
               delay: reduceMotion ? 0 : delayRank * 0.065,
               duration: reduceMotion ? 0 : 0.45,
@@ -537,6 +549,7 @@ function MobileSkyline({
             y="0"
             width="1085"
             height="573"
+            style={{ maskType: "alpha" }}
           >
             <PixelSkylineMask columns={10} rows={6} />
           </mask>

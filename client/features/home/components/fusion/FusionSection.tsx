@@ -234,7 +234,7 @@ function MobileRedTerrain() {
       aria-hidden="true"
     >
       <defs>
-        <mask id="mobile-fusion-terrain-pixels" maskUnits="userSpaceOnUse" x="0" y="0" width="390" height="118">
+          <mask id="mobile-fusion-terrain-pixels" maskUnits="userSpaceOnUse" x="0" y="0" width="390" height="118" style={{ maskType: "alpha" }}>
           <FusionPixelMask width={390} height={118} columns={12} rows={5} active={terrainInView} />
         </mask>
       </defs>
@@ -254,7 +254,7 @@ function JaggedRedBackground({ active }: { active: boolean }) {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <mask id="desktop-fusion-terrain-pixels" maskUnits="userSpaceOnUse" x="100" y="0" width="1857" height="1000.13">
+          <mask id="desktop-fusion-terrain-pixels" maskUnits="userSpaceOnUse" x="100" y="0" width="1857" height="1000.13" style={{ maskType: "alpha" }}>
             <FusionPixelMask width={2057} height={1000.13} columns={18} rows={10} active={active} />
           </mask>
         </defs>
@@ -291,21 +291,29 @@ function FusionPixelMask({
         const row = Math.floor(index / columns);
         const column = index % columns;
         const delayRank = rows - row + column * 0.35 + ((index * 7) % 5) * 0.55;
+        const x = column * tileWidth;
+        const y = row * tileHeight;
+        const insetX = tileWidth * 0.425;
+        const insetY = tileHeight * 0.425;
 
         return (
           <motion.rect
             key={index}
-            x={column * tileWidth}
-            y={row * tileHeight}
-            width={tileWidth + 1}
-            height={tileHeight + 1}
             fill="white"
-            initial={reduceMotion ? false : { opacity: 0, scale: 0.15 }}
+            initial={reduceMotion ? false : {
+              opacity: 0,
+              x: x + insetX,
+              y: y + insetY,
+              width: tileWidth * 0.15,
+              height: tileHeight * 0.15,
+            }}
             animate={{
               opacity: active || reduceMotion ? 1 : 0,
-              scale: active || reduceMotion ? 1 : 0.15,
+              x: active || reduceMotion ? x : x + insetX,
+              y: active || reduceMotion ? y : y + insetY,
+              width: active || reduceMotion ? tileWidth + 1 : tileWidth * 0.15,
+              height: active || reduceMotion ? tileHeight + 1 : tileHeight * 0.15,
             }}
-            style={{ transformBox: "fill-box", transformOrigin: "center" }}
             transition={{
               delay: active && !reduceMotion ? delayRank * 0.065 : 0,
               duration: reduceMotion ? 0 : active ? 0.45 : 0.12,
