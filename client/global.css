@@ -548,6 +548,49 @@
   filter: contrast(1.35) saturate(1.7);
 }
 
+.technology-earth-glitch__base,
+.technology-earth-glitch__layer {
+  will-change: clip-path, opacity, transform;
+}
+
+.technology-earth-glitch__layer {
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.technology-earth-glitch__layer--one {
+  filter: sepia(1) saturate(7) hue-rotate(145deg);
+}
+
+.technology-earth-glitch__layer--two {
+  filter: sepia(1) saturate(8) hue-rotate(305deg);
+}
+
+.technology-earth-glitch__layer--three {
+  filter: contrast(1.35) saturate(1.7);
+}
+
+.technology-earth-glitch__base {
+  animation: hero-glitch-base 6s linear 2.3s infinite;
+}
+
+.technology-earth-glitch__layer--one {
+  animation: hero-glitch-one 6s linear 2.3s infinite;
+}
+
+.technology-earth-glitch__layer--two {
+  animation: hero-glitch-two 6s linear 2.3s infinite;
+}
+
+.technology-earth-glitch__layer--three {
+  animation: hero-glitch-three 6s linear 2.3s infinite;
+}
+
+.technology-earth-glitch__layer--flash {
+  animation: hero-glitch-flash 6s linear 2.3s infinite;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .hero-image-glitch:hover .hero-image-glitch__base {
     animation: hero-glitch-base 2s linear infinite;
@@ -646,7 +689,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hero-image-glitch:hover .hero-image-glitch__base,
-  .hero-image-glitch:hover .hero-image-glitch__layer {
+  .hero-image-glitch:hover .hero-image-glitch__layer,
+  .technology-earth-glitch__base,
+  .technology-earth-glitch__layer {
     animation: none;
   }
 }

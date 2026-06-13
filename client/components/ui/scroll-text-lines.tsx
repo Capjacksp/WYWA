@@ -1,5 +1,6 @@
 import {
   motion,
+  useReducedMotion,
   useScroll,
   useTransform,
   type HTMLMotionProps,
@@ -33,6 +34,7 @@ type ScrollTextLinesProps<T extends ElementType> = {
   duration?: number;
   stagger?: number;
   distance?: number;
+  motionPreset?: "slide" | "fusion-converge";
 } & Omit<HTMLMotionProps<"div">, "children">;
 
 export function ScrollTextLines<T extends ElementType = "div">({
@@ -41,6 +43,7 @@ export function ScrollTextLines<T extends ElementType = "div">({
   className,
   lineClassName,
   delay = 0,
+  motionPreset = "slide",
   ...props
 }: ScrollTextLinesProps<T>) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -64,6 +67,7 @@ export function ScrollTextLines<T extends ElementType = "div">({
             lineCount={lines.length}
             progress={scrollYProgress}
             delay={delay}
+            motionPreset={motionPreset}
           >
             {line}
           </ScrollTextLine>
@@ -133,6 +137,7 @@ type ScrollTextLineProps = {
   lineCount: number;
   progress: MotionValue<number>;
   delay: number;
+  motionPreset: "slide" | "fusion-converge";
 };
 
 function ScrollTextLine({
@@ -142,16 +147,40 @@ function ScrollTextLine({
   lineCount,
   progress,
   delay,
+  motionPreset,
 }: ScrollTextLineProps) {
+  const reduceMotion = useReducedMotion();
   const safeCount = Math.max(lineCount, 1);
   const stagger = Math.min(0.16, 0.44 / safeCount);
   const start = Math.min(0.7, delay + index * stagger);
   const end = Math.min(1, start + 0.62);
-  const x = useTransform(progress, [start, end], [160, 0]);
-  const opacity = useTransform(progress, [start, end], [0.15, 1]);
+  const lock = Math.min(1, start + (end - start) * 0.82);
+  const isFusionLabel = motionPreset === "fusion-converge" && (lineCount === 3 ? index === 0 : index < 2);
+  const approachesFromLeft = lineCount === 3 ? index === 1 : index < 4;
+  const entryX = approachesFromLeft ? -180 : 180;
+  const overshootX = approachesFromLeft ? 12 : -12;
+  const x = useTransform(
+    progress,
+    motionPreset === "fusion-converge" ? [start, lock, end] : [start, end],
+    motionPreset === "fusion-converge"
+      ? isFusionLabel
+        ? [0, 0, 0]
+        : [entryX, overshootX, 0]
+      : [160, 0],
+  );
+  const y = useTransform(progress, [start, lock, end], isFusionLabel ? [72, -4, 0] : [0, 0, 0]);
+  const skewY = useTransform(progress, [start, lock, end], isFusionLabel ? [6, -0.5, 0] : [0, 0, 0]);
+  const scale = useTransform(progress, [start, lock, end], [0.98, 1.012, 1]);
+  const opacity = useTransform(progress, [start, end], [motionPreset === "fusion-converge" ? 0 : 0.15, 1]);
+  const motionStyle = motionPreset === "fusion-converge"
+    ? { x, y, skewY, scale, opacity }
+    : { x, opacity };
 
   return (
-    <motion.span className={className} style={{ x, opacity }}>
+    <motion.span
+      className={className}
+      style={reduceMotion ? undefined : motionStyle}
+    >
       {children}
     </motion.span>
   );

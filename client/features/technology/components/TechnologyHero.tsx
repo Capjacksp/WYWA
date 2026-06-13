@@ -207,22 +207,37 @@ function AnimatedEarth({ className, mobile = false }: { className: string; mobil
       animate={{ opacity: 1, x: 0, scale: 1, rotate: 0 }}
       transition={{ duration: reduceMotion ? 0 : 1.65, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
     >
-      <motion.img
-        src="/images/earth.png"
-        alt=""
-        className="h-auto w-full"
-        animate={
-          reduceMotion
-            ? undefined
-            : {
-                y: [0, -14, -5, 0],
-                x: [0, -5, 3, 0],
-                rotate: [0, 1.2, -0.5, 0],
-                scale: [1, 1.012, 1],
-              }
-        }
-        transition={{ duration: 11, delay: 1.8, repeat: Infinity, ease: "easeInOut" }}
-      />
+      <div className="technology-earth-glitch relative w-full">
+        <img
+          src="/images/earth.png"
+          alt=""
+          className="technology-earth-glitch__base h-auto w-full"
+        />
+        <img
+          src="/images/earth.png"
+          alt=""
+          aria-hidden="true"
+          className="technology-earth-glitch__layer technology-earth-glitch__layer--one absolute inset-0 h-auto w-full"
+        />
+        <img
+          src="/images/earth.png"
+          alt=""
+          aria-hidden="true"
+          className="technology-earth-glitch__layer technology-earth-glitch__layer--two absolute inset-0 h-auto w-full"
+        />
+        <img
+          src="/images/earth.png"
+          alt=""
+          aria-hidden="true"
+          className="technology-earth-glitch__layer technology-earth-glitch__layer--three absolute inset-0 h-auto w-full"
+        />
+        <img
+          src="/images/earth.png"
+          alt=""
+          aria-hidden="true"
+          className="technology-earth-glitch__layer technology-earth-glitch__layer--flash absolute inset-0 h-auto w-full"
+        />
+      </div>
     </motion.div>
   );
 }
