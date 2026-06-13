@@ -3,6 +3,16 @@ import { useEffect, useState, type CSSProperties } from "react";
 
 const DEFAULT_SYMBOLS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*+-<>";
 
+function createScrambledText(text: string, symbols: string) {
+  if (symbols.length === 0) return text;
+
+  return Array.from(text)
+    .map((character, index) =>
+      character === " " ? character : symbols[index % symbols.length],
+    )
+    .join("");
+}
+
 export type ScrambleTextLine = {
   text: string;
   className?: string;
@@ -110,7 +120,9 @@ export function useScrambleText({
   symbols = DEFAULT_SYMBOLS,
 }: UseScrambleTextOptions) {
   const reduceMotion = useReducedMotion();
-  const [displayText, setDisplayText] = useState(text);
+  const [displayText, setDisplayText] = useState(() =>
+    createScrambledText(text, symbols),
+  );
 
   useEffect(() => {
     if (reduceMotion || symbols.length === 0) {
@@ -119,9 +131,11 @@ export function useScrambleText({
     }
 
     const characters = Array.from(text);
-    const startedAt = performance.now() + delay * 2000;
+    const startedAt = performance.now() + delay * 1000;
     let animationFrame = 0;
     let lastUpdate = 0;
+
+    setDisplayText(createScrambledText(text, symbols));
 
     const updateText = (now: number) => {
       if (now < startedAt) {

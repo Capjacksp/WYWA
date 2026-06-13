@@ -179,7 +179,7 @@ function MobileMultimodalFusion() {
       <div className="px-7 text-center">
         <ScrollTextLines
           as="h2"
-          className="font-heading text-[42px] font-[400] uppercase leading-[0.94] tracking-normal"
+          className="font-heading text-[38px] font-[400] uppercase leading-[0.94] tracking-normal"
           lines={[
             <span className="text-cta">The</span>,
             <span className="text-cta">Intelligence</span>,

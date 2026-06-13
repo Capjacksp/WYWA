@@ -123,25 +123,32 @@ function MobileHeroContent() {
   return (
     <>
       <div className="absolute left-[27px] right-5 top-[104px] z-10 hidden max-md:block">
-        <h1 className="font-heading text-[42px] font-[350] uppercase leading-[0.94] tracking-normal text-white min-[390px]:text-[42px]">
-          Building
-          <br />
-          Nature&rsquo;s
-          <br />
-          <span className="text-cta">Sixth Sense</span>
-        </h1>
+        <ScrambleLoadText
+          as="h1"
+          className="font-heading text-[42px] font-[350] uppercase leading-[0.94] tracking-normal text-white min-[390px]:text-[42px]"
+          delay={0.12}
+          {...HERO_TEXT_MOTION}
+          lines={[
+            { text: "Building" },
+            { text: "Nature's" },
+            { text: "Sixth Sense", className: "text-cta" },
+          ]}
+        />
       </div>
 
       <div className="relative z-10 hidden min-h-[max(266px,calc(100svh-578px))] flex-1 bg-bg-dark px-[26px] pb-8 pt-12 max-md:block">
-        <h2 className="max-w-[340px] font-heading text-[28px] font-[350] uppercase leading-[0.91] tracking-normal text-white">
-          Systems that
-          <br />
-          detect wildfires
-          <br />
-          before they
-          <br />
-          become visible
-        </h2>
+        <ScrambleLoadText
+          as="h2"
+          className="max-w-[340px] font-heading text-[28px] font-[350] uppercase leading-[0.91] tracking-normal text-white"
+          delay={0.38}
+          {...HERO_TEXT_MOTION}
+          lines={[
+            { text: "Systems that" },
+            { text: "detect wildfires" },
+            { text: "before they" },
+            { text: "become visible" },
+          ]}
+        />
 
         <Button
           variant="primary"

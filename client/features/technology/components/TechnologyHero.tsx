@@ -43,13 +43,11 @@ function DesktopTechnologyHero() {
             </AnimatedIcon>
             <LoadTextLines
               as="p"
-              className="font-figtree font-normal text-h3 leading-snug"
+              className="font-figtree font-normal text-[22px] leading-snug"
               delay={0.42}
               {...HERO_TEXT_MOTION}
               lines={[
-                "Satellites and ground cameras watch for heat or smoke.",
-                "But satellites can take 15-45 minutes to confirm thermal signatures, while ground cameras must wait for visible smoke.",
-                "Fog, dust, glare, and reflections often mimic smoke or flame, leading to unreliable alerts.",
+                "Satellites and ground cameras watch for heat or smoke. But satellites can take 15-45 minutes to confirm thermal signatures, while ground cameras must wait for visible smoke. Fog, dust, glare, and reflections often mimic smoke or flame, leading to unreliable alerts.",
               ]}
             />
           </div>
@@ -61,12 +59,11 @@ function DesktopTechnologyHero() {
 
             <LoadTextLines
               as="p"
-              className="font-figtree font-normal text-h3 leading-snug"
+              className="font-figtree font-normal text-[22px] leading-snug"
               delay={0.62}
               {...HERO_TEXT_MOTION}
               lines={[
-                "Other systems monitor gases released during combustion, detecting chemical traces in the air.",
-                "But isolated signals often create noise and false alarms without additional verification.",
+                "Other systems monitor gases released during combustion, detecting chemical traces in the air. But isolated signals often create noise and false alarms without additional verification.",
               ]}
             />
           </div>
