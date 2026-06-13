@@ -45,13 +45,20 @@ function HomeHero() {
 }
 
 function HeroImagePanel() {
+  const heroImageClassName =
+    "absolute inset-0 h-full w-full object-cover max-md:object-[55%_top]";
+
   return (
-    <div className="absolute inset-0 w-[70%] max-lg:w-full max-md:relative max-md:h-[578px] max-md:shrink-0">
+    <div className="hero-image-glitch absolute inset-0 w-[70%] overflow-hidden max-lg:w-full max-md:relative max-md:h-[578px] max-md:shrink-0">
       <img
         src="/images/home-img.png"
         alt="Aerial view of forests and farmland"
-        className="h-full w-full object-cover max-md:object-[55%_top]"
+        className={`${heroImageClassName} hero-image-glitch__base`}
       />
+      <img src="/images/home-img.png" alt="" aria-hidden="true" className={`${heroImageClassName} hero-image-glitch__layer hero-image-glitch__layer--one`} />
+      <img src="/images/home-img.png" alt="" aria-hidden="true" className={`${heroImageClassName} hero-image-glitch__layer hero-image-glitch__layer--two`} />
+      <img src="/images/home-img.png" alt="" aria-hidden="true" className={`${heroImageClassName} hero-image-glitch__layer hero-image-glitch__layer--three`} />
+      <img src="/images/home-img.png" alt="" aria-hidden="true" className={`${heroImageClassName} hero-image-glitch__layer hero-image-glitch__layer--flash`} />
       <div className="absolute inset-0 bg-black/40 max-md:bg-black/45" />
       <DesktopGeometryOverlay />
       <MobileGeometryOverlay />
