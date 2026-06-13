@@ -101,7 +101,7 @@ function MobileSingleSenseScreen() {
   return (
     <section
       data-header-class=""
-      className="relative min-h-screen -mt-12 overflow-hidden bg-bg-dark px-7 pb-10 pt-[110px] text-white"
+      className="relative min-h-screen -mt-16 overflow-hidden bg-bg-dark px-7 pb-10 pt-[110px] text-white"
     >
       <ScrambleLoadText
         as="h1"

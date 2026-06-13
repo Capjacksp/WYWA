@@ -5,6 +5,7 @@ import {
   LoadTextLines,
   ScrollTextLines,
 } from "@/components/ui/scroll-text-lines";
+import { ArrowHead } from "@/components/common/ArrowHead";
 
 type TeamMember = {
   id: string;
@@ -131,9 +132,15 @@ function TeamOverlay({ member }: { member: TeamMember }) {
         >
           <div className="flex shrink-0 items-start justify-between gap-5">
             <div className="flex min-w-0 items-start gap-[clamp(0.75rem,1.4vw,2rem)]">
-              <span
-                aria-hidden="true"
-                className="mt-[clamp(0.15rem,0.35vw,0.5rem)] block h-0 w-0 shrink-0 border-y-[clamp(0.5rem,0.9vw,1.25rem)] border-l-[clamp(0.5rem,0.9vw,1.25rem)] border-y-transparent border-l-cta"
+              <ArrowHead
+                direction="right"
+                color="var(--color-cta)"
+                className="mt-[clamp(0.15rem,0.35vw,0.5rem)]"
+                style={{
+                  borderTopWidth: "clamp(0.5rem,0.9vw,1.25rem)",
+                  borderBottomWidth: "clamp(0.5rem,0.9vw,1.25rem)",
+                  borderLeftWidth: "clamp(0.5rem,0.9vw,1.25rem)",
+                }}
               />
               <div className="min-w-0">
                 <h2
@@ -309,9 +316,10 @@ function MobileTeamBioPanel({
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 items-start gap-3">
-          <span
-            aria-hidden="true"
-            className="h-0 w-0 shrink-0 border-y-[10px] border-l-[10px] border-y-transparent border-l-cta"
+          <ArrowHead
+            direction="right"
+            size={10}
+            color="var(--color-cta)"
           />
           <div className="min-w-0">
             <h2 className="font-body text-[14px] font-[400] uppercase leading-none tracking-normal text-cta">

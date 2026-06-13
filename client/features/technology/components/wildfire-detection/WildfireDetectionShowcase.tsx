@@ -6,7 +6,7 @@ import {
   labTestCards,
   wildfireClassCards,
 } from "@/features/technology/data/technologyCards";
-import { RedArrow } from "@/features/technology/components/RedArrow";
+import { ArrowHead } from "@/components/common/ArrowHead";
 
 export function WildfireDetectionShowcase() {
   return (
@@ -203,36 +203,21 @@ function MobileCardRail<T>({
   return (
     <div className={className}>
       <div className="mb-10 flex items-start gap-4 px-7">
-        {
-          activeIndex + 1 < cards.length ?
-            <span
-              aria-hidden="true"
-              className=" h-0 w-0 shrink-0 border-y-[16px] border-l-[16px] border-y-transparent border-l-[#F55656]"
-            /> :
-            <span
-              aria-hidden="true"
-              className=" h-0 w-0  shrink-0 border-y-[16px] border-l-[16px] border-y-transparent border-l-[transparent]"
-            />
-
-        }
+        <ArrowHead
+          direction="right"
+          size={16}
+          color={activeIndex + 1 < cards.length ? "#F55656" : "transparent"}
+        />
 
         <h2 className="font-heading text-[42px] font-[400] uppercase leading-[0.94] tracking-normal text-bg-dark">
           {title}
         </h2>
-        {
-          activeIndex > 0 ?
-            <span
-              aria-hidden="true"
-              className=" h-0 w-0 shrink-0 border-y-[16px] border-r-[16px] border-y-transparent border-r-[#F55656]"
-            />
-            :
-            <span
-              aria-hidden="true"
-              className=" h-0 w-0 shrink-0 border-y-[16px] border-r-[16px] border-y-transparent border-r-[transparent]"
-            />
 
-        }
-
+        <ArrowHead
+          direction="left"
+          size={16}
+          color={activeIndex > 0 ? "#F55656" : "transparent"}
+        />
       </div>
 
       <div
@@ -381,7 +366,7 @@ function ShowcaseSlide({
         className={`${titleSpacingClassName} flex items-start gap-24 max-md:mb-16 max-md:gap-8`}
       >
         <div className="mt-4 max-md:mt-1">
-          <RedArrow direction={arrowDirection} />
+          <ArrowHead direction={arrowDirection} />
         </div>
         <h2 className="font-body text-display font-normal uppercase leading-[1] tracking-normal text-bg-dark">
           {title}

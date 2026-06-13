@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { howItWorksSteps } from "@/features/technology/data/howItWorksSteps";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 import { cn } from "@/lib/utils";
+import { ArrowHead } from "@/components/common/ArrowHead";
 
 // ─── shared spring config ─────────────────────────────────────────────────────
 const SPRING = { type: "spring" as const, stiffness: 380, damping: 36, mass: 0.8 };
@@ -152,15 +153,17 @@ function DesktopHowItWorks() {
               </div>
 
               {activeStep + 1 < howItWorksSteps.length &&
-                <div
-                  aria-hidden="true"
-                  className="absolute bottom-[15%] h-0 w-0 border-y-[18px] border-l-[18px] border-y-transparent border-l-[#F15D59] max-md:mb-8 max-md:ml-0 max-md:border-y-[18px] max-md:border-l-[18px]"
+                <ArrowHead
+                  direction="right"
+                  size={18}
+                  className="absolute bottom-[15%] max-md:mb-8 max-md:ml-0"
                 />
               }
               {activeStep > 0 &&
-                <div
-                  aria-hidden="true"
-                  className="absolute bottom-[15%] right-0 h-0 w-0 border-y-[18px] border-r-[18px] border-y-transparent border-r-[#F15D59] max-md:mb-8 max-md:ml-0 max-md:border-y-[18px] max-md:border-r-[18px]"
+                <ArrowHead
+                  direction="left"
+                  size={18}
+                  className="absolute bottom-[15%] right-0 max-md:mb-8 max-md:ml-0"
                 />
               }
 
@@ -318,16 +321,20 @@ function MobileHowItWorks() {
           </div>
 
           {activeStep + 1 < howItWorksSteps.length &&
-            <span
-              aria-hidden="true"
-              className="absolute top-[28%] left-0 ml-5 block h-0 w-0 border-y-[13px] border-l-[13px] border-y-transparent border-l-[#F55656]"
+            <ArrowHead
+              direction="right"
+              size={13}
+              color="#F55656"
+              className="absolute top-[28%] left-0 ml-5"
             />
           }
 
           {activeStep > 0 &&
-            <span
-              aria-hidden="true"
-              className="absolute right-[0] top-[28%] mr-5 block h-0 w-0 border-y-[13px] border-r-[13px] border-y-transparent border-r-[#F55656]"
+            <ArrowHead
+              direction="left"
+              size={13}
+              color="#F55656"
+              className="absolute right-[0] top-[28%] mr-5"
             />
           }
 

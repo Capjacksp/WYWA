@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { LeafletWildfireMap } from "@/features/home/components/wildfire-map/LeafletWildfireMap";
+import { ArrowHead } from "@/components/common/ArrowHead";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -207,9 +208,11 @@ const WildfireMapIntro = ({
     </div>
 
     <div className="max-w-[800px] max-md:mb-20">
-      <div
-        aria-hidden="true"
-        className="mb-10 ml-5 h-0 w-0 border-y-[18px] border-l-[18px] border-y-transparent border-l-white max-md:mb-8 max-md:ml-0 max-md:border-y-[18px] max-md:border-l-[18px]"
+      <ArrowHead
+        direction="right"
+        size={18}
+        color="white"
+        className="mb-10 ml-5 max-md:mb-8 max-md:ml-0"
       />
       <p className="max-w-[780px] font-heading text-h3 font-[350] uppercase leading-[1.2] text-white">
         We detect at ignition, providing a <span className="font-bold">15-minute</span>
