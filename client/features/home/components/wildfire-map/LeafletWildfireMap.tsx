@@ -46,6 +46,9 @@ export function LeafletWildfireMap({
     locationsPane.style.zIndex = "600";
     locationsLayerRef.current = locationsPane;
 
+    const labelsPane = map.createPane("wywaLabels", locationsPane);
+    labelsPane.style.zIndex = "650";
+
     const incidentBounds = leaflet.latLngBounds(
       wildfireCallouts.map((fire) => fire.coordinates),
     );
@@ -93,7 +96,7 @@ export function LeafletWildfireMap({
           interactive: true,
           direction: labelDirection,
           offset: [labelDirection === "right" ? 20 : labelDirection === "left" ? -20 : 0, 0],
-          pane: "wywaLocations",
+          pane: "wywaLabels",
           className: `wywa-fire-label wywa-location-pop${expandsUp ? " wywa-fire-label--up" : ""}`,
         },
       );
