@@ -370,6 +370,50 @@
 @tailwind components;
 @tailwind utilities;
 
+.technology-earth__svg {
+  max-width: none;
+  overflow: visible;
+}
+
+.technology-earth__grid--dotted {
+  animation: technology-earth-line-drift 10s linear infinite;
+}
+
+.technology-earth__atmosphere {
+  animation: technology-earth-breathe 5.5s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+
+@keyframes technology-earth-line-drift {
+  to {
+    stroke-dashoffset: -54;
+  }
+}
+
+@keyframes technology-earth-breathe {
+
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+
+  .technology-earth__grid,
+  .technology-earth__atmosphere,
+  .technology-earth__pole-draw,
+  .technology-earth__svg>path {
+    animation: none !important;
+  }
+}
+
 @layer base {
 
   /* ===== TYPOGRAPHY SYSTEM ===== */
@@ -692,11 +736,11 @@
   animation: wywa-card-text-enter 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.wywa-fire-label.is-expanded dl > div:nth-child(2) [data-animate-text] {
+.wywa-fire-label.is-expanded dl>div:nth-child(2) [data-animate-text] {
   animation-delay: 70ms;
 }
 
-.wywa-fire-label.is-expanded dl > div:nth-child(3) [data-animate-text] {
+.wywa-fire-label.is-expanded dl>div:nth-child(3) [data-animate-text] {
   animation-delay: 140ms;
 }
 
@@ -709,6 +753,7 @@
     opacity: 0;
     transform: translateX(70px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
