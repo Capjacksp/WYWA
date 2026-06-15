@@ -65,7 +65,7 @@ function DesktopWildfireMapSection() {
   return (
     <section
       ref={sectionRef}
-      data-header-class="header-dark"
+      data-header-class=""
       className="relative bg-transparent max-md:hidden"
       style={{ position: "relative" }}
     >

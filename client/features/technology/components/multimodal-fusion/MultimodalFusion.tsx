@@ -55,6 +55,7 @@ function DesktopMultimodalFusion() {
           <div className="relative z-10 grid min-h-[360px] grid-cols-4 items-end gap-2 px-[50px] max-lg:grid-cols-2 max-md:min-h-0 max-md:grid-cols-1">
             {fusionCards.map(({ eyebrow, title, body, iconSrc }, index) => {
               const isActive = index === activeIndex;
+              const isActiveFusionLayer = isActive && index === 3;
 
               return (
                 <motion.button
@@ -63,7 +64,9 @@ function DesktopMultimodalFusion() {
                   onMouseEnter={() => setActiveIndex(index)}
                   onFocus={() => setActiveIndex(index)}
                   className={`group relative min-h-[120px] overflow-hidden px-7 py-4 text-left transition-colors duration-300 max-md:min-h-[230px] ${isActive
-                    ? "bg-white text-bg-dark"
+                    ? isActiveFusionLayer
+                      ? "bg-[#F15D59] text-white"
+                      : "bg-white text-bg-dark"
                     : "bg-[#676767] text-white hover:bg-[#777777]"
                     }`}
                   animate={{
@@ -71,10 +74,12 @@ function DesktopMultimodalFusion() {
                   }}
                   transition={{ type: "spring", stiffness: 130, damping: 20 }}
                 >
-                  <span className="block font-body text-sm font-normal uppercase tracking-[0.2em]">
-                    {eyebrow}
-                  </span>
-                  <span className="mt-2 block font-body text-h3 font-bold uppercase leading-none tracking-normal">
+                  {!isActiveFusionLayer && (
+                    <span className="block font-body text-sm font-normal uppercase tracking-[0.2em]">
+                      {eyebrow}
+                    </span>
+                  )}
+                  <span className={`${isActiveFusionLayer ? "" : "mt-2"} block font-body text-h3 font-bold uppercase leading-none tracking-normal`}>
                     {title}
                   </span>
 
@@ -83,11 +88,10 @@ function DesktopMultimodalFusion() {
                     animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 18 }}
                     transition={{ duration: 0.25 }}
                   >
-                    <img
-                      src={iconSrc}
-                      alt=""
-                      className="mb-8 h-20 w-20 object-contain"
-                      aria-hidden="true"
+                    <FusionCardIcon
+                      iconSrc={iconSrc}
+                      isHighlighted={isActiveFusionLayer}
+                      className="mb-8 h-20 w-20"
                     />
                     <p className="max-w-[340px] font-figtree text-body font-normal leading-snug">
                       {body}
@@ -268,10 +272,16 @@ function MobileFusionCard({
   index: number;
   isActive: boolean;
 }) {
+  const isActiveFusionLayer = isActive && index === 3;
+
   return (
     <motion.article
       data-fusion-card-slot
-      className={`overflow-hidden text-left ${isActive ? "bg-white text-bg-dark" : "bg-[#676767] text-white"
+      className={`overflow-hidden text-left ${isActive
+        ? isActiveFusionLayer
+          ? "bg-[#F15D59] text-white"
+          : "bg-white text-bg-dark"
+        : "bg-[#676767] text-white"
         }`}
       initial={{
         width: 300,
@@ -292,10 +302,12 @@ function MobileFusionCard({
       style={{ flexShrink: 0 }}
       transition={{ type: "spring", stiffness: 160, damping: 22 }}
     >
-      <p className="font-figtree text-[10px] font-[500] uppercase tracking-[0.12em]">
-        {card.eyebrow}
-      </p>
-      <h3 className="mt-1 font-heading text-[18px] font-[800] uppercase leading-none tracking-normal">
+      {!isActiveFusionLayer && (
+        <p className="font-figtree text-[10px] font-[500] uppercase tracking-[0.12em]">
+          {card.eyebrow}
+        </p>
+      )}
+      <h3 className={`${isActiveFusionLayer ? "" : "mt-1"} font-heading text-[18px] font-[800] uppercase leading-none tracking-normal`}>
         {card.title}
       </h3>
 
@@ -303,11 +315,10 @@ function MobileFusionCard({
         animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 14 }}
         transition={{ duration: 0.22 }}
       >
-        <img
-          src={card.iconSrc}
-          alt=""
-          className="mt-8 h-20 w-20 object-contain"
-          aria-hidden="true"
+        <FusionCardIcon
+          iconSrc={card.iconSrc}
+          isHighlighted={isActiveFusionLayer}
+          className="mt-8 h-20 w-20"
         />
 
         <p className="mt-[48px] max-w-[280px] font-figtree text-[12px] font-[400] leading-[1.45]">
@@ -315,6 +326,44 @@ function MobileFusionCard({
         </p>
       </motion.div>
     </motion.article>
+  );
+}
+
+function FusionCardIcon({
+  iconSrc,
+  isHighlighted,
+  className,
+}: {
+  iconSrc: string;
+  isHighlighted: boolean;
+  className: string;
+}) {
+  if (isHighlighted) {
+    return (
+      <span
+        aria-hidden="true"
+        className={`block bg-[#90E8FF] ${className}`}
+        style={{
+          maskImage: `url(${iconSrc})`,
+          maskPosition: "center",
+          maskRepeat: "no-repeat",
+          maskSize: "contain",
+          WebkitMaskImage: `url(${iconSrc})`,
+          WebkitMaskPosition: "center",
+          WebkitMaskRepeat: "no-repeat",
+          WebkitMaskSize: "contain",
+        }}
+      />
+    );
+  }
+
+  return (
+    <img
+      src={iconSrc}
+      alt=""
+      className={`object-contain ${className}`}
+      aria-hidden="true"
+    />
   );
 }
 

@@ -544,6 +544,19 @@
   color: white !important;
 }
 
+.wywa-map-reveal-control {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 240ms ease, transform 240ms ease;
+}
+
+.wywa-leaflet-map:has(.leaflet-wywaLocations-pane.is-visible) .wywa-map-reveal-control {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
 .leaflet-control-attribution {
   background: rgb(36 36 37 / 0.82) !important;
   color: rgb(255 255 255 / 0.65);
@@ -661,6 +674,53 @@
   width: 300px;
 }
 
+.wywa-fire-label.is-expanded .wywa-fire-label__card {
+  background: #24211f !important;
+}
+
+.wywa-fire-label,
+.wywa-fire-marker {
+  transition: opacity 240ms ease;
+}
+
+.wywa-fire-label.is-location-dimmed,
+.wywa-fire-marker.is-location-dimmed {
+  opacity: 0.22 !important;
+}
+
+.wywa-fire-label.is-expanded [data-animate-text] {
+  animation: wywa-card-text-enter 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.wywa-fire-label.is-expanded dl > div:nth-child(2) [data-animate-text] {
+  animation-delay: 70ms;
+}
+
+.wywa-fire-label.is-expanded dl > div:nth-child(3) [data-animate-text] {
+  animation-delay: 140ms;
+}
+
+.wywa-fire-label.is-expanded p[data-animate-text] {
+  animation-delay: 210ms;
+}
+
+@keyframes wywa-card-text-enter {
+  from {
+    opacity: 0;
+    transform: translateX(70px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wywa-fire-label.is-expanded [data-animate-text] {
+    animation: none;
+  }
+}
+
 .wywa-fire-label.leaflet-tooltip-right .wywa-fire-label__card {
   left: 0;
 }
@@ -699,9 +759,6 @@
   transition: grid-template-rows 280ms ease;
 }
 
-.wywa-fire-label:hover .wywa-fire-label__details,
-.wywa-fire-label:focus .wywa-fire-label__details,
-.wywa-fire-label.is-marker-hovered .wywa-fire-label__details,
 .wywa-fire-label.is-expanded .wywa-fire-label__details {
   grid-template-rows: 1fr;
 }

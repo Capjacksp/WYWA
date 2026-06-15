@@ -21,6 +21,7 @@ export function HowItWorks() {
 // ─── Desktop ──────────────────────────────────────────────────────────────────
 function DesktopHowItWorks() {
   const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
   const [activeStep, setActiveStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const { scrollYProgress } = useScroll({
@@ -139,16 +140,22 @@ function DesktopHowItWorks() {
               {/* Product image — spring scale + fade */}
               <div className=" absolute left-[27%] h-[60vh] w-[30vw]">
                 <AnimatePresence mode="wait">
-                  <motion.img
+                  <motion.div
                     key={step.image}
-                    src={step.image}
-                    alt=""
                     initial={{ opacity: 0, scale: 0.88, filter: "blur(6px)" }}
                     animate={{ opacity: 1, scale: 1.15, filter: "blur(0px)" }}
                     exit={{ opacity: 0, scale: 1.08, filter: "blur(4px)" }}
                     transition={{ ...SPRING, duration: 0.6 }}
-                    className={cn("h-full w-full max-w-[400px] object-contain drop-shadow-2xl max-md:h-auto max-md:w-[92vw]", step.customCSS)}
-                  />
+                    className="h-full w-full"
+                  >
+                    <motion.img
+                      src={step.image}
+                      alt=""
+                      animate={reduceMotion ? undefined : { y: [0, 12, 0], rotate: [-0.4, 0.4, 0] }}
+                      transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
+                      className={cn("h-full w-full max-w-[400px] object-contain drop-shadow-2xl max-md:h-auto max-md:w-[92vw]", step.customCSS)}
+                    />
+                  </motion.div>
                 </AnimatePresence>
               </div>
 
@@ -256,6 +263,7 @@ const desktopBodyVariants = {
 // ─── Mobile ───────────────────────────────────────────────────────────────────
 function MobileHowItWorks() {
   const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
   const [activeStep, setActiveStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const { scrollYProgress } = useScroll({
@@ -357,10 +365,8 @@ function MobileHowItWorks() {
 
           {/* Product image — spring blur + scale */}
           <AnimatePresence mode="wait" custom={direction}>
-            <motion.img
+            <motion.div
               key={step.image}
-              src={step.image}
-              alt=""
               custom={direction}
               className="absolute bottom-[38%] right-[10%] mx-auto z-10 h-[250px] w-auto max-w-none -translate-x-1/2 object-contain drop-shadow-xl"
               initial={{
@@ -382,7 +388,15 @@ function MobileHowItWorks() {
                 x: direction > 0 ? -50 : 50,
               }}
               transition={{ ...SPRING, duration: 0.55 }}
-            />
+            >
+              <motion.img
+                src={step.image}
+                alt=""
+                animate={reduceMotion ? undefined : { y: [-10, 12, -10], rotate: [-0.4, 0.4, -0.4] }}
+                transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
+                className="h-full w-auto max-w-none object-contain drop-shadow-xl"
+              />
+            </motion.div>
           </AnimatePresence>
 
           {/* Bottom text panel */}
