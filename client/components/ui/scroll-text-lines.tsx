@@ -2,6 +2,7 @@ import {
   motion,
   useReducedMotion,
   useScroll,
+  useSpring,
   useTransform,
   type HTMLMotionProps,
   type MotionValue,
@@ -50,7 +51,16 @@ export function ScrollTextLines<T extends ElementType = "div">({
   const Component = getMotionComponent(as);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "center center"],
+    offset:
+      motionPreset === "fusion-converge"
+        ? ["start 76%", "center 42%"]
+        : ["start end", "center center"],
+  });
+  const smoothScrollProgress = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 28,
+    mass: 0.45,
+    restDelta: 0.001,
   });
 
   return (
@@ -65,7 +75,11 @@ export function ScrollTextLines<T extends ElementType = "div">({
             className={lineClassName ?? "block"}
             index={index}
             lineCount={lines.length}
-            progress={scrollYProgress}
+            progress={
+              motionPreset === "fusion-converge"
+                ? smoothScrollProgress
+                : scrollYProgress
+            }
             delay={delay}
             motionPreset={motionPreset}
           >
@@ -151,28 +165,31 @@ function ScrollTextLine({
 }: ScrollTextLineProps) {
   const reduceMotion = useReducedMotion();
   const safeCount = Math.max(lineCount, 1);
-  const stagger = Math.min(0.16, 0.44 / safeCount);
-  const start = Math.min(0.7, delay + index * stagger);
-  const end = Math.min(1, start + 0.62);
-  const lock = Math.min(1, start + (end - start) * 0.82);
-  const isFusionLabel = motionPreset === "fusion-converge" && (lineCount === 3 ? index === 0 : index < 2);
+  const isFusionPreset = motionPreset === "fusion-converge";
+  const stagger = isFusionPreset
+    ? Math.min(0.12, 0.3 / safeCount)
+    : Math.min(0.16, 0.44 / safeCount);
+  const start = Math.min(0.72, delay + index * stagger);
+  const end = Math.min(1, start + (isFusionPreset ? 0.7 : 0.62));
+  const lock = Math.min(1, start + (end - start) * (isFusionPreset ? 0.9 : 0.82));
+  const isFusionLabel = isFusionPreset && (lineCount === 3 ? index === 0 : index < 2);
   const approachesFromLeft = lineCount === 3 ? index === 1 : index < 4;
   const entryX = approachesFromLeft ? -180 : 180;
-  const overshootX = approachesFromLeft ? 12 : -12;
+  const overshootX = approachesFromLeft ? 4 : -4;
   const x = useTransform(
     progress,
-    motionPreset === "fusion-converge" ? [start, lock, end] : [start, end],
-    motionPreset === "fusion-converge"
+    isFusionPreset ? [start, lock, end] : [start, end],
+    isFusionPreset
       ? isFusionLabel
         ? [0, 0, 0]
         : [entryX, overshootX, 0]
       : [160, 0],
   );
-  const y = useTransform(progress, [start, lock, end], isFusionLabel ? [72, -4, 0] : [0, 0, 0]);
-  const skewY = useTransform(progress, [start, lock, end], isFusionLabel ? [6, -0.5, 0] : [0, 0, 0]);
-  const scale = useTransform(progress, [start, lock, end], [0.98, 1.012, 1]);
-  const opacity = useTransform(progress, [start, end], [motionPreset === "fusion-converge" ? 0 : 0.15, 1]);
-  const motionStyle = motionPreset === "fusion-converge"
+  const y = useTransform(progress, [start, lock, end], isFusionLabel ? [56, -1, 0] : [0, 0, 0]);
+  const skewY = useTransform(progress, [start, lock, end], isFusionLabel ? [3, -0.15, 0] : [0, 0, 0]);
+  const scale = useTransform(progress, [start, lock, end], [0.985, 1.003, 1]);
+  const opacity = useTransform(progress, [start, end], [isFusionPreset ? 0 : 0.15, 1]);
+  const motionStyle = isFusionPreset
     ? { x, y, skewY, scale, opacity }
     : { x, opacity };
 

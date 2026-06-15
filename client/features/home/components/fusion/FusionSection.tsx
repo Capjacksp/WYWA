@@ -14,7 +14,7 @@ export function FusionSection() {
 
 function DesktopFusionSection() {
   const revealRef = useRef<HTMLDivElement>(null);
-  const redAreaInView = useInView(revealRef, { amount: 0.25, once: true });
+  const redAreaInView = useInView(revealRef, { amount: 0.25, once: false });
   const reduceMotion = useReducedMotion();
   const revealCopy = redAreaInView || reduceMotion;
 
@@ -36,6 +36,7 @@ function DesktopFusionSection() {
         className="relative z-10 mx-auto mb-[-80px] max-w-[1800px] text-center"
         lineClassName="block text-huge"
         motionPreset="fusion-converge"
+        delay={0.1}
         lines={[
           <span className="text-[#F15D59]">MULTIMODAL FUSION</span>,
           <span className="text-dark">THREE SIGNALS.</span>,
@@ -224,7 +225,7 @@ function MobileGridBackground() {
 
 function MobileRedTerrain() {
   const terrainRef = useRef<SVGSVGElement>(null);
-  const terrainInView = useInView(terrainRef, { amount: 0.25, once: true });
+  const terrainInView = useInView(terrainRef, { amount: 0.25, once: false });
 
   return (
     <svg

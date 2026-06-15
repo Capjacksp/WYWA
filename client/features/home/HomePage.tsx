@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PageLayout from "@/components/layout/PageLayout";
-import HeroFusionPixelTransition from "@/features/home/components/HeroFusionPixelTransition";
+import HeroFusionPullScene from "@/features/home/components/HeroFusionPullScene";
 import {
   WildfireMapSection,
 } from "@/features/home/components/HomeSections";
@@ -55,7 +55,7 @@ export default function HomePage() {
 
   return (
     <PageLayout>
-      <HeroFusionPixelTransition />
+      <HeroFusionPullScene />
       <div className="h-[100vh] min-h-[500px] w-full">
         <video
           ref={videoRef}
