@@ -8,13 +8,6 @@ interface PageLayoutProps {
   headerClassName?: string;
 }
 
-/**
- * Top-level page wrapper.
- * Every page should be wrapped in <PageLayout> to get:
- * - Sticky Header with nav
- * - Connect popup (controlled from here)
- * - Footer
- */
 export default function PageLayout({ children, headerClassName }: PageLayoutProps) {
   const [connectOpen, setConnectOpen] = useState(false);
   const [dynamicHeaderClass, setDynamicHeaderClass] = useState(headerClassName || "");
@@ -53,6 +46,7 @@ export default function PageLayout({ children, headerClassName }: PageLayoutProp
     updateHeaderClass();
     window.addEventListener("scroll", requestUpdate, { passive: true });
     window.addEventListener("resize", requestUpdate);
+    window.addEventListener("header-class-change", requestUpdate);
 
     return () => {
       if (animationFrame) {
@@ -60,6 +54,7 @@ export default function PageLayout({ children, headerClassName }: PageLayoutProp
       }
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
+      window.removeEventListener("header-class-change", requestUpdate);
     };
   }, [children, headerClassName]);
 

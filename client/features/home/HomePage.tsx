@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PageLayout from "@/components/layout/PageLayout";
-import HomeHero from "@/features/home/components/HomeHero";
+import HeroFusionPixelTransition from "@/features/home/components/HeroFusionPixelTransition";
 import {
-  FusionSection,
   WildfireMapSection,
 } from "@/features/home/components/HomeSections";
 import { useResponsiveVideoSource } from "@/hooks/use-responsive-video-source";
@@ -56,9 +55,7 @@ export default function HomePage() {
 
   return (
     <PageLayout>
-      <HomeHero />
-
-      <FusionSection />
+      <HeroFusionPixelTransition />
       <div className="h-[100vh] min-h-[500px] w-full">
         <video
           ref={videoRef}

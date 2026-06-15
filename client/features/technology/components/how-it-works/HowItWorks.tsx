@@ -392,8 +392,9 @@ function MobileHowItWorks() {
               <motion.img
                 src={step.image}
                 alt=""
-                animate={reduceMotion ? undefined : { y: [-10, 12, -10], rotate: [-0.4, 0.4, -0.4] }}
-                transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
+                initial={{ y: 0, rotate: -0.4 }}
+                animate={reduceMotion ? undefined : { y: -18, rotate: 0.4 }}
+                transition={{ duration: 3.5, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
                 className="h-full w-auto max-w-none object-contain drop-shadow-xl"
               />
             </motion.div>

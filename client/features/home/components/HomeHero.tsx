@@ -30,11 +30,17 @@ const GEOMETRY_LINE_VARIANTS = {
   },
 };
 
-function HomeHero() {
+function HomeHero({
+  embedded = false,
+  trackHeader = true,
+}: {
+  embedded?: boolean;
+  trackHeader?: boolean;
+}) {
   return (
     <section
-      data-header-class=""
-      className="relative h-screen w-full overflow-hidden p-0 -mt-16 max-md:flex max-md:h-auto max-md:min-h-screen max-md:flex-col max-md:bg-bg-dark min-md:h-screen"
+      data-header-class={trackHeader ? "" : undefined}
+      className={`relative h-screen w-full overflow-hidden p-0 max-md:flex max-md:h-auto max-md:min-h-screen max-md:flex-col max-md:bg-bg-dark min-md:h-screen ${embedded ? "" : "-mt-16"}`}
     >
       <HeroImagePanel />
       <DesktopContentPanel />

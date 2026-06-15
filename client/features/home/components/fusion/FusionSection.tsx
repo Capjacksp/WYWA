@@ -21,7 +21,7 @@ function DesktopFusionSection() {
   return (
     <Section
       data-header-class="header-dark"
-      className="relative z-10 flex min-h-220vh flex-col items-center justify-center overflow-hidden bg-bg-light pb-20 pt-28 shadow-[0_-24px_60px_rgba(0,0,0,0.18)] max-md:hidden"
+      className="relative z-10 flex min-h-230vh flex-col items-center justify-center overflow-hidden bg-bg-light pb-28 pt-28 shadow-[0_-24px_60px_rgba(0,0,0,0.18)] max-md:hidden"
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.10]"
@@ -51,8 +51,9 @@ function DesktopFusionSection() {
         transition={{ duration: 0.9, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
       >
         <motion.div
-          animate={reduceMotion ? undefined : { y: [0, 12, 0], rotate: [-0.4, 0.4, 0] }}
-          transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
+          animate={reduceMotion ? undefined : { y: -18, rotate: 0.4 }}
+          initial={{ y: 0, rotate: -0.4 }}
+          transition={{ duration: 3.5, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
         >
           <img
             src="/images/sensor-mob.png"
@@ -186,10 +187,12 @@ function MobileFusionSensorScreen() {
 
       <div className="relative z-10 left-1/2 -translate-x-1/2 mt-[-34px] w-[400px] pointer-events-none">
         <motion.div
-          animate={{ y: [-10, 12, -10], rotate: [-0.4, 0.4, -0.4] }}
+          animate={{ y: -18, rotate: 0.4 }}
+          initial={{ y: 0, rotate: -0.4 }}
           transition={{
-            duration: 6.5,
+            duration: 3.5,
             repeat: Infinity,
+            repeatType: "mirror",
             ease: "easeInOut",
           }}
         >
@@ -234,7 +237,7 @@ function MobileRedTerrain() {
       aria-hidden="true"
     >
       <defs>
-          <mask id="mobile-fusion-terrain-pixels" maskUnits="userSpaceOnUse" x="0" y="0" width="390" height="118" style={{ maskType: "alpha" }}>
+        <mask id="mobile-fusion-terrain-pixels" maskUnits="userSpaceOnUse" x="0" y="0" width="390" height="118" style={{ maskType: "alpha" }}>
           <FusionPixelMask width={390} height={118} columns={12} rows={5} active={terrainInView} />
         </mask>
       </defs>
@@ -247,7 +250,7 @@ function JaggedRedBackground({ active }: { active: boolean }) {
   return (
     <div className="pointer-events-none absolute bottom-0 left-0 z-0 h-full w-full">
       <svg
-        className="absolute bottom-0 h-[80vh] w-full object-cover object-bottom"
+        className="absolute bottom-0 h-[82vh] w-full object-cover object-bottom"
         viewBox="100 0 1857 1000.13"
         preserveAspectRatio="none"
         fill="none"
