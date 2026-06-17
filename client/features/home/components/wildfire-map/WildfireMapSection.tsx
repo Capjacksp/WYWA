@@ -69,7 +69,10 @@ function DesktopWildfireMapSection() {
       className="relative bg-transparent max-md:hidden"
       style={{ position: "relative" }}
     >
-      <div ref={panelRef} className="relative h-screen overflow-hidden text-white">
+      <div
+        ref={panelRef}
+        className="relative h-screen overflow-hidden text-white"
+      >
         <LeafletWildfireMap locationsLayerRef={locationsRef} />
 
         <div
@@ -109,7 +112,8 @@ function MobileWildfireMapSection() {
       const mapOverlay = mapOverlayRef.current;
       const logo = logoRef.current;
       const locations = locationsRef.current;
-      if (!section || !panel || !intro || !mapOverlay || !logo || !locations) return;
+      if (!section || !panel || !intro || !mapOverlay || !logo || !locations)
+        return;
 
       const disableMapGestures = () => {
         const map = mapRef.current;
@@ -148,10 +152,18 @@ function MobileWildfireMapSection() {
 
       timeline
         .to(intro, { x: "-18vw", duration: 0.28, ease: "none" }, 0)
-        .to([intro, mapOverlay, logo], { autoAlpha: 0, duration: 0.18, ease: "none" }, 0.1)
-        .call(() => {
-          locations.classList.add("is-visible");
-        }, [], 0.24)
+        .to(
+          [intro, mapOverlay, logo],
+          { autoAlpha: 0, duration: 0.18, ease: "none" },
+          0.1,
+        )
+        .call(
+          () => {
+            locations.classList.add("is-visible");
+          },
+          [],
+          0.24,
+        )
         .to(locations, { autoAlpha: 1, duration: 0.18, ease: "none" }, 0.24)
         .to({}, { duration: 0.72 });
     },
@@ -161,10 +173,13 @@ function MobileWildfireMapSection() {
   return (
     <section
       ref={sectionRef}
-      data-header-class="header-dark"
+      data-header-class=""
       className="relative bg-bg-dark md:hidden"
     >
-      <div ref={panelRef} className="relative h-[100svh] overflow-hidden text-white">
+      <div
+        ref={panelRef}
+        className="relative h-[100svh] overflow-hidden text-white"
+      >
         <LeafletWildfireMap locationsLayerRef={locationsRef} mapRef={mapRef} />
 
         <div
@@ -215,9 +230,12 @@ const WildfireMapIntro = ({
         className="mb-10 ml-5 max-md:mb-8 max-md:ml-0"
       />
       <p className="max-w-[780px] font-heading text-h3 font-[350] uppercase leading-[1.2] text-white">
-        We detect at ignition, providing a <span className="font-bold">15-minute</span>
-        <br className="hidden md:block" /> head start before the invisible becomes
-        <br className="hidden md:block" /> inevitable, because every minute counts.
+        We detect at ignition, providing a{" "}
+        <span className="font-bold">15-minute</span>
+        <br className="hidden md:block" /> head start before the invisible
+        becomes
+        <br className="hidden md:block" /> inevitable, because every minute
+        counts.
       </p>
     </div>
   </div>

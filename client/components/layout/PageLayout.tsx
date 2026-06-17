@@ -8,9 +8,14 @@ interface PageLayoutProps {
   headerClassName?: string;
 }
 
-export default function PageLayout({ children, headerClassName }: PageLayoutProps) {
+export default function PageLayout({
+  children,
+  headerClassName,
+}: PageLayoutProps) {
   const [connectOpen, setConnectOpen] = useState(false);
-  const [dynamicHeaderClass, setDynamicHeaderClass] = useState(headerClassName || "");
+  const [dynamicHeaderClass, setDynamicHeaderClass] = useState(
+    headerClassName || "",
+  );
 
   useEffect(() => {
     const headerWatchY = 64;
@@ -28,13 +33,20 @@ export default function PageLayout({ children, headerClassName }: PageLayoutProp
         return;
       }
 
-      const activeElement = trackedElements.find((element) => {
+      let activeElement: HTMLElement | undefined;
+      for (let index = trackedElements.length - 1; index >= 0; index -= 1) {
+        const element = trackedElements[index];
         const rect = element.getBoundingClientRect();
-        return rect.top <= headerWatchY && rect.bottom > headerWatchY;
-      });
+        if (rect.top <= headerWatchY && rect.bottom > headerWatchY) {
+          activeElement = element;
+          break;
+        }
+      }
 
       setDynamicHeaderClass(
-        activeElement?.getAttribute("data-header-class") ?? headerClassName ?? "",
+        activeElement?.getAttribute("data-header-class") ??
+          headerClassName ??
+          "",
       );
     };
 

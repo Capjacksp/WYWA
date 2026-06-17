@@ -6,22 +6,20 @@ import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 export function FusionSection() {
   return (
     <>
-      <DesktopFusionSection />
+      <DesktopFusionIntroSection />
+      <DesktopFusionRedSection />
       <MobileFusionSection />
     </>
   );
 }
 
-function DesktopFusionSection() {
-  const revealRef = useRef<HTMLDivElement>(null);
-  const redAreaInView = useInView(revealRef, { amount: 0.25, once: false });
+export function DesktopFusionIntroSection() {
   const reduceMotion = useReducedMotion();
-  const revealCopy = redAreaInView || reduceMotion;
 
   return (
     <Section
       data-header-class="header-dark"
-      className="relative z-10 flex min-h-230vh flex-col items-center justify-center overflow-hidden bg-bg-light pb-28 pt-28 shadow-[0_-24px_60px_rgba(0,0,0,0.18)] max-md:hidden"
+      className="relative z-20 flex min-h-[100vh] flex-col items-center justify-center overflow-visible bg-bg-light pb-0 pt-28 max-md:hidden"
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.10]"
@@ -45,7 +43,7 @@ function DesktopFusionSection() {
       />
 
       <motion.div
-        className="relative -top-20 z-30 mx-auto h-full w-full overflow-visible align-top pointer-events-none"
+        className="pointer-events-none relative -top-20 z-30 mx-auto mb-[-28vh] h-full w-full overflow-visible align-top"
         initial={reduceMotion ? false : { opacity: 0, y: 70, scale: 0.94 }}
         whileInView={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
         viewport={{ once: true, amount: 0.2 }}
@@ -54,24 +52,47 @@ function DesktopFusionSection() {
         <motion.div
           animate={reduceMotion ? undefined : { y: -18, rotate: 0.4 }}
           initial={{ y: 0, rotate: -0.4 }}
-          transition={{ duration: 3.5, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
+          transition={{
+            duration: 3.5,
+            repeat: Infinity,
+            repeatType: "mirror",
+            ease: "easeInOut",
+          }}
         >
           <img
             src="/images/sensor-mob.png"
             alt="Exploded view of the sensor"
-            className="mx-auto block h-auto w-[700px] object-contain"
+            className="mx-auto block h-auto w-[min(700px,52vw)] object-contain"
           />
         </motion.div>
       </motion.div>
+    </Section>
+  );
+}
 
+export function DesktopFusionRedSection() {
+  const revealRef = useRef<HTMLElement>(null);
+  const redAreaInView = useInView(revealRef, { amount: 0.35, once: false });
+  const reduceMotion = useReducedMotion();
+  const revealCopy = redAreaInView || reduceMotion;
+
+  return (
+    <section
+      ref={revealRef}
+      data-header-class="header-dark"
+      className="sticky top-0 z-10 flex h-screen min-h-[720px] items-end overflow-hidden bg-bg-light pb-28 pt-[30vh] max-md:hidden"
+    >
       <div
-        ref={revealRef}
-        className="pointer-events-none absolute bottom-0 left-0 h-[80vh] w-full"
+        className="pointer-events-none absolute inset-0 opacity-[0.10]"
+        style={{
+          backgroundImage:
+            "linear-gradient(#242425 1px, transparent 1px), linear-gradient(90deg, #242425 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+        }}
       />
-
       <JaggedRedBackground active={redAreaInView} />
 
-      <div className="relative z-10 mx-auto mb-0 mt-auto flex max-w-[1700px] items-end gap-32 px-[50px] max-lg:flex-col max-md:px-5">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1700px] items-end gap-32 px-[50px] max-lg:flex-col max-md:px-5">
         <div className="max-w-[850px] flex-[1.5]">
           <CharacterReveal
             className="text-justify text-h1-md uppercase text-white"
@@ -106,13 +127,25 @@ function DesktopFusionSection() {
               },
             }}
           >
-            <p>Our models are trained on VOC signatures from fast-igniting fuels like Red Brome, Medusahead, Cheatgrass, and Wild Oats to detect wildfire-specific combustion signatures in real time, filtering out false triggers like diesel emissions or dust.</p>
-            <p>Edge AI then verifies ignition by interpreting motion patterns in flame and rising smoke.</p>
-            <p>Trained in simulated wildfire environments using real-world and simulated data, the system detects fire alerts within a minute, providing a critical 15-minute head start.</p>
+            <p>
+              Our models are trained on VOC signatures from fast-igniting fuels
+              like Red Brome, Medusahead, Cheatgrass, and Wild Oats to detect
+              wildfire-specific combustion signatures in real time, filtering
+              out false triggers like diesel emissions or dust.
+            </p>
+            <p>
+              Edge AI then verifies ignition by interpreting motion patterns in
+              flame and rising smoke.
+            </p>
+            <p>
+              Trained in simulated wildfire environments using real-world and
+              simulated data, the system detects fire alerts within a minute,
+              providing a critical 15-minute head start.
+            </p>
           </motion.div>
         </div>
       </div>
-    </Section>
+    </section>
   );
 }
 
@@ -155,9 +188,25 @@ function MobileFusionCopyScreen() {
         lineClassName="mb-2 block last:mb-0"
         delay={0.1}
         lines={[
-          <>Our models are trained on VOC signatures from fast-igniting fuels like Red Brome, Medusahead, Cheatgrass, and Wild Oats to detect wildfire-specific combustion signatures in real time, filtering out false triggers like diesel emissions or dust.<br /><br /></>,
-          <>Edge AI then verifies ignition by interpreting motion patterns in flame and rising smoke.<br /><br /></>,
-          <>Trained in simulated wildfire environments using real-world and simulated data, the system detects fire alerts within a minute, providing a critical 15-minute head start.</>,
+          <>
+            Our models are trained on VOC signatures from fast-igniting fuels
+            like Red Brome, Medusahead, Cheatgrass, and Wild Oats to detect
+            wildfire-specific combustion signatures in real time, filtering out
+            false triggers like diesel emissions or dust.
+            <br />
+            <br />
+          </>,
+          <>
+            Edge AI then verifies ignition by interpreting motion patterns in
+            flame and rising smoke.
+            <br />
+            <br />
+          </>,
+          <>
+            Trained in simulated wildfire environments using real-world and
+            simulated data, the system detects fire alerts within a minute,
+            providing a critical 15-minute head start.
+          </>,
         ]}
       />
     </section>
@@ -238,11 +287,29 @@ function MobileRedTerrain() {
       aria-hidden="true"
     >
       <defs>
-        <mask id="mobile-fusion-terrain-pixels" maskUnits="userSpaceOnUse" x="0" y="0" width="390" height="118" style={{ maskType: "alpha" }}>
-          <FusionPixelMask width={390} height={118} columns={12} rows={5} active={terrainInView} />
+        <mask
+          id="mobile-fusion-terrain-pixels"
+          maskUnits="userSpaceOnUse"
+          x="0"
+          y="0"
+          width="390"
+          height="118"
+          style={{ maskType: "alpha" }}
+        >
+          <FusionPixelMask
+            width={390}
+            height={118}
+            columns={12}
+            rows={5}
+            active={terrainInView}
+          />
         </mask>
       </defs>
-      <path d="M147.031 28.3534L147.101 20.7204L153.849 20.6871L153.893 17.4667L167.496 17.4608L167.531 20.6695L181.124 20.691L180.984 15.5443L194.7 15.556L194.753 20.6812C197.099 20.7106 199.06 20.7145 201.528 20.6773L201.554 9.29535L221.975 9.28948L222.01 13.7158C224.242 13.7471 226.273 13.7452 228.759 13.7275L228.803 2.87023L249.189 2.87024L249.25 13.7373L262.817 13.7373L262.852 21.6014L269.627 21.6542L269.688 25.3053C272.227 25.3621 274.354 25.2642 276.454 25.3562L276.481 32.7073L283.247 32.7288L283.308 40.1112L290.066 40.1347L290.118 47.9772L296.884 48.0046L296.963 52.3233C299.318 52.3859 301.033 52.3624 303.641 52.3487L303.712 44.1441L310.469 44.1049L310.539 40.1289C312.841 40.0819 314.915 40.2052 317.261 40.0584L317.34 44.1128C319.598 44.148 321.542 44.1382 324.027 44.1186L324.141 40.1445L330.864 40.1132L330.942 36.1313L337.709 36.1L337.709 26.7305L344.492 26.6913L344.536 18.6355L351.328 18.6041L351.363 11.6367L371.819 11.6367L371.863 18.6041L378.629 18.6257L378.664 24.6886L385.387 24.7317L385.387 28.698L392.197 28.7273L392.214 36.098L399.024 36.1372L399.024 55.2148L405.781 55.2441L405.781 214.814L-23.1734 214.814L-23.2609 54.6862L-16.6435 54.6392C-16.2846 54.3828 -16.3109 54.1537 -16.626 53.8973L-18.0528 54.1909L-18.0791 52.5465C-18.2104 52.4858 -18.823 52.4153 -18.9018 52.5073C-18.114 53.2199 -18.7005 52.6776 -18.7268 53.4333L-18.7531 54.3749C-19.2695 54.4063 -19.4183 54.416 -19.5058 54.4317C-19.7159 54.463 -20.5299 54.4434 -19.7684 54.3514L-19.8822 51.2681C-21.1513 51.1193 -20.1536 53.4998 -20.7313 53.1944C-20.3812 53.3804 -20.2586 53.6369 -20.9151 53.7171C-21.0551 53.7348 -21.6766 53.7426 -21.6066 53.6839C-21.0814 53.2356 -21.5278 52.8205 -21.5365 52.3801L-21.6241 49.4181C-23.2347 49.3045 -21.6591 49.9329 -22.6045 50.0152C-23.8036 50.117 -23.1909 47.9753 -23.2171 47.6601L-23.2958 46.6147L-23.1646 41.7988C-22.2717 41.7733 -21.4053 41.7811 -20.3899 41.7811C-20.3199 41.9984 -20.7838 42.1316 -20.5562 42.3665C-18.7005 42.2549 -17.4663 42.1668 -17.7464 41.7929L-9.85114 41.8105L-9.72858 40.5987L5.37929 40.583L5.52804 37.0671L12.2592 37.0083L12.3555 35.8278L31.945 35.8122L32.0062 29.9528L38.6499 29.8961C38.9212 29.4869 38.8774 29.1267 38.6761 28.8252L58.4406 28.8389L58.3881 26.4916C60.5763 26.5445 62.7034 26.5445 65.2943 26.4956L65.2943 21.0336L72.1217 20.9964L72.1217 9.22096L99.4138 9.22487L99.4138 20.9651C101.821 21.0669 104.114 20.9945 106.285 21.0101L106.233 28.371C109.095 28.4141 111.283 28.3358 113.069 28.4082L112.964 42.0415L119.756 42.0709L119.774 46.0293L133.175 46.0469L133.498 41.7635L140.238 41.7381L140.238 28.3554C142.112 28.3906 144.02 28.4004 147.013 28.3593L147.031 28.3534Z" fill="#F15D59" mask="url(#mobile-fusion-terrain-pixels)" />
+      <path
+        d="M147.031 28.3534L147.101 20.7204L153.849 20.6871L153.893 17.4667L167.496 17.4608L167.531 20.6695L181.124 20.691L180.984 15.5443L194.7 15.556L194.753 20.6812C197.099 20.7106 199.06 20.7145 201.528 20.6773L201.554 9.29535L221.975 9.28948L222.01 13.7158C224.242 13.7471 226.273 13.7452 228.759 13.7275L228.803 2.87023L249.189 2.87024L249.25 13.7373L262.817 13.7373L262.852 21.6014L269.627 21.6542L269.688 25.3053C272.227 25.3621 274.354 25.2642 276.454 25.3562L276.481 32.7073L283.247 32.7288L283.308 40.1112L290.066 40.1347L290.118 47.9772L296.884 48.0046L296.963 52.3233C299.318 52.3859 301.033 52.3624 303.641 52.3487L303.712 44.1441L310.469 44.1049L310.539 40.1289C312.841 40.0819 314.915 40.2052 317.261 40.0584L317.34 44.1128C319.598 44.148 321.542 44.1382 324.027 44.1186L324.141 40.1445L330.864 40.1132L330.942 36.1313L337.709 36.1L337.709 26.7305L344.492 26.6913L344.536 18.6355L351.328 18.6041L351.363 11.6367L371.819 11.6367L371.863 18.6041L378.629 18.6257L378.664 24.6886L385.387 24.7317L385.387 28.698L392.197 28.7273L392.214 36.098L399.024 36.1372L399.024 55.2148L405.781 55.2441L405.781 214.814L-23.1734 214.814L-23.2609 54.6862L-16.6435 54.6392C-16.2846 54.3828 -16.3109 54.1537 -16.626 53.8973L-18.0528 54.1909L-18.0791 52.5465C-18.2104 52.4858 -18.823 52.4153 -18.9018 52.5073C-18.114 53.2199 -18.7005 52.6776 -18.7268 53.4333L-18.7531 54.3749C-19.2695 54.4063 -19.4183 54.416 -19.5058 54.4317C-19.7159 54.463 -20.5299 54.4434 -19.7684 54.3514L-19.8822 51.2681C-21.1513 51.1193 -20.1536 53.4998 -20.7313 53.1944C-20.3812 53.3804 -20.2586 53.6369 -20.9151 53.7171C-21.0551 53.7348 -21.6766 53.7426 -21.6066 53.6839C-21.0814 53.2356 -21.5278 52.8205 -21.5365 52.3801L-21.6241 49.4181C-23.2347 49.3045 -21.6591 49.9329 -22.6045 50.0152C-23.8036 50.117 -23.1909 47.9753 -23.2171 47.6601L-23.2958 46.6147L-23.1646 41.7988C-22.2717 41.7733 -21.4053 41.7811 -20.3899 41.7811C-20.3199 41.9984 -20.7838 42.1316 -20.5562 42.3665C-18.7005 42.2549 -17.4663 42.1668 -17.7464 41.7929L-9.85114 41.8105L-9.72858 40.5987L5.37929 40.583L5.52804 37.0671L12.2592 37.0083L12.3555 35.8278L31.945 35.8122L32.0062 29.9528L38.6499 29.8961C38.9212 29.4869 38.8774 29.1267 38.6761 28.8252L58.4406 28.8389L58.3881 26.4916C60.5763 26.5445 62.7034 26.5445 65.2943 26.4956L65.2943 21.0336L72.1217 20.9964L72.1217 9.22096L99.4138 9.22487L99.4138 20.9651C101.821 21.0669 104.114 20.9945 106.285 21.0101L106.233 28.371C109.095 28.4141 111.283 28.3358 113.069 28.4082L112.964 42.0415L119.756 42.0709L119.774 46.0293L133.175 46.0469L133.498 41.7635L140.238 41.7381L140.238 28.3554C142.112 28.3906 144.02 28.4004 147.013 28.3593L147.031 28.3534Z"
+        fill="#F15D59"
+        mask="url(#mobile-fusion-terrain-pixels)"
+      />
     </svg>
   );
 }
@@ -258,8 +325,22 @@ function JaggedRedBackground({ active }: { active: boolean }) {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <mask id="desktop-fusion-terrain-pixels" maskUnits="userSpaceOnUse" x="100" y="0" width="1857" height="1000.13" style={{ maskType: "alpha" }}>
-            <FusionPixelMask width={2057} height={1000.13} columns={18} rows={10} active={active} />
+          <mask
+            id="desktop-fusion-terrain-pixels"
+            maskUnits="userSpaceOnUse"
+            x="100"
+            y="0"
+            width="1857"
+            height="1000.13"
+            style={{ maskType: "alpha" }}
+          >
+            <FusionPixelMask
+              width={2057}
+              height={1000.13}
+              columns={18}
+              rows={10}
+              active={active}
+            />
           </mask>
         </defs>
         <path
@@ -304,19 +385,24 @@ function FusionPixelMask({
           <motion.rect
             key={index}
             fill="white"
-            initial={reduceMotion ? false : {
-              opacity: 0,
-              x: x + insetX,
-              y: y + insetY,
-              width: tileWidth * 0.15,
-              height: tileHeight * 0.15,
-            }}
+            initial={
+              reduceMotion
+                ? false
+                : {
+                  opacity: 0,
+                  x: x + insetX,
+                  y: y + insetY,
+                  width: tileWidth * 0.15,
+                  height: tileHeight * 0.15,
+                }
+            }
             animate={{
               opacity: active || reduceMotion ? 1 : 0,
               x: active || reduceMotion ? x : x + insetX,
               y: active || reduceMotion ? y : y + insetY,
               width: active || reduceMotion ? tileWidth + 1 : tileWidth * 0.15,
-              height: active || reduceMotion ? tileHeight + 1 : tileHeight * 0.15,
+              height:
+                active || reduceMotion ? tileHeight + 1 : tileHeight * 0.15,
             }}
             transition={{
               delay: active && !reduceMotion ? delayRank * 0.065 : 0,
@@ -363,7 +449,10 @@ function CharacterReveal({
                 const index = characterIndex++;
 
                 return (
-                  <span key={index} className="inline-block overflow-hidden align-bottom">
+                  <span
+                    key={index}
+                    className="inline-block overflow-hidden align-bottom"
+                  >
                     <motion.span
                       className="inline-block"
                       variants={{

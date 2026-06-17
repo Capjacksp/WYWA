@@ -17,8 +17,11 @@ function DesktopMultimodalFusion() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section className="relative overflow-hidden bg-bg-dark pb-8 pt-28 text-white max-md:hidden">
-      <div className="mx-auto">
+    <section
+      data-header-class=""
+      className="sticky top-0 z-20 h-screen min-h-[720px] overflow-hidden bg-bg-dark pt-16 pb-[10px] text-white max-md:hidden"
+    >
+      <div className="mx-auto flex h-full flex-col">
         <div className="text-center">
           <ScrollTextLines
             as="h2"
@@ -33,7 +36,7 @@ function DesktopMultimodalFusion() {
           />
         </div>
 
-        <div className="mt-20 flex flex-wrap items-center justify-center gap-x-9 gap-y-5 font-body text-sm uppercase tracking-[0.22em] text-white max-md:mt-12 max-md:tracking-[0.14em]">
+        <div className="mt-[clamp(2rem,6vh,5rem)] flex flex-wrap items-center justify-center gap-x-9 gap-y-5 font-body text-sm uppercase tracking-[0.22em] text-white max-md:mt-12 max-md:tracking-[0.14em]">
           <ScrollTextLines as="span" lines={["Three Signal Types"]} />
           <span className="h-6 w-[2px] bg-white" />
           <ScrollTextLines
@@ -49,7 +52,7 @@ function DesktopMultimodalFusion() {
           />
         </div>
 
-        <div className="relative mt-36 max-md:mt-16">
+        <div className="relative mt-auto max-md:mt-16">
           <FusionWave activeIndex={activeIndex} />
 
           <div className="relative z-10 grid min-h-[360px] grid-cols-4 items-end gap-2 px-[50px] max-lg:grid-cols-2 max-md:min-h-0 max-md:grid-cols-1">
@@ -76,16 +79,21 @@ function DesktopMultimodalFusion() {
                 >
                   {!isActiveFusionLayer && (
                     <span className="block font-body text-sm font-normal uppercase tracking-[0.2em]">
-                      {eyebrow}
+                      {!(index === 3) && eyebrow}
                     </span>
                   )}
-                  <span className={`${isActiveFusionLayer ? "" : "mt-2"} block font-body text-h3 font-bold uppercase leading-none tracking-normal`}>
+                  <span
+                    className={`${isActiveFusionLayer ? "" : "mt-2"} block font-body text-h3 font-bold uppercase leading-none tracking-normal`}
+                  >
                     {title}
                   </span>
 
                   <motion.div
                     className="mt-10"
-                    animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 18 }}
+                    animate={{
+                      opacity: isActive ? 1 : 0,
+                      y: isActive ? 0 : 18,
+                    }}
                     transition={{ duration: 0.25 }}
                   >
                     <FusionCardIcon
@@ -138,14 +146,18 @@ function MobileMultimodalFusion() {
 
     isAutoScrolling.current = true;
     rail.scrollTo({ left: targetScroll, behavior: "smooth" });
-    const t = window.setTimeout(() => { isAutoScrolling.current = false; }, 700);
+    const t = window.setTimeout(() => {
+      isAutoScrolling.current = false;
+    }, 700);
     return () => window.clearTimeout(t);
   }, [activeIndex]);
 
   // Auto-cycle on mount
   useEffect(() => {
     restartInterval();
-    return () => { if (intervalRef.current) window.clearInterval(intervalRef.current); };
+    return () => {
+      if (intervalRef.current) window.clearInterval(intervalRef.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -178,7 +190,7 @@ function MobileMultimodalFusion() {
   return (
     <section
       data-header-class=""
-      className="relative overflow-hidden bg-bg-dark pb-0 pt-[104px] text-white md:hidden"
+      className="relative min-h-[100svh] overflow-hidden bg-bg-dark pb-0 pt-[104px] text-white md:hidden"
     >
       <div className="px-7 text-center">
         <ScrollTextLines
@@ -307,7 +319,9 @@ function MobileFusionCard({
           {card.eyebrow}
         </p>
       )}
-      <h3 className={`${isActiveFusionLayer ? "" : "mt-1"} font-heading text-[18px] font-[800] uppercase leading-none tracking-normal`}>
+      <h3
+        className={`${isActiveFusionLayer ? "" : "mt-1"} font-heading text-[18px] font-[800] uppercase leading-none tracking-normal`}
+      >
         {card.title}
       </h3>
 
@@ -366,8 +380,6 @@ function FusionCardIcon({
     />
   );
 }
-
-
 
 function MobileFusionWave({ activeIndex }: { activeIndex: number }) {
   return (

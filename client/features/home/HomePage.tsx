@@ -3,6 +3,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PageLayout from "@/components/layout/PageLayout";
 import HeroFusionPullScene from "@/features/home/components/HeroFusionPullScene";
 import {
+  DesktopFusionRedSection,
   WildfireMapSection,
 } from "@/features/home/components/HomeSections";
 import { useResponsiveVideoSource } from "@/hooks/use-responsive-video-source";
@@ -55,21 +56,33 @@ export default function HomePage() {
 
   return (
     <PageLayout>
-      <HeroFusionPullScene />
-      <div className="h-[100vh] min-h-[500px] w-full">
-        <video
-          ref={videoRef}
-          className="h-full w-full object-cover"
-          src={shouldLoadVideo ? videoSrc : undefined}
-          loop
-          playsInline
-          preload={shouldLoadVideo ? "metadata" : "none"}
-          poster={VIDEO_POSTER_SRC}
-          controls
-          onLoadedMetadata={handleVideoReady}
-        />
-      </div>
-      <WildfireMapSection />
+      <section className="relative bg-bg-dark">
+        <HeroFusionPullScene />
+        <DesktopFusionRedSection />
+
+        <div className="relative z-20">
+          <div
+            data-header-class=""
+            className="sticky top-0 h-screen min-h-[500px] w-full overflow-hidden bg-bg-dark shadow-[0_-24px_60px_rgba(0,0,0,0.18)]"
+          >
+            <video
+              ref={videoRef}
+              className="h-full w-full object-cover"
+              src={shouldLoadVideo ? videoSrc : undefined}
+              loop
+              playsInline
+              preload={shouldLoadVideo ? "metadata" : "none"}
+              poster={VIDEO_POSTER_SRC}
+              controls
+              onLoadedMetadata={handleVideoReady}
+            />
+          </div>
+
+          <div className="relative z-30">
+            <WildfireMapSection />
+          </div>
+        </div>
+      </section>
     </PageLayout>
   );
 }

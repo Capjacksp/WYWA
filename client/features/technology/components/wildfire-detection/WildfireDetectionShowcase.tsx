@@ -359,7 +359,7 @@ function ShowcaseSlide({
 }) {
   return (
     <div
-      className="box-border flex h-full shrink-0 flex-col justify-start px-[50px] py-[clamp(2rem,6.5vh,6rem)] max-md:px-5"
+      className="box-border flex h-full shrink-0 flex-col justify-start px-[50px] pt-16 pb-[clamp(2rem,6.5vh,6rem)] max-md:px-5"
       style={{ width }}
     >
       <div

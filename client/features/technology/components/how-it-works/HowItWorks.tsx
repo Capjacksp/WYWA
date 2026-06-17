@@ -1,4 +1,11 @@
-import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { howItWorksSteps } from "@/features/technology/data/howItWorksSteps";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
@@ -6,8 +13,14 @@ import { cn } from "@/lib/utils";
 import { ArrowHead } from "@/components/common/ArrowHead";
 
 // ─── shared spring config ─────────────────────────────────────────────────────
-const SPRING = { type: "spring" as const, stiffness: 380, damping: 36, mass: 0.8 };
+const SPRING = {
+  type: "spring" as const,
+  stiffness: 380,
+  damping: 36,
+  mass: 0.8,
+};
 const EASE_EXPO = [0.16, 1, 0.3, 1] as const;
+const DESKTOP_STEP_PROGRESS_END = 2 / 3;
 
 export function HowItWorks() {
   return (
@@ -30,10 +43,13 @@ function DesktopHowItWorks() {
   });
 
   // Smooth spring-driven progress for the step indicator bar
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 200,
+    damping: 30,
+  });
   const indicatorWidth = useTransform(
     smoothProgress,
-    [0, 1],
+    [0, DESKTOP_STEP_PROGRESS_END],
     ["0%", "100%"],
   );
 
@@ -44,9 +60,10 @@ function DesktopHowItWorks() {
 
   useEffect(() => {
     return scrollYProgress.on("change", (latest) => {
+      const stepProgress = Math.min(latest / DESKTOP_STEP_PROGRESS_END, 0.999);
       const nextStep = Math.min(
         howItWorksSteps.length - 1,
-        Math.floor(latest * howItWorksSteps.length),
+        Math.floor(stepProgress * howItWorksSteps.length),
       );
 
       setActiveStep((previous) => {
@@ -71,8 +88,7 @@ function DesktopHowItWorks() {
             lines={[
               "Single senses create",
               <>
-                blind spots.{" "}
-                <span className="text-[#F15D59]">Multimodal</span>
+                blind spots. <span className="text-[#F15D59]">Multimodal</span>
               </>,
               <span className="text-[#F15D59]">intelligence closes them.</span>,
             ]}
@@ -81,10 +97,9 @@ function DesktopHowItWorks() {
       </div>
 
       {/* STICKY HORIZONTAL SCROLL PART */}
-      <section ref={sectionRef} className="relative h-[300vh]">
+      <section ref={sectionRef} className="relative h-[400vh]">
         <div className="sticky top-0 h-screen overflow-hidden px-[50px] pb-12 pt-12 max-md:h-auto max-md:min-h-screen max-md:px-5">
           <div className="mx-auto flex h-full flex-col">
-
             <div className="mt-20 flex items-center gap-5 max-md:mt-12">
               <span className="shrink-0 font-body font-normal text-sm uppercase tracking-[0.22em] text-bg-dark">
                 How it works
@@ -99,9 +114,11 @@ function DesktopHowItWorks() {
             </div>
 
             <div className="relative flex min-h-0 flex-1 items-end max-md:items-center max-md:pt-8">
-
               {/* Skyline fill — clip-path wipe */}
-              <div className="pointer-events-none absolute inset-x-0 left-8 bottom-[15%] min-h-[70%] overflow-hidden" aria-hidden="true">
+              <div
+                className="pointer-events-none absolute inset-x-0 left-8 bottom-[15%] min-h-[70%] overflow-hidden"
+                aria-hidden="true"
+              >
                 <AnimatePresence mode="sync">
                   <motion.svg
                     key={activeStep}
@@ -151,28 +168,39 @@ function DesktopHowItWorks() {
                     <motion.img
                       src={step.image}
                       alt=""
-                      animate={reduceMotion ? undefined : { y: [0, 12, 0], rotate: [-0.4, 0.4, 0] }}
-                      transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
-                      className={cn("h-full w-full max-w-[400px] object-contain drop-shadow-2xl max-md:h-auto max-md:w-[92vw]", step.customCSS)}
+                      animate={
+                        reduceMotion
+                          ? undefined
+                          : { y: [0, 12, 0], rotate: [-0.4, 0.4, 0] }
+                      }
+                      transition={{
+                        duration: 6.5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      className={cn(
+                        "h-full w-full max-w-[400px] object-contain drop-shadow-2xl max-md:h-auto max-md:w-[92vw]",
+                        step.customCSS,
+                      )}
                     />
                   </motion.div>
                 </AnimatePresence>
               </div>
 
-              {activeStep + 1 < howItWorksSteps.length &&
+              {activeStep + 1 < howItWorksSteps.length && (
                 <ArrowHead
                   direction="right"
                   size={18}
                   className="absolute bottom-[15%] max-md:mb-8 max-md:ml-0"
                 />
-              }
-              {activeStep > 0 &&
+              )}
+              {activeStep > 0 && (
                 <ArrowHead
                   direction="left"
                   size={18}
                   className="absolute bottom-[15%] right-0 max-md:mb-8 max-md:ml-0"
                 />
-              }
+              )}
 
               {/* Text grid — staggered children via variants */}
               <div className="relative z-10 grid w-full grid-cols-[1fr_1fr] h-full items-center gap-0 max-lg:grid-cols-[1fr_1fr] max-md:grid-cols-1 max-md:gap-6">
@@ -194,7 +222,11 @@ function DesktopHowItWorks() {
                           className={`font-body font-normal text-display uppercase tracking-normal ${activeStep % 2 === 0 ? "text-bg-dark" : "text-bg-light"}`}
                           initial={{ clipPath: "inset(0 0 100% 0)" }}
                           animate={{ clipPath: "inset(0 0 0% 0)" }}
-                          transition={{ duration: 0.55, ease: EASE_EXPO, delay: 0.05 }}
+                          transition={{
+                            duration: 0.55,
+                            ease: EASE_EXPO,
+                            delay: 0.05,
+                          }}
                         >
                           {step.number}
                         </motion.p>
@@ -203,7 +235,11 @@ function DesktopHowItWorks() {
                           className="mt-3 font-body font-normal text-display uppercase tracking-normal text-bg-dark"
                           initial={{ clipPath: "inset(0 0 100% 0)" }}
                           animate={{ clipPath: "inset(0 0 0% 0)" }}
-                          transition={{ duration: 0.6, ease: EASE_EXPO, delay: 0.12 }}
+                          transition={{
+                            duration: 0.6,
+                            ease: EASE_EXPO,
+                            delay: 0.12,
+                          }}
                         >
                           {step.title}
                         </motion.h3>
@@ -235,8 +271,9 @@ function DesktopHowItWorks() {
               {thresholds.map((_, index) => (
                 <span
                   key={index}
-                  className={`h-1.5 w-8 transition-colors ${index === activeStep ? "bg-[#f15d59]" : "bg-bg-dark/20"
-                    }`}
+                  className={`h-1.5 w-8 transition-colors ${
+                    index === activeStep ? "bg-[#f15d59]" : "bg-bg-dark/20"
+                  }`}
                 />
               ))}
             </div>
@@ -249,9 +286,17 @@ function DesktopHowItWorks() {
 
 // ─── Desktop animation variants ───────────────────────────────────────────────
 const desktopTitleVariants = {
-  enter: (dir: number) => ({ opacity: 0, y: dir > 0 ? 40 : -40, filter: "blur(4px)" }),
+  enter: (dir: number) => ({
+    opacity: 0,
+    y: dir > 0 ? 40 : -40,
+    filter: "blur(4px)",
+  }),
   center: { opacity: 1, y: 0, filter: "blur(0px)" },
-  exit: (dir: number) => ({ opacity: 0, y: dir > 0 ? -30 : 30, filter: "blur(3px)" }),
+  exit: (dir: number) => ({
+    opacity: 0,
+    y: dir > 0 ? -30 : 30,
+    filter: "blur(3px)",
+  }),
 };
 
 const desktopBodyVariants = {
@@ -271,7 +316,10 @@ function MobileHowItWorks() {
     offset: ["start start", "end end"],
   });
 
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 200,
+    damping: 30,
+  });
   const indicatorWidth = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
 
   useEffect(() => {
@@ -310,12 +358,8 @@ function MobileHowItWorks() {
         />
       </div>
 
-      <section
-        ref={sectionRef}
-        className="relative h-[420vh]"
-      >
+      <section ref={sectionRef} className="relative h-[420vh]">
         <div className="sticky top-0 h-screen overflow-hidden bg-[#F7F7F7] px-5 pb-10 pt-32">
-
           <div className="flex items-center gap-3 mb-2">
             <span className="shrink-0 font-heading text-[14px] font-[400] uppercase tracking-[0.22em] text-bg-dark">
               How it works
@@ -328,23 +372,23 @@ function MobileHowItWorks() {
             </div>
           </div>
 
-          {activeStep + 1 < howItWorksSteps.length &&
+          {activeStep + 1 < howItWorksSteps.length && (
             <ArrowHead
               direction="right"
               size={13}
               color="#F55656"
               className="absolute top-[28%] left-0 ml-5"
             />
-          }
+          )}
 
-          {activeStep > 0 &&
+          {activeStep > 0 && (
             <ArrowHead
               direction="left"
               size={13}
               color="#F55656"
               className="absolute right-[0] top-[28%] mr-5"
             />
-          }
+          )}
 
           {/* Skyline — clip-path horizontal wipe */}
           <AnimatePresence mode="sync">
@@ -394,7 +438,12 @@ function MobileHowItWorks() {
                 alt=""
                 initial={{ y: 0, rotate: -0.4 }}
                 animate={reduceMotion ? undefined : { y: -18, rotate: 0.4 }}
-                transition={{ duration: 3.5, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
+                transition={{
+                  duration: 3.5,
+                  repeat: Infinity,
+                  repeatType: "mirror",
+                  ease: "easeInOut",
+                }}
                 className="h-full w-auto max-w-none object-contain drop-shadow-xl"
               />
             </motion.div>
@@ -417,7 +466,7 @@ function MobileHowItWorks() {
               >
                 <h3 className="font-heading text-[32px] font-[400] -mt-12 uppercase leading-[1.2] tracking-normal text-bg-dark">
                   <motion.span
-                    className={`${activeStep % 2 === 1 ? 'text-[#FFFFFF]' : ''} block`}
+                    className={`${activeStep % 2 === 1 ? "text-[#FFFFFF]" : ""} block`}
                     initial={{ clipPath: "inset(0 0 100% 0)" }}
                     animate={{ clipPath: "inset(0 0 0% 0)" }}
                     transition={{ duration: 0.5, ease: EASE_EXPO, delay: 0.05 }}
@@ -428,7 +477,11 @@ function MobileHowItWorks() {
                     className="block"
                     initial={{ clipPath: "inset(0 0 100% 0)" }}
                     animate={{ clipPath: "inset(0 0 0% 0)" }}
-                    transition={{ duration: 0.55, ease: EASE_EXPO, delay: 0.13 }}
+                    transition={{
+                      duration: 0.55,
+                      ease: EASE_EXPO,
+                      delay: 0.13,
+                    }}
                   >
                     {step.title}
                   </motion.span>
@@ -452,7 +505,6 @@ function MobileHowItWorks() {
               </motion.p>
             </AnimatePresence>
           </div>
-
         </div>
       </section>
     </div>
@@ -518,13 +570,17 @@ function PixelSkylineMask({
           <motion.rect
             key={index}
             fill="white"
-            initial={reduceMotion ? false : {
-              opacity: 0,
-              x: x + insetX,
-              y: y + insetY,
-              width: tileWidth * 0.15,
-              height: tileHeight * 0.15,
-            }}
+            initial={
+              reduceMotion
+                ? false
+                : {
+                    opacity: 0,
+                    x: x + insetX,
+                    y: y + insetY,
+                    width: tileWidth * 0.15,
+                    height: tileHeight * 0.15,
+                  }
+            }
             animate={{
               opacity: 1,
               x,

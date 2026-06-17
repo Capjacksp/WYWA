@@ -10,9 +10,15 @@ export default function TechnologyPage() {
   return (
     <PageLayout>
       <TechnologyHero />
-      <HowItWorks />
-      <MultimodalFusion />
-      <WildfireDetectionShowcase />
+      <section className="relative bg-bg-light">
+        <HowItWorks />
+        <div className="relative z-20 -mt-[100vh] max-md:mt-0">
+          <MultimodalFusion />
+          <div className="relative z-30">
+            <WildfireDetectionShowcase />
+          </div>
+        </div>
+      </section>
     </PageLayout>
   );
 }
