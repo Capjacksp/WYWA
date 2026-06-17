@@ -21,6 +21,7 @@ const SPRING = {
 };
 const EASE_EXPO = [0.16, 1, 0.3, 1] as const;
 const DESKTOP_STEP_PROGRESS_END = 2 / 3;
+const STEP_PROGRESS_OFFSET = 0.02;
 
 export function HowItWorks() {
   return (
@@ -74,6 +75,26 @@ function DesktopHowItWorks() {
       });
     });
   }, [scrollYProgress]);
+
+  const scrollToStep = (targetStep: number) => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const nextStep = Math.max(
+      0,
+      Math.min(howItWorksSteps.length - 1, targetStep),
+    );
+    const scrollDistance = section.offsetHeight - window.innerHeight;
+    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+    const targetProgress =
+      ((nextStep + STEP_PROGRESS_OFFSET) / howItWorksSteps.length) *
+      DESKTOP_STEP_PROGRESS_END;
+
+    window.scrollTo({
+      top: sectionTop + scrollDistance * targetProgress,
+      behavior: "smooth",
+    });
+  };
 
   const step = howItWorksSteps[activeStep];
 
@@ -188,18 +209,24 @@ function DesktopHowItWorks() {
               </div>
 
               {activeStep + 1 < howItWorksSteps.length && (
-                <ArrowHead
-                  direction="right"
-                  size={18}
-                  className="absolute bottom-[15%] max-md:mb-8 max-md:ml-0"
-                />
+                <button
+                  type="button"
+                  className="absolute bottom-[15%] z-20 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F15D59] max-md:mb-8 max-md:ml-0"
+                  onClick={() => scrollToStep(activeStep + 1)}
+                  aria-label="Show next step"
+                >
+                  <ArrowHead direction="right" size={18} />
+                </button>
               )}
               {activeStep > 0 && (
-                <ArrowHead
-                  direction="left"
-                  size={18}
-                  className="absolute bottom-[15%] right-0 max-md:mb-8 max-md:ml-0"
-                />
+                <button
+                  type="button"
+                  className="absolute bottom-[15%] right-0 z-20 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F15D59] max-md:mb-8 max-md:ml-0"
+                  onClick={() => scrollToStep(activeStep - 1)}
+                  aria-label="Show previous step"
+                >
+                  <ArrowHead direction="left" size={18} />
+                </button>
               )}
 
               {/* Text grid — staggered children via variants */}
@@ -338,6 +365,25 @@ function MobileHowItWorks() {
     });
   }, [scrollYProgress]);
 
+  const scrollToStep = (targetStep: number) => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const nextStep = Math.max(
+      0,
+      Math.min(howItWorksSteps.length - 1, targetStep),
+    );
+    const scrollDistance = section.offsetHeight - window.innerHeight;
+    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+    const targetProgress =
+      (nextStep + STEP_PROGRESS_OFFSET) / howItWorksSteps.length;
+
+    window.scrollTo({
+      top: sectionTop + scrollDistance * targetProgress,
+      behavior: "smooth",
+    });
+  };
+
   const step = howItWorksSteps[activeStep];
 
   return (
@@ -373,21 +419,25 @@ function MobileHowItWorks() {
           </div>
 
           {activeStep + 1 < howItWorksSteps.length && (
-            <ArrowHead
-              direction="right"
-              size={13}
-              color="#F55656"
-              className="absolute top-[28%] left-0 ml-5"
-            />
+            <button
+              type="button"
+              className="absolute top-[28%] left-0 z-20 ml-5 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F55656]"
+              onClick={() => scrollToStep(activeStep + 1)}
+              aria-label="Show next step"
+            >
+              <ArrowHead direction="right" size={13} color="#F55656" />
+            </button>
           )}
 
           {activeStep > 0 && (
-            <ArrowHead
-              direction="left"
-              size={13}
-              color="#F55656"
-              className="absolute right-[0] top-[28%] mr-5"
-            />
+            <button
+              type="button"
+              className="absolute right-[0] top-[28%] z-20 mr-5 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F55656]"
+              onClick={() => scrollToStep(activeStep - 1)}
+              aria-label="Show previous step"
+            >
+              <ArrowHead direction="left" size={13} color="#F55656" />
+            </button>
           )}
 
           {/* Skyline — clip-path horizontal wipe */}

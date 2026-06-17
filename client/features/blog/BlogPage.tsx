@@ -44,6 +44,19 @@ export default function Blog() {
     });
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
   const indicatorWidth = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
+  const scrollToPost = (index: number) => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const scrollDistance = section.offsetHeight - window.innerHeight;
+    const progress = posts.length > 1 ? index / (posts.length - 1) : 0;
+    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+
+    window.scrollTo({
+      top: sectionTop + scrollDistance * progress,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <PageLayout headerClassName="header-dark">
@@ -76,9 +89,14 @@ export default function Blog() {
                 className="relative box-border grid h-full shrink-0 grid-cols-[1.3fr_1fr] items-center gap-14 px-[50px] max-lg:grid-cols-1 max-lg:content-center max-lg:gap-6 max-md:px-5"
                 style={{ width: slideWidth }}
               >
-                <div className="absolute left-[50px] bottom-[100px] -translate-y-1/2 max-lg:top-auto max-lg:bottom-4 max-lg:translate-y-0">
+                <button
+                  type="button"
+                  className="absolute left-[50px] bottom-[100px] z-10 -translate-y-1/2 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F15D59] max-lg:top-auto max-lg:bottom-4 max-lg:translate-y-0"
+                  onClick={() => scrollToPost(index === 0 ? 1 : 0)}
+                  aria-label={index === 0 ? "Show next blog post" : "Show previous blog post"}
+                >
                   <ArrowHead direction={index === 0 ? "right" : "left"} size={20} />
-                </div>
+                </button>
 
                 <div className="ml-[100px] max-lg:ml-16 max-md:ml-0">
                   <img
@@ -123,6 +141,24 @@ function MobileBlogRail() {
   const scrollProgress = useMotionValue(0);
   const smoothProgress = useSpring(scrollProgress, { stiffness: 200, damping: 30 });
   const indicatorWidth = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
+
+  const scrollToPost = (index: number) => {
+    const rail = railRef.current;
+    const slot = rail?.querySelectorAll<HTMLElement>("[data-blog-card-slot]")[
+      index
+    ];
+
+    if (!rail || !slot) return;
+
+    rail.scrollTo({
+      left: slot.offsetLeft + slot.offsetWidth / 2 - rail.clientWidth / 2,
+      behavior: "smooth",
+    });
+    setActiveIndex(index);
+
+    const maxScroll = rail.scrollWidth - rail.clientWidth;
+    scrollProgress.set(maxScroll > 0 ? slot.offsetLeft / maxScroll : 0);
+  };
 
   const handleScroll = () => {
     const rail = railRef.current;
@@ -188,11 +224,29 @@ function MobileBlogRail() {
                   {post.date}
                 </p>
                 <div className="mt-6 relative flex items-start gap-0">
-                  {index === 0 && <ArrowHead className="absolute -left-4" size={{ x: 16, y: 16 }} direction={index === 0 ? "right" : "left"} />}
+                  {index === 0 && (
+                    <button
+                      type="button"
+                      className="absolute -left-4 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F55656]"
+                      onClick={() => scrollToPost(1)}
+                      aria-label="Show next blog post"
+                    >
+                      <ArrowHead size={{ x: 16, y: 16 }} direction="right" />
+                    </button>
+                  )}
                   <h2 className="font-body text-[42px] pl-6 font-normal uppercase leading-[0.94] tracking-normal text-black">
                     {post.title}
                   </h2>
-                  {index === 1 && <ArrowHead className="absolute -right-4" size={{ x: 16, y: 16 }} direction={"left"} />}
+                  {index === 1 && (
+                    <button
+                      type="button"
+                      className="absolute -right-4 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F55656]"
+                      onClick={() => scrollToPost(0)}
+                      aria-label="Show previous blog post"
+                    >
+                      <ArrowHead size={{ x: 16, y: 16 }} direction="left" />
+                    </button>
+                  )}
                 </div>
                 <p className="mt-6 pl-6 font-figtree text-[14px] font-normal leading-snug text-[#24242578] line-clamp-4">
                   {post.body}

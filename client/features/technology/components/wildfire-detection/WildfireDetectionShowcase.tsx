@@ -22,6 +22,19 @@ function DesktopWildfireDetectionShowcase() {
     useHorizontalScroll({
       slideCount: 2,
     });
+  const scrollToSlide = (index: number) => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const scrollDistance = section.offsetHeight - window.innerHeight;
+    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+    const progress = index > 0 ? 1 : 0;
+
+    window.scrollTo({
+      top: sectionTop + scrollDistance * progress,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <section
@@ -41,6 +54,8 @@ function DesktopWildfireDetectionShowcase() {
               </>
             }
             arrowDirection="right"
+            arrowLabel="Show lab tests"
+            onArrowClick={() => scrollToSlide(1)}
             width={slideWidth}
           >
             <div className="mt-auto grid grid-cols-3 items-end gap-4 max-lg:gap-3 max-md:grid-cols-1">
@@ -66,6 +81,8 @@ function DesktopWildfireDetectionShowcase() {
           <ShowcaseSlide
             title="Lab Tests"
             arrowDirection="left"
+            arrowLabel="Show wildfire detection classes"
+            onArrowClick={() => scrollToSlide(0)}
             width={slideWidth}
             titleSpacingClassName="mb-[clamp(2.5rem,9vh,12rem)]"
           >
@@ -158,6 +175,12 @@ function MobileCardRail<T>({
     setTimeout(() => { isAutoScrolling.current = false; }, 700);
   };
 
+  const goToCard = (index: number) => {
+    const nextIndex = Math.max(0, Math.min(cards.length - 1, index));
+    setActiveIndex(nextIndex);
+    scrollToCard(nextIndex);
+  };
+
   useEffect(() => {
     if (cards.length <= 1) return;
 
@@ -203,21 +226,37 @@ function MobileCardRail<T>({
   return (
     <div className={className}>
       <div className="mb-10 flex items-start gap-4 px-7">
-        <ArrowHead
-          direction="right"
-          size={16}
-          color={activeIndex + 1 < cards.length ? "#F55656" : "transparent"}
-        />
+        <button
+          type="button"
+          className="shrink-0 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F55656] disabled:pointer-events-none"
+          onClick={() => goToCard(activeIndex + 1)}
+          disabled={activeIndex + 1 >= cards.length}
+          aria-label="Show next card"
+        >
+          <ArrowHead
+            direction="right"
+            size={16}
+            color={activeIndex + 1 < cards.length ? "#F55656" : "transparent"}
+          />
+        </button>
 
         <h2 className="font-heading text-[42px] font-[400] uppercase leading-[0.94] tracking-normal text-bg-dark">
           {title}
         </h2>
 
-        <ArrowHead
-          direction="left"
-          size={16}
-          color={activeIndex > 0 ? "#F55656" : "transparent"}
-        />
+        <button
+          type="button"
+          className="shrink-0 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F55656] disabled:pointer-events-none"
+          onClick={() => goToCard(activeIndex - 1)}
+          disabled={activeIndex <= 0}
+          aria-label="Show previous card"
+        >
+          <ArrowHead
+            direction="left"
+            size={16}
+            color={activeIndex > 0 ? "#F55656" : "transparent"}
+          />
+        </button>
       </div>
 
       <div
@@ -347,12 +386,16 @@ function LabVideo({
 function ShowcaseSlide({
   title,
   arrowDirection,
+  arrowLabel,
+  onArrowClick,
   width,
   titleSpacingClassName = "mb-[clamp(2.5rem,9vh,7rem)]",
   children,
 }: {
   title: ReactNode;
   arrowDirection: "left" | "right";
+  arrowLabel: string;
+  onArrowClick: () => void;
   width: string;
   titleSpacingClassName?: string;
   children: ReactNode;
@@ -365,9 +408,14 @@ function ShowcaseSlide({
       <div
         className={`${titleSpacingClassName} flex items-start gap-24 max-md:mb-16 max-md:gap-8`}
       >
-        <div className="mt-4 max-md:mt-1">
+        <button
+          type="button"
+          className="mt-4 shrink-0 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F15D59] max-md:mt-1"
+          onClick={onArrowClick}
+          aria-label={arrowLabel}
+        >
           <ArrowHead direction={arrowDirection} />
-        </div>
+        </button>
         <h2 className="font-body text-display font-normal uppercase leading-[1] tracking-normal text-bg-dark">
           {title}
         </h2>
