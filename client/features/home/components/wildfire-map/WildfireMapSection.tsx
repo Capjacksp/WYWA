@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { LeafletWildfireMap } from "@/features/home/components/wildfire-map/LeafletWildfireMap";
 import { ArrowHead } from "@/components/common/ArrowHead";
+import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -22,6 +23,7 @@ function DesktopWildfireMapSection() {
   const introRef = useRef<HTMLDivElement>(null);
   const mapOverlayRef = useRef<HTMLDivElement>(null);
   const locationsRef = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<any | null>(null);
 
   useGSAP(
     () => {
@@ -34,12 +36,32 @@ function DesktopWildfireMapSection() {
       const locations = locationsRef.current;
       if (!section || !panel || !intro || !mapOverlay || !locations) return;
 
+      const setMapInteractive = (interactive: boolean) => {
+        const map = mapRef.current;
+        if (!map) return;
+
+        const handlers = [
+          map.dragging,
+          map.touchZoom,
+          map.doubleClickZoom,
+          map.boxZoom,
+          map.keyboard,
+        ];
+        handlers.forEach((handler) =>
+          interactive ? handler?.enable() : handler?.disable(),
+        );
+      };
+
       gsap.set(intro, { x: "0vw", autoAlpha: 1 });
       gsap.set(mapOverlay, { autoAlpha: 1 });
       gsap.set(locations, { autoAlpha: 0 });
+      setMapInteractive(false);
 
       const timeline = gsap.timeline({
-        onReverseComplete: () => locations.classList.remove("is-visible"),
+        onReverseComplete: () => {
+          locations.classList.remove("is-visible");
+          setMapInteractive(false);
+        },
         scrollTrigger: {
           trigger: section,
           pin: panel,
@@ -55,7 +77,15 @@ function DesktopWildfireMapSection() {
         .to(intro, { x: "-16vw", duration: 0.28, ease: "none" }, 0)
         .to(intro, { autoAlpha: 0, duration: 0.18, ease: "none" }, 0.1)
         .to(mapOverlay, { autoAlpha: 0, duration: 0.18, ease: "none" }, 0.1)
-        .call(() => locations.classList.add("is-visible"), [], 0.24)
+        .call(
+          () => {
+            const revealingMap = timeline.scrollTrigger?.direction !== -1;
+            locations.classList.toggle("is-visible", revealingMap);
+            setMapInteractive(revealingMap);
+          },
+          [],
+          0.24,
+        )
         .to(locations, { autoAlpha: 1, duration: 0.18, ease: "none" }, 0.24)
         .to({}, { duration: 0.72 });
     },
@@ -73,7 +103,7 @@ function DesktopWildfireMapSection() {
         ref={panelRef}
         className="relative h-screen overflow-hidden text-white"
       >
-        <LeafletWildfireMap locationsLayerRef={locationsRef} />
+        <LeafletWildfireMap locationsLayerRef={locationsRef} mapRef={mapRef} />
 
         <div
           ref={mapOverlayRef}
@@ -115,7 +145,7 @@ function MobileWildfireMapSection() {
       if (!section || !panel || !intro || !mapOverlay || !logo || !locations)
         return;
 
-      const disableMapGestures = () => {
+      const setMapInteractive = (interactive: boolean) => {
         const map = mapRef.current;
         if (!map) return;
 
@@ -126,18 +156,20 @@ function MobileWildfireMapSection() {
           map.boxZoom,
           map.keyboard,
         ];
-        handlers.forEach((handler) => handler?.disable());
+        handlers.forEach((handler) =>
+          interactive ? handler?.enable() : handler?.disable(),
+        );
       };
 
       gsap.set([intro, mapOverlay, logo], { autoAlpha: 1 });
       gsap.set(intro, { x: 0 });
       gsap.set(locations, { autoAlpha: 0 });
-      disableMapGestures();
+      setMapInteractive(false);
 
       const timeline = gsap.timeline({
         onReverseComplete: () => {
           locations.classList.remove("is-visible");
-          disableMapGestures();
+          setMapInteractive(false);
         },
         scrollTrigger: {
           trigger: section,
@@ -159,7 +191,9 @@ function MobileWildfireMapSection() {
         )
         .call(
           () => {
-            locations.classList.add("is-visible");
+            const revealingMap = timeline.scrollTrigger?.direction !== -1;
+            locations.classList.toggle("is-visible", revealingMap);
+            setMapInteractive(revealingMap);
           },
           [],
           0.24,
@@ -213,13 +247,15 @@ const WildfireMapIntro = ({
     className="pointer-events-none absolute inset-0 z-[520] flex flex-col justify-between px-[50px] pb-12 pt-28 max-md:px-5 max-md:pb-8 max-md:pt-24"
   >
     <div className="max-w-[1120px]">
-      <h2 className="font-display text-h1 font-[350] uppercase leading-[1] text-white">
-        A Decade of Wildfires.
-        <br />
-        Minutes to Spread.
-        <br />
-        <span className="font-[500] text-cta">California, USA</span>
-      </h2>
+      <ScrollTextLines
+        as="h2"
+        className="font-display text-h1 font-[350] uppercase leading-[1] text-white"
+        lines={[
+          "A Decade of Wildfires.",
+          "Minutes to Spread.",
+          <span className="font-[500] text-cta">California, USA</span>,
+        ]}
+      />
     </div>
 
     <div className="max-w-[800px] max-md:mb-20">
@@ -229,14 +265,20 @@ const WildfireMapIntro = ({
         color="white"
         className="mb-10 ml-5 max-md:mb-8 max-md:ml-0"
       />
-      <p className="max-w-[780px] font-heading text-h3 font-[350] uppercase leading-[1.2] text-white">
-        We detect at ignition, providing a{" "}
-        <span className="font-bold">15-minute</span>
-        <br className="hidden md:block" /> head start before the invisible
-        becomes
-        <br className="hidden md:block" /> inevitable, because every minute
-        counts.
-      </p>
+      <ScrollTextLines
+        as="p"
+        className="max-w-[780px] font-heading text-h3 font-[350] uppercase leading-[1.2] text-white"
+        delay={0.08}
+        smoothProgress
+        lines={[
+          <>
+            We detect at ignition, providing a{" "}
+            <span className="font-bold">15-minute</span>
+          </>,
+          "head start before the invisible becomes",
+          "inevitable, because every minute counts.",
+        ]}
+      />
     </div>
   </div>
 );

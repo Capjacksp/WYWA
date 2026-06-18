@@ -35,6 +35,7 @@ type ScrollTextLinesProps<T extends ElementType> = {
   duration?: number;
   stagger?: number;
   distance?: number;
+  smoothProgress?: boolean;
   motionPreset?: "slide" | "fusion-converge";
 } & Omit<HTMLMotionProps<"div">, "children">;
 
@@ -44,6 +45,7 @@ export function ScrollTextLines<T extends ElementType = "div">({
   className,
   lineClassName,
   delay = 0,
+  smoothProgress = false,
   motionPreset = "slide",
   ...props
 }: ScrollTextLinesProps<T>) {
@@ -76,7 +78,7 @@ export function ScrollTextLines<T extends ElementType = "div">({
             index={index}
             lineCount={lines.length}
             progress={
-              motionPreset === "fusion-converge"
+              motionPreset === "fusion-converge" || smoothProgress
                 ? smoothScrollProgress
                 : scrollYProgress
             }
