@@ -298,9 +298,8 @@ function DesktopHowItWorks() {
               {thresholds.map((_, index) => (
                 <span
                   key={index}
-                  className={`h-1.5 w-8 transition-colors ${
-                    index === activeStep ? "bg-[#f15d59]" : "bg-bg-dark/20"
-                  }`}
+                  className={`h-1.5 w-8 transition-colors ${index === activeStep ? "bg-[#f15d59]" : "bg-bg-dark/20"
+                    }`}
                 />
               ))}
             </div>
@@ -604,13 +603,26 @@ function PixelSkylineMask({
   const reduceMotion = useReducedMotion();
   const tileWidth = 1085 / columns;
   const tileHeight = 573 / rows;
+  const pixelCount = columns * rows;
+  const randomDelayOrder = useMemo(() => {
+    const order = Array.from({ length: pixelCount }, (_, index) => index);
+
+    for (let index = order.length - 1; index > 0; index -= 1) {
+      const randomIndex = Math.floor(Math.random() * (index + 1));
+      [order[index], order[randomIndex]] = [order[randomIndex], order[index]];
+    }
+
+    return order;
+  }, [pixelCount]);
 
   return (
     <>
-      {Array.from({ length: columns * rows }, (_, index) => {
+      {Array.from({ length: pixelCount }, (_, index) => {
         const row = Math.floor(index / columns);
         const column = index % columns;
-        const delayRank = rows - row + column * 0.35 + ((index * 7) % 5) * 0.55;
+        const randomRank = randomDelayOrder[index];
+        const revealDelay =
+          pixelCount > 1 ? (randomRank / (pixelCount - 1)) * 0.80 : 0;
         const x = column * tileWidth;
         const y = row * tileHeight;
         const insetX = tileWidth * 0.425;
@@ -624,12 +636,12 @@ function PixelSkylineMask({
               reduceMotion
                 ? false
                 : {
-                    opacity: 0,
-                    x: x + insetX,
-                    y: y + insetY,
-                    width: tileWidth * 0.15,
-                    height: tileHeight * 0.15,
-                  }
+                  opacity: 0,
+                  x: x + insetX,
+                  y: y + insetY,
+                  width: tileWidth * 0.15,
+                  height: tileHeight * 0.15,
+                }
             }
             animate={{
               opacity: 1,
@@ -639,8 +651,8 @@ function PixelSkylineMask({
               height: tileHeight + 1,
             }}
             transition={{
-              delay: reduceMotion ? 0 : delayRank * 0.065,
-              duration: reduceMotion ? 0 : 0.45,
+              delay: reduceMotion ? 0 : revealDelay,
+              duration: reduceMotion ? 0 : 0.35,
               ease: [0.22, 1, 0.36, 1],
             }}
           />

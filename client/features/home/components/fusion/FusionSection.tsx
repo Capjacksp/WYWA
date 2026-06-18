@@ -1,5 +1,5 @@
 import { motion, useInView, useReducedMotion } from "framer-motion";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import Section from "@/components/common/Section";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 
@@ -369,13 +369,26 @@ function FusionPixelMask({
   const reduceMotion = useReducedMotion();
   const tileWidth = width / columns;
   const tileHeight = height / rows;
+  const pixelCount = columns * rows;
+  const randomDelayOrder = useMemo(() => {
+    const order = Array.from({ length: pixelCount }, (_, index) => index);
+
+    for (let index = order.length - 1; index > 0; index -= 1) {
+      const randomIndex = Math.floor(Math.random() * (index + 1));
+      [order[index], order[randomIndex]] = [order[randomIndex], order[index]];
+    }
+
+    return order;
+  }, [pixelCount]);
 
   return (
     <>
-      {Array.from({ length: columns * rows }, (_, index) => {
+      {Array.from({ length: pixelCount }, (_, index) => {
         const row = Math.floor(index / columns);
         const column = index % columns;
-        const delayRank = rows - row + column * 0.35 + ((index * 7) % 5) * 0.55;
+        const randomRank = randomDelayOrder[index];
+        const revealDelay =
+          pixelCount > 1 ? (randomRank / (pixelCount - 1)) * 0.80 : 0;
         const x = column * tileWidth;
         const y = row * tileHeight;
         const insetX = tileWidth * 0.425;
@@ -405,8 +418,8 @@ function FusionPixelMask({
                 active || reduceMotion ? tileHeight + 1 : tileHeight * 0.15,
             }}
             transition={{
-              delay: active && !reduceMotion ? delayRank * 0.065 : 0,
-              duration: reduceMotion ? 0 : active ? 0.45 : 0.12,
+              delay: active && !reduceMotion ? revealDelay : 0,
+              duration: reduceMotion ? 0 : active ? 0.35 : 0.12,
               ease: [0.22, 1, 0.36, 1],
             }}
           />
