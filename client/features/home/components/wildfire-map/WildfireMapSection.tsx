@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { LeafletWildfireMap } from "@/features/home/components/wildfire-map/LeafletWildfireMap";
 import { ArrowHead } from "@/components/common/ArrowHead";
+import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -247,15 +248,17 @@ const WildfireMapIntro = ({
     className="pointer-events-none absolute inset-0 z-[520] flex flex-col justify-between px-[50px] pb-12 pt-28 max-md:px-5 max-md:pb-8 max-md:pt-24"
   >
     <div className="max-w-[1120px]">
-      <ScrollTextLines
-        as="h2"
-        className="font-display text-h1 font-[350] uppercase leading-[1] text-white"
-        lines={[
-          "A Decade of Wildfires.",
-          "Minutes to Spread.",
-          <span className="font-[500] text-cta">California, USA</span>,
-        ]}
-      />
+      <ScrambleHover className="pointer-events-auto w-fit cursor-default">
+        <ScrollTextLines
+          as="h2"
+          className="font-display text-h1 font-[350] uppercase leading-[1] text-white"
+          lines={[
+            "A Decade of Wildfires.",
+            "Minutes to Spread.",
+            <span className="font-[500] text-cta">California, USA</span>,
+          ]}
+        />
+      </ScrambleHover>
     </div>
 
     <div className="max-w-[800px] max-md:mb-20">

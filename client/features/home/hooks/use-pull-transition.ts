@@ -18,6 +18,7 @@ const HERO_EDGE_SCALE_PROGRESS: number[] = [0.08, 0.3, 0.5];
 const HERO_EDGE_OPACITY_PROGRESS: number[] = [0.06, 0.18, 0.52];
 const EDGE_SCALE: number[] = [0.22, 0.72, 1];
 const EDGE_OPACITY: number[] = [0, 0.9, 0];
+const DEFAULT_PULL_Y: number[] = [0, 22, 118, 48, 0];
 const SPRING = {
   stiffness: 105,
   damping: 26,
@@ -46,12 +47,14 @@ export function usePullTransition(
     disabledOnMobile = true,
     offset = pullTransitionPresets.boundary.offset,
     pullProgress = pullTransitionPresets.boundary.pullProgress,
+    pullY = DEFAULT_PULL_Y,
     edgeScaleProgress = pullTransitionPresets.boundary.edgeScaleProgress,
     edgeOpacityProgress = pullTransitionPresets.boundary.edgeOpacityProgress,
   }: {
     disabledOnMobile?: boolean;
     offset?: ScrollOffset;
     pullProgress?: number[];
+    pullY?: number[];
     edgeScaleProgress?: number[];
     edgeOpacityProgress?: number[];
   } = {},
@@ -64,7 +67,7 @@ export function usePullTransition(
     offset,
   });
 
-  const resistedY = useTransform(scrollYProgress, pullProgress, PULL_Y);
+  const resistedY = useTransform(scrollYProgress, pullProgress, pullY);
   const y = useSpring(resistedY, SPRING);
   const edgeScale = useTransform(
     scrollYProgress,

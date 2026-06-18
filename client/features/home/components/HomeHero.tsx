@@ -1,4 +1,5 @@
 import { Button } from "@/components/common/Button";
+import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrambleLoadText } from "@/components/ui/scramble-load-text";
 import { motion, useReducedMotion } from "framer-motion";
 
@@ -103,17 +104,19 @@ function DesktopContentPanel() {
 function DesktopHeroTitle() {
   return (
     <div className="absolute left-[50px] top-[20%] z-10 max-md:hidden max-lg:top-[40%]">
-      <ScrambleLoadText
-        as="h1"
-        className="font-heading text-h1"
-        style={{ fontWeight: 350 }}
-        delay={0.12}
-        {...HERO_TEXT_MOTION}
-        lines={[
-          { text: "BUILDING NATURE'S", className: "text-white" },
-          { text: "SIXTH SENSE", className: "text-cta" },
-        ]}
-      />
+      <ScrambleHover className="w-fit cursor-default">
+        <ScrambleLoadText
+          as="h1"
+          className="font-heading text-h1"
+          style={{ fontWeight: 350 }}
+          delay={0.12}
+          {...HERO_TEXT_MOTION}
+          lines={[
+            { text: "BUILDING NATURE'S", className: "text-white" },
+            { text: "SIXTH SENSE", className: "text-cta" },
+          ]}
+        />
+      </ScrambleHover>
     </div>
   );
 }
@@ -122,17 +125,19 @@ function MobileHeroContent() {
   return (
     <>
       <div className="absolute left-[27px] right-5 top-[104px] z-10 hidden max-md:block">
-        <ScrambleLoadText
-          as="h1"
-          className="font-heading text-[42px] font-[350] uppercase leading-[0.94] tracking-normal text-white min-[390px]:text-[42px]"
-          delay={0.12}
-          {...HERO_TEXT_MOTION}
-          lines={[
-            { text: "Building" },
-            { text: "Nature's" },
-            { text: "Sixth Sense", className: "text-cta" },
-          ]}
-        />
+        <ScrambleHover className="w-fit cursor-default">
+          <ScrambleLoadText
+            as="h1"
+            className="font-heading text-[42px] font-[350] uppercase leading-[0.94] tracking-normal text-white min-[390px]:text-[42px]"
+            delay={0.12}
+            {...HERO_TEXT_MOTION}
+            lines={[
+              { text: "Building" },
+              { text: "Nature's" },
+              { text: "Sixth Sense", className: "text-cta" },
+            ]}
+          />
+        </ScrambleHover>
       </div>
 
       <div className="relative z-10 hidden min-h-[max(266px,calc(100svh-578px))] flex-1 bg-bg-dark px-[26px] pb-8 pt-12 max-md:block">

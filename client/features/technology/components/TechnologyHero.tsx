@@ -2,6 +2,7 @@ import {
   LoadTextLines,
   ScrollTextLines,
 } from "@/components/ui/scroll-text-lines";
+import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrambleLoadText } from "@/components/ui/scramble-load-text";
 import { motion, useReducedMotion } from "framer-motion";
 
@@ -25,17 +26,19 @@ function DesktopTechnologyHero() {
     <section className="relative min-h-[calc(100vh-4rem)] overflow-hidden  bg-[#242425] -mt-16 px-[50px] pb-20 pt-32 text-white max-md:hidden">
 
       <div className="relative z-10 max-w-[1340px]">
-        <ScrambleLoadText
-          as="h1"
-          className="max-w-[1405px] font-body font-normal text-display uppercase tracking-normal"
-          delay={0.12}
-          {...HERO_TEXT_MOTION}
-          lines={[
-            { text: "Most wildfire detection" },
-            { text: "systems depend on a" },
-            { text: "single sense." },
-          ]}
-        />
+        <ScrambleHover className="w-fit cursor-default">
+          <ScrambleLoadText
+            as="h1"
+            className="max-w-[1405px] font-body font-normal text-display uppercase tracking-normal"
+            delay={0.12}
+            {...HERO_TEXT_MOTION}
+            lines={[
+              { text: "Most wildfire detection" },
+              { text: "systems depend on a" },
+              { text: "single sense." },
+            ]}
+          />
+        </ScrambleHover>
         <div className="mt-20 grid max-w-[600px] gap-14 max-md:mt-12 max-md:gap-10">
           <div>
             <AnimatedIcon delay={0.72}>
@@ -100,22 +103,24 @@ function MobileSingleSenseScreen() {
       data-header-class=""
       className="relative min-h-screen -mt-16 overflow-hidden bg-bg-dark px-7 pb-10 pt-[110px] text-white"
     >
-      <ScrambleLoadText
-        as="h1"
-        className="relative z-10 max-w-[335px] font-heading text-[43px] font-[400] uppercase leading-[0.94] tracking-normal text-white"
-        delay={0.12}
-        {...HERO_TEXT_MOTION}
-        lines={[
-          { text: "Most" },
-          { text: "wildfire" },
-          { text: "detection" },
-          { text: "systems" },
-          { text: "depend" },
-          { text: "on a" },
-          { text: "single" },
-          { text: "sense." },
-        ]}
-      />
+      <ScrambleHover className="relative z-10 w-fit cursor-default">
+        <ScrambleLoadText
+          as="h1"
+          className="max-w-[335px] font-heading text-[43px] font-[400] uppercase leading-[0.94] tracking-normal text-white"
+          delay={0.12}
+          {...HERO_TEXT_MOTION}
+          lines={[
+            { text: "Most" },
+            { text: "wildfire" },
+            { text: "detection" },
+            { text: "systems" },
+            { text: "depend" },
+            { text: "on a" },
+            { text: "single" },
+            { text: "sense." },
+          ]}
+        />
+      </ScrambleHover>
 
       <AnimatedEarth className="bottom-0 right-0 w-[320px] max-w-none" />
     </section>

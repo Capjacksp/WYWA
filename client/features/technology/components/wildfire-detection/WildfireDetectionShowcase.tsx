@@ -7,6 +7,7 @@ import {
   wildfireClassCards,
 } from "@/features/technology/data/technologyCards";
 import { ArrowHead } from "@/components/common/ArrowHead";
+import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 
 export function WildfireDetectionShowcase() {
   return (
@@ -53,6 +54,7 @@ function DesktopWildfireDetectionShowcase() {
                 Classes
               </>
             }
+            animatedTitleLines={["Wildfire Detection", "Classes"]}
             arrowDirection="right"
             arrowLabel="Show lab tests"
             onArrowClick={() => scrollToSlide(1)}
@@ -125,6 +127,7 @@ function MobileWildfireDetectionShowcase() {
             Classes
           </>
         }
+        animatedTitleLines={["Wildfire", "Detection", "Classes"]}
         cards={wildfireClassCards}
         renderCard={(card) => (
           <MobileClassCard key={card.label} card={card} />
@@ -148,11 +151,13 @@ function MobileCardRail<T>({
   cards,
   renderCard,
   className = "",
+  animatedTitleLines,
 }: {
   title: ReactNode;
   cards: readonly T[];
   renderCard: (card: T) => ReactNode;
   className?: string;
+  animatedTitleLines?: ReactNode[];
 }) {
   const railRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -240,9 +245,17 @@ function MobileCardRail<T>({
           />
         </button>
 
-        <h2 className="font-heading text-[42px] font-[400] uppercase leading-[0.94] tracking-normal text-bg-dark">
-          {title}
-        </h2>
+        {animatedTitleLines ? (
+          <ScrollTextLines
+            as="h2"
+            className="font-heading text-[42px] font-[400] uppercase leading-[0.94] tracking-normal text-bg-dark"
+            lines={animatedTitleLines}
+          />
+        ) : (
+          <h2 className="font-heading text-[42px] font-[400] uppercase leading-[0.94] tracking-normal text-bg-dark">
+            {title}
+          </h2>
+        )}
 
         <button
           type="button"
@@ -390,6 +403,7 @@ function ShowcaseSlide({
   onArrowClick,
   width,
   titleSpacingClassName = "mb-[clamp(2.5rem,9vh,7rem)]",
+  animatedTitleLines,
   children,
 }: {
   title: ReactNode;
@@ -398,6 +412,7 @@ function ShowcaseSlide({
   onArrowClick: () => void;
   width: string;
   titleSpacingClassName?: string;
+  animatedTitleLines?: ReactNode[];
   children: ReactNode;
 }) {
   return (
@@ -416,9 +431,17 @@ function ShowcaseSlide({
         >
           <ArrowHead direction={arrowDirection} />
         </button>
-        <h2 className="font-body text-display font-normal uppercase leading-[1] tracking-normal text-bg-dark">
-          {title}
-        </h2>
+        {animatedTitleLines ? (
+          <ScrollTextLines
+            as="h2"
+            className="font-body text-display font-normal uppercase leading-[1] tracking-normal text-bg-dark"
+            lines={animatedTitleLines}
+          />
+        ) : (
+          <h2 className="font-body text-display font-normal uppercase leading-[1] tracking-normal text-bg-dark">
+            {title}
+          </h2>
+        )}
       </div>
 
       {children}

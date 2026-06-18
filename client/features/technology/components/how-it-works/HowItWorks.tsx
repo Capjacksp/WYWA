@@ -8,6 +8,7 @@ import {
 } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { howItWorksSteps } from "@/features/technology/data/howItWorksSteps";
+import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 import { cn } from "@/lib/utils";
 import { ArrowHead } from "@/components/common/ArrowHead";
@@ -103,17 +104,21 @@ function DesktopHowItWorks() {
       {/* STATIC HEADER PART */}
       <div className="px-[50px] pt-32 max-md:px-5 max-md:pt-20">
         <div className="mx-auto">
-          <ScrollTextLines
-            as="h2"
-            className="font-body font-normal text-display uppercase tracking-normal text-bg-dark"
-            lines={[
-              "Single senses create",
-              <>
-                blind spots. <span className="text-[#F15D59]">Multimodal</span>
-              </>,
-              <span className="text-[#F15D59]">intelligence closes them.</span>,
-            ]}
-          />
+          <ScrambleHover className="w-fit cursor-default">
+            <ScrollTextLines
+              as="h2"
+              className="font-body font-normal text-display uppercase tracking-normal text-bg-dark"
+              lines={[
+                "Single senses create",
+                <>
+                  blind spots. <span className="text-[#F15D59]">Multimodal</span>
+                </>,
+                <span className="text-[#F15D59]">
+                  intelligence closes them.
+                </span>,
+              ]}
+            />
+          </ScrambleHover>
         </div>
       </div>
 
@@ -391,18 +396,20 @@ function MobileHowItWorks() {
     <div data-header-class="header-dark" className="bg-[#F7F7F7] md:hidden">
       {/* Static heading — outside the scroll section */}
       <div className="px-7 pt-24 pb-6">
-        <ScrollTextLines
-          as="h2"
-          className="font-heading text-[32px] font-[400] uppercase leading-[0.94] tracking-normal text-bg-dark"
-          lines={[
-            "Single senses",
-            "create",
-            "blind spots.",
-            <span className="text-[#F55656]">Multimodal</span>,
-            <span className="text-[#F55656]">intelligence</span>,
-            <span className="text-[#F55656]">closes them.</span>,
-          ]}
-        />
+        <ScrambleHover className="w-fit cursor-default">
+          <ScrollTextLines
+            as="h2"
+            className="font-heading text-[32px] font-[400] uppercase leading-[0.94] tracking-normal text-bg-dark"
+            lines={[
+              "Single senses",
+              "create",
+              "blind spots.",
+              <span className="text-[#F55656]">Multimodal</span>,
+              <span className="text-[#F55656]">intelligence</span>,
+              <span className="text-[#F55656]">closes them.</span>,
+            ]}
+          />
+        </ScrambleHover>
       </div>
 
       <section ref={sectionRef} className="relative h-[420vh]">
