@@ -43,7 +43,7 @@ function DesktopTechnologyHero() {
             </AnimatedIcon>
             <LoadTextLines
               as="p"
-              className="font-figtree font-normal text-[22px] leading-snug"
+              className="font-figtree font-normal text-[22px] leading-snug w-[580px]"
               delay={0.42}
               {...HERO_TEXT_MOTION}
               lines={[
@@ -59,7 +59,7 @@ function DesktopTechnologyHero() {
 
             <LoadTextLines
               as="p"
-              className="font-figtree font-normal text-[22px] leading-snug"
+              className="font-figtree font-normal text-[22px] leading-snug w-[480px]"
               delay={0.62}
               {...HERO_TEXT_MOTION}
               lines={[

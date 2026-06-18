@@ -275,20 +275,22 @@ function DesktopHowItWorks() {
                   </motion.div>
                 </AnimatePresence>
 
-                <AnimatePresence mode="wait" custom={direction}>
-                  <motion.p
-                    key={step.body}
-                    custom={direction}
-                    variants={desktopBodyVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{ duration: 0.5, ease: EASE_EXPO, delay: 0.08 }}
-                    className="self-center justify-self-end max-w-[300px] font-figtree text-body font-normal leading-snug text-bg-dark max-lg:justify-self-start max-lg:text-left max-md:max-w-none"
-                  >
-                    {step.body}
-                  </motion.p>
-                </AnimatePresence>
+                <div className="flex w-full h-40 justify-center items-start">
+                  <AnimatePresence mode="wait" custom={direction}>
+                    <motion.p
+                      key={step.body}
+                      custom={direction}
+                      variants={desktopBodyVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{ duration: 0.5, ease: EASE_EXPO, delay: 0.08 }}
+                      className="max-w-[300px] ml-24 font-figtree text-body font-normal leading-snug text-bg-dark text-left max-md:max-w-none"
+                    >
+                      {step.body}
+                    </motion.p>
+                  </AnimatePresence>
+                </div>
               </div>
 
               <div className="absolute -right-8 top-10 h-full w-[45%] bg-[linear-gradient(to_right,rgba(36,36,37,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(36,36,37,0.08)_1px,transparent_1px)] bg-[size:34px_34px] [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent),linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)] [mask-composite:intersect] max-md:hidden" />

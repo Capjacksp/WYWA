@@ -97,21 +97,27 @@ export function DesktopFusionRedSection() {
           <CharacterReveal
             className="text-justify text-h1-md uppercase text-white"
             active={revealCopy}
-            delay={1.7}
+            delay={1}
             segments={[
-              { text: "SENSING SUBTLE SHIFTS IN THE ENVIRONMENT ACROSS " },
+              { text: "SENSING SUBTLE SHIFTS IN" },
+              { text: "THE ENVIRONMENT ACROSS" },
               {
-                text: "CHEMICAL, VISUAL, AND TEMPORAL SIGNALS, ",
+                text: "CHEMICAL, VISUAL, AND",
                 className: "font-bold text-bg-dark",
               },
-              { text: "DETECTING IGNITION BEFORE CATASTROPHE UNFOLDS." },
+              {
+                text: "TEMPORAL SIGNALS,",
+                className: "font-bold text-bg-dark",
+              },
+              { text: "DETECTING IGNITION BEFORE" },
+              { text: "CATASTROPHE UNFOLDS." },
             ]}
           />
         </div>
 
         <div className="ml-auto max-w-[260px] flex-1">
           <motion.div
-            className="align-right font-figtree text-body font-[400] leading-relaxed text-white opacity-90"
+            className="align-right font-figtree text-body font-[400] leading-[1.5] text-white opacity-90"
             initial="hidden"
             animate={revealCopy ? "visible" : "hidden"}
             variants={{
@@ -132,12 +138,8 @@ export function DesktopFusionRedSection() {
               like Red Brome, Medusahead, Cheatgrass, and Wild Oats to detect
               wildfire-specific combustion signatures in real time, filtering
               out false triggers like diesel emissions or dust.
-            </p>
-            <p>
               Edge AI then verifies ignition by interpreting motion patterns in
               flame and rising smoke.
-            </p>
-            <p>
               Trained in simulated wildfire environments using real-world and
               simulated data, the system detects fire alerts within a minute,
               providing a critical 15-minute head start.
@@ -318,7 +320,7 @@ function JaggedRedBackground({ active }: { active: boolean }) {
   return (
     <div className="pointer-events-none absolute bottom-0 left-0 z-0 h-full w-full">
       <svg
-        className="absolute bottom-0 h-[82vh] w-full object-cover object-bottom"
+        className="absolute bottom-0 h-[90vh] w-full object-cover object-bottom"
         viewBox="100 0 1857 1000.13"
         preserveAspectRatio="none"
         fill="none"
@@ -449,47 +451,49 @@ function CharacterReveal({
       initial="hidden"
       animate={active || reduceMotion ? "visible" : "hidden"}
     >
-      {segments.map((segment, segmentIndex) =>
-        segment.text.split(/(\s+)/).map((word, wordIndex) => {
-          if (/^\s+$/.test(word)) return " ";
+      {segments.map((segment, segmentIndex) => (
+        <span key={segmentIndex} className="block text-justify [text-align-last:justify] leading-[1.1] ">
+          {segment.text.split(/(\s+)/).map((word, wordIndex) => {
+            if (/^\s+$/.test(word)) return " ";
 
-          return (
-            <span
-              key={`${segmentIndex}-${wordIndex}`}
-              className={`inline-block whitespace-nowrap ${segment.className ?? ""}`}
-            >
-              {Array.from(word).map((character) => {
-                const index = characterIndex++;
+            return (
+              <span
+                key={`${segmentIndex}-${wordIndex}`}
+                className={`inline-block whitespace-nowrap ${segment.className ?? ""}`}
+              >
+                {Array.from(word).map((character) => {
+                  const index = characterIndex++;
 
-                return (
-                  <span
-                    key={index}
-                    className="inline-block overflow-hidden align-bottom"
-                  >
-                    <motion.span
-                      className="inline-block"
-                      variants={{
-                        hidden: { opacity: 0, y: "110%" },
-                        visible: {
-                          opacity: 1,
-                          y: 0,
-                          transition: {
-                            delay: reduceMotion ? 0 : delay + index * 0.012,
-                            duration: reduceMotion ? 0 : 0.48,
-                            ease: [0.22, 1, 0.36, 1],
-                          },
-                        },
-                      }}
+                  return (
+                    <span
+                      key={index}
+                      className="inline-block overflow-hidden align-bottom"
                     >
-                      {character}
-                    </motion.span>
-                  </span>
-                );
-              })}
-            </span>
-          );
-        }),
-      )}
+                      <motion.span
+                        className="inline-block"
+                        variants={{
+                          hidden: { opacity: 0, y: "110%" },
+                          visible: {
+                            opacity: 1,
+                            y: 0,
+                            transition: {
+                              delay: reduceMotion ? 0 : delay + index * 0.012,
+                              duration: reduceMotion ? 0 : 0.48,
+                              ease: [0.22, 1, 0.36, 1],
+                            },
+                          },
+                        }}
+                      >
+                        {character}
+                      </motion.span>
+                    </span>
+                  );
+                })}
+              </span>
+            );
+          })}
+        </span>
+      ))}
     </motion.h2>
   );
 }
