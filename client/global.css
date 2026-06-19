@@ -572,6 +572,21 @@
 
 
 
+/* Dense horizontal analog interference, matching the reference's rippled edges. */
+.hero-radio-glitch > span {
+  overflow: visible;
+}
+
+.hero-radio-glitch > span > span {
+  filter: url("#hero-radio-glitch-filter");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-radio-glitch > span > span {
+    filter: url("#hero-radio-glitch-filter-static");
+  }
+}
+
 /* Leaflet wildfire map */
 .leaflet-container {
   background: #17191c center / cover no-repeat;

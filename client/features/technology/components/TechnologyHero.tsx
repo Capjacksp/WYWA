@@ -4,6 +4,7 @@ import {
 } from "@/components/ui/scroll-text-lines";
 import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrambleLoadText } from "@/components/ui/scramble-load-text";
+import { RadioGlitchFilter } from "@/components/ui/radio-glitch-filter";
 import { motion, useReducedMotion } from "framer-motion";
 
 const HERO_TEXT_MOTION = {
@@ -15,6 +16,7 @@ const HERO_TEXT_MOTION = {
 export function TechnologyHero() {
   return (
     <>
+      <RadioGlitchFilter />
       <DesktopTechnologyHero />
       <MobileTechnologyHero />
     </>
@@ -29,7 +31,7 @@ function DesktopTechnologyHero() {
         <ScrambleHover className="w-fit cursor-default">
           <ScrambleLoadText
             as="h1"
-            className="max-w-[1405px] font-body font-normal text-display uppercase tracking-normal"
+            className="hero-radio-glitch max-w-[1405px] font-body font-normal text-display uppercase tracking-normal"
             delay={0.12}
             {...HERO_TEXT_MOTION}
             lines={[
@@ -106,7 +108,7 @@ function MobileSingleSenseScreen() {
       <ScrambleHover className="relative z-10 w-fit cursor-default">
         <ScrambleLoadText
           as="h1"
-          className="max-w-[335px] font-heading text-[43px] font-[400] uppercase leading-[0.94] tracking-normal text-white"
+          className="hero-radio-glitch max-w-[335px] font-heading text-[43px] font-[400] uppercase leading-[0.94] tracking-normal text-white"
           delay={0.12}
           {...HERO_TEXT_MOTION}
           lines={[

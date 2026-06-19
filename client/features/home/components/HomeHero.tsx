@@ -1,6 +1,7 @@
 import { Button } from "@/components/common/Button";
 import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrambleLoadText } from "@/components/ui/scramble-load-text";
+import { RadioGlitchFilter } from "@/components/ui/radio-glitch-filter";
 import { motion, useReducedMotion } from "framer-motion";
 
 const HERO_TEXT_MOTION = {
@@ -43,6 +44,7 @@ function HomeHero({
       data-header-class={trackHeader ? "" : undefined}
       className={`relative h-screen w-full overflow-hidden p-0 max-md:flex max-md:h-auto max-md:min-h-screen max-md:flex-col max-md:bg-bg-dark min-md:h-screen ${embedded ? "" : "-mt-16"}`}
     >
+      <RadioGlitchFilter />
       <HeroImagePanel />
       <DesktopContentPanel />
       <DesktopHeroTitle />
@@ -107,7 +109,7 @@ function DesktopHeroTitle() {
       <ScrambleHover className="w-fit cursor-default">
         <ScrambleLoadText
           as="h1"
-          className="font-heading text-h1"
+          className="hero-radio-glitch font-heading text-h1"
           style={{ fontWeight: 350 }}
           delay={0.12}
           {...HERO_TEXT_MOTION}
@@ -128,7 +130,7 @@ function MobileHeroContent() {
         <ScrambleHover className="w-fit cursor-default">
           <ScrambleLoadText
             as="h1"
-            className="font-heading text-[42px] font-[350] uppercase leading-[0.94] tracking-normal text-white min-[390px]:text-[42px]"
+            className="hero-radio-glitch font-heading text-[42px] font-[350] uppercase leading-[0.94] tracking-normal text-white min-[390px]:text-[42px]"
             delay={0.12}
             {...HERO_TEXT_MOTION}
             lines={[

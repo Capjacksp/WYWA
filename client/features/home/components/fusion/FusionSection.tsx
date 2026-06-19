@@ -31,7 +31,7 @@ export function DesktopFusionIntroSection() {
       />
 
       <ScrollTextLines
-        className="relative z-10 mx-auto mb-[-80px] max-w-[1800px] text-center"
+        className="hero-radio-glitch relative z-10 mx-auto mb-[-80px] max-w-[1800px] text-center"
         lineClassName="block text-huge"
         motionPreset="fusion-converge"
         delay={0.1}
@@ -225,7 +225,7 @@ function MobileFusionSensorScreen() {
 
       <ScrollTextLines
         as="h2"
-        className="relative z-10 mx-auto max-w-[360px] text-center font-heading text-[43px] font-[350] uppercase leading-[0.94] tracking-normal"
+        className="hero-radio-glitch relative z-10 mx-auto max-w-[360px] text-center font-heading text-[43px] font-[350] uppercase leading-[0.94] tracking-normal"
         motionPreset="fusion-converge"
         lines={[
           <span className="text-[#F15D59]">Multimodal</span>,
