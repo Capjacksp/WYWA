@@ -5,6 +5,7 @@ import {
 import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrambleLoadText } from "@/components/ui/scramble-load-text";
 import { RadioGlitchFilter } from "@/components/ui/radio-glitch-filter";
+import { CursorRadialGlow } from "@/components/ui/cursor-radial-glow";
 import { motion, useReducedMotion } from "framer-motion";
 
 const HERO_TEXT_MOTION = {
@@ -25,7 +26,10 @@ export function TechnologyHero() {
 
 function DesktopTechnologyHero() {
   return (
-    <section className="relative min-h-[calc(100vh-4rem)] overflow-hidden  bg-[#242425] -mt-16 px-[50px] pb-20 pt-32 text-white max-md:hidden">
+    <CursorRadialGlow
+      as="section"
+      className="relative -mt-16 min-h-[calc(100vh-4rem)] overflow-hidden bg-bg-dark px-[50px] pb-20 pt-32 text-white max-md:hidden"
+    >
 
       <div className="relative z-10 max-w-[1340px]">
         <ScrambleHover className="w-fit cursor-default">
@@ -86,7 +90,7 @@ function DesktopTechnologyHero() {
       </div>
 
       <AnimatedEarth className="right-[250px] top-[21vh] w-[300px] h-[300px] min-w-[350px] max-w-[600px] max-lg:right-[-28vw]" />
-    </section>
+    </CursorRadialGlow>
   );
 }
 

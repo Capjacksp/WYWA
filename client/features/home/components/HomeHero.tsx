@@ -2,7 +2,13 @@ import { Button } from "@/components/common/Button";
 import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrambleLoadText } from "@/components/ui/scramble-load-text";
 import { RadioGlitchFilter } from "@/components/ui/radio-glitch-filter";
-import { motion, useReducedMotion } from "framer-motion";
+import { CursorRadialGlow } from "@/components/ui/cursor-radial-glow";
+import {
+  motion,
+  useAnimationControls,
+  useReducedMotion,
+} from "framer-motion";
+import { useEffect } from "react";
 
 const HERO_TEXT_MOTION = {
   duration: 1.3,
@@ -11,7 +17,12 @@ const HERO_TEXT_MOTION = {
 } as const;
 
 const GEOMETRY_GROUP_VARIANTS = {
-  hidden: {},
+  hidden: {
+    transition: {
+      staggerChildren: 0.04,
+      staggerDirection: -1,
+    },
+  },
   visible: {
     transition: {
       delayChildren: 0.18,
@@ -21,7 +32,14 @@ const GEOMETRY_GROUP_VARIANTS = {
 };
 
 const GEOMETRY_LINE_VARIANTS = {
-  hidden: { pathLength: 0, opacity: 0 },
+  hidden: {
+    pathLength: 0,
+    opacity: 0,
+    transition: {
+      pathLength: { duration: 1.05, ease: [0.65, 0, 0.35, 1] as const },
+      opacity: { duration: 0.16, delay: 0.92 },
+    },
+  },
   visible: {
     pathLength: 1,
     opacity: 0.92,
@@ -31,6 +49,50 @@ const GEOMETRY_LINE_VARIANTS = {
     },
   },
 };
+
+function useLoopingGeometryAnimation() {
+  const controls = useAnimationControls();
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (reduceMotion) {
+      controls.set("visible");
+      return;
+    }
+
+    let active = true;
+    let timer: number | undefined;
+
+    const wait = (duration: number) =>
+      new Promise<void>((resolve) => {
+        timer = window.setTimeout(resolve, duration);
+      });
+
+    const runAnimation = async () => {
+      controls.set("hidden");
+
+      while (active) {
+        await controls.start("visible");
+        await wait(4200);
+
+        if (!active) break;
+
+        await controls.start("hidden");
+        await wait(260);
+      }
+    };
+
+    void runAnimation();
+
+    return () => {
+      active = false;
+      if (timer !== undefined) window.clearTimeout(timer);
+      controls.stop();
+    };
+  }, [controls, reduceMotion]);
+
+  return controls;
+}
 
 function HomeHero({
   embedded = false,
@@ -70,8 +132,8 @@ function HeroImagePanel() {
 
 function DesktopContentPanel() {
   return (
-    <div className="absolute right-0 top-0 flex h-full w-[30%] flex-col justify-end bg-bg-dark p-10 max-lg:hidden">
-      <div className="mb-12">
+    <CursorRadialGlow className="absolute right-0 top-0 flex h-full w-[30%] flex-col justify-end overflow-hidden bg-bg-dark p-10 max-lg:hidden">
+      <div className="relative z-10 mb-12">
         <ScrambleLoadText
           as="h2"
           className="font-heading text-[28px] font-[300] leading-[1] text-white"
@@ -99,7 +161,7 @@ function DesktopContentPanel() {
           </Button>
         </motion.div>
       </div>
-    </div>
+    </CursorRadialGlow>
   );
 }
 
@@ -168,7 +230,7 @@ function MobileHeroContent() {
 }
 
 function DesktopGeometryOverlay() {
-  const reduceMotion = useReducedMotion();
+  const animationControls = useLoopingGeometryAnimation();
 
   return (
     <svg
@@ -178,8 +240,8 @@ function DesktopGeometryOverlay() {
       viewBox="0 0 100 100"
     >
       <motion.g
-        initial={reduceMotion ? false : "hidden"}
-        animate="visible"
+        initial="hidden"
+        animate={animationControls}
         variants={GEOMETRY_GROUP_VARIANTS}
       >
         <motion.line variants={GEOMETRY_LINE_VARIANTS} x1="0" y1="50%" x2="3%" y2="50%" stroke="white" strokeWidth="0.15" />
@@ -203,7 +265,7 @@ function DesktopGeometryOverlay() {
 }
 
 function MobileGeometryOverlay() {
-  const reduceMotion = useReducedMotion();
+  const animationControls = useLoopingGeometryAnimation();
 
   return (
     <svg
@@ -215,8 +277,8 @@ function MobileGeometryOverlay() {
       aria-hidden="true"
     >
       <motion.g
-        initial={reduceMotion ? false : "hidden"}
-        animate="visible"
+        initial="hidden"
+        animate={animationControls}
         variants={GEOMETRY_GROUP_VARIANTS}
         stroke="white"
         strokeWidth="1"

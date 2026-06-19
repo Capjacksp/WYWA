@@ -582,17 +582,41 @@
   overflow-x: clip;
 }
 
-.hero-radio-glitch > span {
+.hero-radio-glitch>span {
   overflow: visible;
 }
 
-.hero-radio-glitch > span > span {
+.hero-radio-glitch>span>span {
   filter: url("#hero-radio-glitch-filter");
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-radio-glitch > span > span {
+  .hero-radio-glitch>span>span {
     filter: url("#hero-radio-glitch-filter-static");
+  }
+}
+
+/* Reusable theme glow for dark, pointer-driven surfaces. */
+.cursor-radial-glow-surface {
+  --cursor-glow-x: 50%;
+  --cursor-glow-y: 35%;
+}
+
+.cursor-radial-glow {
+  background: radial-gradient(circle 120px at var(--cursor-glow-x) var(--cursor-glow-y),
+      rgb(144 232 255 / 0.16) 0%,
+      rgb(144 232 255 / 0.07) 36%,
+      transparent 72%);
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  transition: opacity 240ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cursor-radial-glow-surface:hover .cursor-radial-glow {
+    opacity: 1;
   }
 }
 

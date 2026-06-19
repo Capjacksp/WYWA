@@ -4,6 +4,7 @@ import { fusionCards } from "@/features/technology/data/technologyCards";
 import { fusionWavePath } from "@/features/technology/data/fusionWavePath";
 import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
+import { CursorRadialGlow } from "@/components/ui/cursor-radial-glow";
 
 export function MultimodalFusion() {
   return (
@@ -18,11 +19,12 @@ function DesktopMultimodalFusion() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section
+    <CursorRadialGlow
+      as="section"
       data-header-class=""
       className="sticky top-0 z-20 h-screen min-h-[720px] overflow-hidden bg-bg-dark pt-16 pb-[10px] text-white max-md:hidden"
     >
-      <div className="mx-auto flex h-full flex-col">
+      <div className="relative z-10 mx-auto flex h-full flex-col">
         <div className="text-center">
           <ScrambleHover className="mx-auto w-fit cursor-default">
             <ScrollTextLines
@@ -114,7 +116,7 @@ function DesktopMultimodalFusion() {
           </div>
         </div>
       </div>
-    </section>
+    </CursorRadialGlow>
   );
 }
 
