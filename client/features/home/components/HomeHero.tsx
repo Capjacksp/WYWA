@@ -42,7 +42,7 @@ function HomeHero({
   return (
     <section
       data-header-class={trackHeader ? "" : undefined}
-      className={`relative h-screen w-full overflow-hidden p-0 max-md:flex max-md:h-auto max-md:min-h-screen max-md:flex-col max-md:bg-bg-dark min-md:h-screen ${embedded ? "" : "-mt-16"}`}
+      className={`radio-glitch-paint-boundary relative h-screen w-full overflow-hidden p-0 max-md:flex max-md:h-auto max-md:min-h-screen max-md:flex-col max-md:bg-bg-dark min-md:h-screen ${embedded ? "" : "-mt-16"}`}
     >
       <RadioGlitchFilter />
       <HeroImagePanel />

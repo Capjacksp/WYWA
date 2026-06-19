@@ -573,6 +573,15 @@
 
 
 /* Dense horizontal analog interference, matching the reference's rippled edges. */
+.radio-glitch-paint-boundary {
+  contain: paint;
+  overflow-x: clip;
+}
+
+.radio-glitch-x-boundary {
+  overflow-x: clip;
+}
+
 .hero-radio-glitch > span {
   overflow: visible;
 }

@@ -19,7 +19,7 @@ export function DesktopFusionIntroSection() {
   return (
     <Section
       data-header-class="header-dark"
-      className="relative z-20 flex min-h-[100vh] flex-col items-center justify-center overflow-visible bg-bg-light pb-0 pt-28 max-md:hidden"
+      className="radio-glitch-x-boundary relative z-20 flex min-h-[100vh] flex-col items-center justify-center overflow-visible bg-bg-light pb-0 pt-28 max-md:hidden"
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.10]"
@@ -219,7 +219,7 @@ function MobileFusionSensorScreen() {
   return (
     <section
       data-header-class="header-dark"
-      className="relative min-h-[max(800px,100vh)] overflow-hidden bg-[#FFFFFF] px-5 pt-[112px] text-bg-dark"
+      className="radio-glitch-x-boundary relative min-h-[max(800px,100vh)] overflow-hidden bg-[#FFFFFF] px-5 pt-[112px] text-bg-dark"
     >
       <MobileGridBackground />
 
