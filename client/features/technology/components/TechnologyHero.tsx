@@ -109,7 +109,7 @@ function MobileSingleSenseScreen() {
   return (
     <section
       data-header-class=""
-      className="relative min-h-screen -mt-16 overflow-hidden bg-bg-dark px-7 pb-10 pt-[110px] text-white"
+      className="relative min-h-[800px] h-screen -mt-16 overflow-hidden bg-bg-dark px-7 pb-10 pt-[110px] text-white"
     >
       <ScrambleHover className="relative z-10 w-fit cursor-default">
         <ScrambleLoadText
@@ -130,7 +130,7 @@ function MobileSingleSenseScreen() {
         />
       </ScrambleHover>
 
-      <AnimatedEarth className="bottom-[0px] left-[-40px]" width={550} height={600} />
+      <AnimatedEarth className="bottom-[0px] left-[-40px]" width={550} height={550} />
     </section>
   );
 }

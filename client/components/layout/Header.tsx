@@ -17,13 +17,39 @@ export default function Header({ onConnectClick, className }: HeaderProps) {
   const barBg = isDark ? "bg-bg-dark" : "bg-white";
 
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
+    if (!isMenuOpen) return;
+
+    const scrollY = window.scrollY;
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+    const { body, documentElement } = document;
+    const previousStyles = {
+      htmlOverflow: documentElement.style.overflow,
+      bodyOverflow: body.style.overflow,
+      bodyPosition: body.style.position,
+      bodyTop: body.style.top,
+      bodyWidth: body.style.width,
+      bodyPaddingRight: body.style.paddingRight,
+    };
+
+    documentElement.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
+
+    if (scrollbarWidth > 0) {
+      body.style.paddingRight = `${scrollbarWidth}px`;
     }
+
     return () => {
-      document.body.style.overflow = "unset";
+      documentElement.style.overflow = previousStyles.htmlOverflow;
+      body.style.overflow = previousStyles.bodyOverflow;
+      body.style.position = previousStyles.bodyPosition;
+      body.style.top = previousStyles.bodyTop;
+      body.style.width = previousStyles.bodyWidth;
+      body.style.paddingRight = previousStyles.bodyPaddingRight;
+      window.scrollTo(0, scrollY);
     };
   }, [isMenuOpen]);
 
