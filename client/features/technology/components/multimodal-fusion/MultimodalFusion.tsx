@@ -5,14 +5,12 @@ import { fusionWavePath } from "@/features/technology/data/fusionWavePath";
 import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 import { CursorRadialGlow } from "@/components/ui/cursor-radial-glow";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export function MultimodalFusion() {
-  return (
-    <>
-      <DesktopMultimodalFusion />
-      <MobileMultimodalFusion />
-    </>
-  );
+  const isMobile = useIsMobile();
+
+  return isMobile ? <MobileMultimodalFusion /> : <DesktopMultimodalFusion />;
 }
 
 function DesktopMultimodalFusion() {

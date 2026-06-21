@@ -12,6 +12,7 @@ import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 import { cn } from "@/lib/utils";
 import { ArrowHead } from "@/components/common/ArrowHead";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // ─── shared spring config ─────────────────────────────────────────────────────
 const SPRING = {
@@ -25,12 +26,9 @@ const DESKTOP_STEP_PROGRESS_END = 2 / 3;
 const STEP_PROGRESS_OFFSET = 0.02;
 
 export function HowItWorks() {
-  return (
-    <>
-      <DesktopHowItWorks />
-      <MobileHowItWorks />
-    </>
-  );
+  const isMobile = useIsMobile();
+
+  return isMobile ? <MobileHowItWorks /> : <DesktopHowItWorks />;
 }
 
 // ─── Desktop ──────────────────────────────────────────────────────────────────

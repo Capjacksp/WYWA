@@ -4,6 +4,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
 import { Button } from "@/components/common/Button";
 import { ArrowHead } from "@/components/common/ArrowHead";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const posts = [
   {
@@ -38,6 +39,18 @@ const posts = [
 
 
 export default function Blog() {
+  const isMobile = useIsMobile();
+
+  return isMobile ? (
+    <PageLayout headerClassName="header-dark">
+      <MobileBlogRail />
+    </PageLayout>
+  ) : (
+    <DesktopBlog />
+  );
+}
+
+function DesktopBlog() {
   const { sectionRef, sectionHeight, trackWidth, trackX, slideWidth, scrollYProgress } =
     useHorizontalScroll({
       slideCount: posts.length,
@@ -129,8 +142,6 @@ export default function Blog() {
         </div>
       </section>
 
-      {/* ── Mobile ── */}
-      <MobileBlogRail />
     </PageLayout>
   );
 }

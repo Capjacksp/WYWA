@@ -2,13 +2,17 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useMemo, useRef } from "react";
 import Section from "@/components/common/Section";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export function FusionSection() {
-  return (
+  const isMobile = useIsMobile();
+
+  return isMobile ? (
+    <MobileFusionSection />
+  ) : (
     <>
       <DesktopFusionIntroSection />
       <DesktopFusionRedSection />
-      <MobileFusionSection />
     </>
   );
 }

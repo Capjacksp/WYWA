@@ -6,6 +6,7 @@ import {
   DesktopFusionRedSection,
   WildfireMapSection,
 } from "@/features/home/components/HomeSections";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useResponsiveVideoSource } from "@/hooks/use-responsive-video-source";
 
 const MOBILE_VIDEO_SRC = "/videos/Wywa-480.mp4";
@@ -13,6 +14,7 @@ const DESKTOP_VIDEO_SRC = "/videos/Wywa-720.mp4";
 const VIDEO_POSTER_SRC = "/images/video-overlay.webp";
 
 export default function HomePage() {
+  const isMobile = useIsMobile();
   const videoRef = useRef<HTMLVideoElement>(null);
   const loadedVideoSrcRef = useRef<string | null>(null);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
@@ -58,7 +60,7 @@ export default function HomePage() {
     <PageLayout>
       <section className="relative bg-bg-dark">
         <HeroFusionPullScene />
-        <DesktopFusionRedSection />
+        {!isMobile && <DesktopFusionRedSection />}
 
         <div className="relative z-20">
           <div

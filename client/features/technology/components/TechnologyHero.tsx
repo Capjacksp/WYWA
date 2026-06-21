@@ -6,6 +6,7 @@ import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrambleLoadText } from "@/components/ui/scramble-load-text";
 import { RadioGlitchFilter } from "@/components/ui/radio-glitch-filter";
 import { CursorRadialGlow } from "@/components/ui/cursor-radial-glow";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { motion, useReducedMotion } from "framer-motion";
 
 const HERO_TEXT_MOTION = {
@@ -15,11 +16,12 @@ const HERO_TEXT_MOTION = {
 } as const;
 
 export function TechnologyHero() {
+  const isMobile = useIsMobile();
+
   return (
     <>
       <RadioGlitchFilter />
-      <DesktopTechnologyHero />
-      <MobileTechnologyHero />
+      {isMobile ? <MobileTechnologyHero /> : <DesktopTechnologyHero />}
     </>
   );
 }
@@ -128,7 +130,7 @@ function MobileSingleSenseScreen() {
         />
       </ScrambleHover>
 
-      <AnimatedEarth className="bottom-0 right-0 w-[320px] max-w-none" />
+      <AnimatedEarth className="bottom-[0px] left-[-40px]" width={550} height={600} />
     </section>
   );
 }
@@ -148,7 +150,12 @@ function MobileBlindSpotScreen() {
           className="font-figtree text-[15px] font-[400] leading-[1.18] text-white"
           delay={0.04}
           lines={[
-            "Satellites and ground cameras watch for heat or smoke. But satellites can take 15-45 minutes to confirm thermal signatures, while ground cameras must wait for visible smoke. Fog, dust, glare, and reflections often mimic smoke or flame, leading to unreliable alerts.",
+            "Satellites and ground cameras watch for",
+            "heat or smoke. But satellites can take 15-45",
+            "minutes to confirm thermal signatures, while",
+            "ground cameras must wait for visible smoke.",
+            "Fog, dust, glare, and reflections often mimic",
+            "smoke or flame, leading to unreliable alerts.",
           ]}
         />
       </div>
@@ -162,7 +169,11 @@ function MobileBlindSpotScreen() {
           className="font-figtree text-[15px] font-[400] leading-[1.18] text-white"
           delay={0.08}
           lines={[
-            "Other systems monitor gases released during combustion, detecting chemical traces in the air. But isolated signals often create noise and false alarms without additional verification.",
+            "Other systems monitor gases released",
+            "during combustion, detecting chemical",
+            "traces in the air. But isolated signals",
+            "often create noise and false alarms",
+            "without additional verification.",
           ]}
         />
       </div>
@@ -205,7 +216,7 @@ function AnimatedIcon({
   );
 }
 
-function AnimatedEarth({ className }: { className: string }) {
+function AnimatedEarth({ className, width = 600, height = 900 }: { className: string; width?: number; height?: number }) {
   const reduceMotion = useReducedMotion();
   const solidLineMotion = {
     initial: reduceMotion ? false : { pathLength: 0, pathOffset: 0, opacity: 0 },
@@ -260,7 +271,7 @@ function AnimatedEarth({ className }: { className: string }) {
           }
       }
     >
-      <svg className="technology-earth__svg" width="600" height="900" viewBox="0 0 846 1216" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <svg className="technology-earth__svg" width={width} height={height} viewBox="0 0 846 1216" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
           <radialGradient id="earth-atmosphere" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(574 574) rotate(90) scale(515)">
             <stop offset="0.72" stopColor="#90E8FF" stopOpacity="0" />

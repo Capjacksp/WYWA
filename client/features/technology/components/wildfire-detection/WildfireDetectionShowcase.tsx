@@ -8,13 +8,15 @@ import {
 } from "@/features/technology/data/technologyCards";
 import { ArrowHead } from "@/components/common/ArrowHead";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export function WildfireDetectionShowcase() {
-  return (
-    <>
-      <DesktopWildfireDetectionShowcase />
-      <MobileWildfireDetectionShowcase />
-    </>
+  const isMobile = useIsMobile();
+
+  return isMobile ? (
+    <MobileWildfireDetectionShowcase />
+  ) : (
+    <DesktopWildfireDetectionShowcase />
   );
 }
 

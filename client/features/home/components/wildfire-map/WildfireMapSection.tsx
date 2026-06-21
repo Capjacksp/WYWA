@@ -6,16 +6,14 @@ import { LeafletWildfireMap } from "@/features/home/components/wildfire-map/Leaf
 import { ArrowHead } from "@/components/common/ArrowHead";
 import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export function WildfireMapSection() {
-  return (
-    <>
-      <DesktopWildfireMapSection />
-      <MobileWildfireMapSection />
-    </>
-  );
+  const isMobile = useIsMobile();
+
+  return isMobile ? <MobileWildfireMapSection /> : <DesktopWildfireMapSection />;
 }
 
 function DesktopWildfireMapSection() {

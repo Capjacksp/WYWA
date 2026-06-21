@@ -6,6 +6,7 @@ import {
   ScrollTextLines,
 } from "@/components/ui/scroll-text-lines";
 import { ArrowHead } from "@/components/common/ArrowHead";
+import { useIsMobile, useMediaQuery } from "@/hooks/use-mobile";
 import { type TeamMember, teamMembers, advisors } from "./data/peopleData";
 
 function TeamStageCard({
@@ -101,39 +102,42 @@ function TeamOverlay({ member }: { member: TeamMember }) {
 }
 
 function TeamHero() {
+  const useCompactTeamStage = useMediaQuery("(max-width: 1023px)");
   const [activeId, setActiveId] = useState<null | string>(null);
   const activeMember =
     teamMembers.find((member) => member.id === activeId) ?? null;
 
   return (
     <section className="bg-[#F7F7F7] px-[50px] pt-0 max-md:px-5">
-      <div
-        className="relative mx-auto hidden aspect-[16/9] w-full max-w-[1920px] overflow-hidden lg:block"
-        onMouseLeave={() => setActiveId(null)}
-      >
-        <LoadTextLines
-          className="pointer-events-none absolute left-[1.35%] top-[11.8%] z-0 font-body text-[clamp(8rem,17.6vw,18rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
-          lines={["Our"]}
-        />
-        <LoadTextLines
-          className="pointer-events-none absolute bottom-[1.7%] right-[1.1%] z-0 font-body text-[clamp(8rem,17.4vw,18rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
-          delay={0.12}
-          lines={["Team"]}
-        />
-
-        {teamMembers.map((member) => (
-          <TeamStageCard
-            key={member.id}
-            member={member}
-            activeId={activeId}
-            setActiveId={setActiveId}
+      {useCompactTeamStage ? (
+        <MobileTeamStage />
+      ) : (
+        <div
+          className="relative mx-auto aspect-[16/9] w-full max-w-[1920px] overflow-hidden"
+          onMouseLeave={() => setActiveId(null)}
+        >
+          <LoadTextLines
+            className="pointer-events-none absolute left-[1.35%] top-[11.8%] z-0 font-body text-[clamp(8rem,17.6vw,18rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
+            lines={["Our"]}
           />
-        ))}
+          <LoadTextLines
+            className="pointer-events-none absolute bottom-[1.7%] right-[1.1%] z-0 font-body text-[clamp(8rem,17.4vw,18rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
+            delay={0.12}
+            lines={["Team"]}
+          />
 
-        {activeMember ? <TeamOverlay member={activeMember} /> : null}
-      </div>
+          {teamMembers.map((member) => (
+            <TeamStageCard
+              key={member.id}
+              member={member}
+              activeId={activeId}
+              setActiveId={setActiveId}
+            />
+          ))}
 
-      <MobileTeamStage />
+          {activeMember ? <TeamOverlay member={activeMember} /> : null}
+        </div>
+      )}
     </section>
   );
 }
@@ -299,9 +303,14 @@ function LinkedInIcon({ className }: { className?: string }) {
 }
 
 function AdvisorsSection() {
+  const isMobile = useIsMobile();
+
   return (
     <section className="bg-[#F7F7F7] px-[50px] pb-28 pt-20 max-md:px-5 max-md:pt-10">
-      <div className="mx-auto max-w-[1920px] max-md:hidden">
+      {isMobile ? (
+        <MobileAdvisorsSection />
+      ) : (
+      <div className="mx-auto max-w-[1920px]">
         <ScrollTextLines
           as="h2"
           className="text-center font-body text-display font-normal uppercase leading-[0.9] tracking-normal text-bg-dark"
@@ -352,8 +361,7 @@ function AdvisorsSection() {
           ))}
         </div>
       </div>
-
-      <MobileAdvisorsSection />
+      )}
     </section>
   );
 }

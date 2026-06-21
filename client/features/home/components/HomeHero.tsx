@@ -9,6 +9,7 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import { useEffect } from "react";
+import { useIsMobile, useMediaQuery } from "@/hooks/use-mobile";
 
 const HERO_TEXT_MOTION = {
   duration: 1.3,
@@ -101,21 +102,23 @@ function HomeHero({
   embedded?: boolean;
   trackHeader?: boolean;
 }) {
+  const isMobile = useIsMobile();
+  const hasDesktopSidePanel = useMediaQuery("(min-width: 1024px)");
+
   return (
     <section
       data-header-class={trackHeader ? "" : undefined}
       className={`radio-glitch-paint-boundary relative h-screen w-full overflow-hidden p-0 max-md:flex max-md:h-auto max-md:min-h-screen max-md:flex-col max-md:bg-bg-dark min-md:h-screen ${embedded ? "" : "-mt-16"}`}
     >
       <RadioGlitchFilter />
-      <HeroImagePanel />
-      <DesktopContentPanel />
-      <DesktopHeroTitle />
-      <MobileHeroContent />
+      <HeroImagePanel isMobile={isMobile} />
+      {hasDesktopSidePanel && <DesktopContentPanel />}
+      {isMobile ? <MobileHeroContent /> : <DesktopHeroTitle />}
     </section>
   );
 }
 
-function HeroImagePanel() {
+function HeroImagePanel({ isMobile }: { isMobile: boolean }) {
   return (
     <div className="absolute inset-0 w-[70%] overflow-hidden max-lg:w-full max-md:relative max-md:h-[578px] max-md:shrink-0">
       <img
@@ -124,8 +127,7 @@ function HeroImagePanel() {
         className="absolute inset-0 h-full w-full object-cover max-md:object-[55%_top]"
       />
       <div className="absolute inset-0 bg-black/40 max-md:bg-black/45" />
-      <DesktopGeometryOverlay />
-      <MobileGeometryOverlay />
+      {isMobile ? <MobileGeometryOverlay /> : <DesktopGeometryOverlay />}
     </div>
   );
 }
