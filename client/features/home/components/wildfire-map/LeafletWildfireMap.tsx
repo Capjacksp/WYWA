@@ -96,20 +96,26 @@ export function LeafletWildfireMap({
     );
     map.fitBounds(incidentBounds, {
       padding: isMobile ? [45, 90] : [110, 110],
-      maxZoom: isMobile ? 5 : 6,
+      maxZoom: 6,
     });
 
     wildfireCallouts.forEach((fire, index) => {
+      const displayLabel = fire.label;
+      const mobileExpandsUp =
+        (fire.mobileExpandDirection ?? fire.expandDirection) === "up";
       const labelDirection = isMobile
-        ? fire.mobileCardPosition ?? "auto"
+        ? mobileExpandsUp
+          ? "top"
+          : "bottom"
         : fire.markerPosition === "left"
           ? "right"
           : "left";
       const expandsUp = fire.expandDirection === "up";
       const marker = leaflet.marker(fire.coordinates, {
-        title: fire.label,
-        alt: fire.label,
+        title: displayLabel,
+        alt: displayLabel,
         pane: "wywaLocations",
+        zIndexOffset: isMobile ? 1000 : 0,
         icon: leaflet.divIcon({
           className: `wywa-fire-marker wywa-location-${index}`,
           html: `<span class="wywa-fire-marker__content" style="--wywa-location-index:${index}"><span class="wywa-fire-marker__pulse"></span><span class="wywa-fire-marker__core"></span></span>`,
@@ -121,7 +127,7 @@ export function LeafletWildfireMap({
 
       marker.bindTooltip(
         `<article class="wywa-fire-label__card">
-          <h3>${fire.label}</h3>
+          <h3>${displayLabel}</h3>
           <div class="wywa-fire-label__details">
             <div class="wywa-fire-label__details-inner">
               <dl>
@@ -137,9 +143,11 @@ export function LeafletWildfireMap({
           permanent: true,
           interactive: true,
           direction: labelDirection,
-          offset: [labelDirection === "right" ? 20 : labelDirection === "left" ? -20 : 0, 0],
+          offset: isMobile
+            ? [0, mobileExpandsUp ? -24 : 24]
+            : [labelDirection === "right" ? 20 : -20, 0],
           pane: "wywaLabels",
-          className: `wywa-fire-label wywa-location-pop wywa-location-${index}${expandsUp ? " wywa-fire-label--up" : ""}`,
+          className: `wywa-fire-label wywa-location-pop wywa-location-${index}${isMobile && mobileExpandsUp ? " wywa-fire-label--mobile-up" : ""}${!isMobile && expandsUp ? " wywa-fire-label--up" : ""}`,
         },
       );
 
@@ -177,6 +185,24 @@ export function LeafletWildfireMap({
         animateCardText(tooltipElement);
       };
 
+      const closeDetails = () => {
+        const tooltipElement = getTooltipElement();
+        if (!tooltipElement?.classList.contains("is-expanded")) return;
+
+        window.clearTimeout(closeTimer);
+        tooltipElement.classList.remove("is-expanded");
+        clearActiveLocation();
+      };
+
+      const toggleDetails = () => {
+        const tooltipElement = getTooltipElement();
+        if (tooltipElement?.classList.contains("is-expanded")) {
+          closeDetails();
+        } else {
+          openDetails();
+        }
+      };
+
       const scheduleCloseDetails = () => {
         window.clearTimeout(closeTimer);
         closeTimer = window.setTimeout(() => {
@@ -191,8 +217,12 @@ export function LeafletWildfireMap({
         }, 90);
       };
 
-      marker.on("mouseover", openDetails);
-      marker.on("mouseout", scheduleCloseDetails);
+      if (!isMobile) {
+        marker.on("mouseover", openDetails);
+        marker.on("mouseout", scheduleCloseDetails);
+      } else {
+        marker.on("click", toggleDetails);
+      }
 
       marker.on("tooltipopen", () => {
         const tooltipElement = getTooltipElement();
@@ -202,13 +232,19 @@ export function LeafletWildfireMap({
         tooltipElement.style.setProperty("--wywa-location-index", String(index));
         tooltipElement.setAttribute("role", "button");
         tooltipElement.setAttribute("tabindex", "0");
-        tooltipElement.setAttribute("aria-label", `Toggle details for ${fire.label}`);
+        tooltipElement.setAttribute("aria-label", `Toggle details for ${displayLabel}`);
 
         tooltipElement.removeAttribute("role");
         tooltipElement.removeAttribute("tabindex");
         tooltipElement.removeAttribute("aria-label");
-        tooltipElement.addEventListener("mouseenter", openDetails);
-        tooltipElement.addEventListener("mouseleave", scheduleCloseDetails);
+        if (!isMobile) {
+          tooltipElement.addEventListener("mouseenter", openDetails);
+          tooltipElement.addEventListener("mouseleave", scheduleCloseDetails);
+        }
+
+        if (isMobile && fire.defaultOpenOnMobile) {
+          requestAnimationFrame(openDetails);
+        }
       });
 
       marker.addTo(map);

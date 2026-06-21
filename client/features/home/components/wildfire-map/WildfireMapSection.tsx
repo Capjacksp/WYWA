@@ -129,7 +129,6 @@ function MobileWildfireMapSection() {
   const mapOverlayRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const locationsRef = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<any | null>(null);
 
   useGSAP(
     () => {
@@ -144,31 +143,13 @@ function MobileWildfireMapSection() {
       if (!section || !panel || !intro || !mapOverlay || !logo || !locations)
         return;
 
-      const setMapInteractive = (interactive: boolean) => {
-        const map = mapRef.current;
-        if (!map) return;
-
-        const handlers = [
-          map.dragging,
-          map.touchZoom,
-          map.doubleClickZoom,
-          map.boxZoom,
-          map.keyboard,
-        ];
-        handlers.forEach((handler) =>
-          interactive ? handler?.enable() : handler?.disable(),
-        );
-      };
-
       gsap.set([intro, mapOverlay, logo], { autoAlpha: 1 });
       gsap.set(intro, { x: 0 });
       gsap.set(locations, { autoAlpha: 0 });
-      setMapInteractive(false);
 
       const timeline = gsap.timeline({
         onReverseComplete: () => {
           locations.classList.remove("is-visible");
-          setMapInteractive(false);
         },
         scrollTrigger: {
           trigger: section,
@@ -192,7 +173,6 @@ function MobileWildfireMapSection() {
           () => {
             const revealingMap = timeline.scrollTrigger?.direction !== -1;
             locations.classList.toggle("is-visible", revealingMap);
-            setMapInteractive(revealingMap);
           },
           [],
           0.24,
@@ -213,7 +193,7 @@ function MobileWildfireMapSection() {
         ref={panelRef}
         className="relative h-[100svh] overflow-hidden text-white"
       >
-        <LeafletWildfireMap locationsLayerRef={locationsRef} mapRef={mapRef} />
+        <LeafletWildfireMap locationsLayerRef={locationsRef} />
 
         <div
           ref={mapOverlayRef}

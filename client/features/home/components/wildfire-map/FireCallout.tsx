@@ -13,7 +13,10 @@ export interface FireCalloutProps {
   enterFrom: "left" | "right";
   range: [number, number];
   markerPosition?: "left" | "right";
+  mobileLabel?: string;
   mobileCardPosition?: "left" | "right";
+  mobileExpandDirection?: "up" | "down";
+  defaultOpenOnMobile?: boolean;
   expandDirection?: "up" | "down";
   doesHaveAsterisk?: string;
 }

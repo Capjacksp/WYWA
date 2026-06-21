@@ -900,9 +900,32 @@
     touch-action: pan-y !important;
   }
 
+  .wywa-fire-label:not(.is-expanded) {
+    opacity: 0 !important;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  .wywa-fire-label:not(.is-expanded)::before {
+    display: none;
+  }
+
+  .leaflet-wywaLocations-pane.has-active-location
+    .wywa-fire-marker:not(.is-location-dimmed) {
+    z-index: 3000 !important;
+  }
+
   .wywa-fire-label {
     height: 44px;
     width: 210px;
+  }
+
+  .wywa-fire-label.leaflet-tooltip-bottom::before {
+    border-bottom-color: rgb(36 33 31 / 0.96) !important;
+  }
+
+  .wywa-fire-label.leaflet-tooltip-top::before {
+    border-top-color: rgb(36 33 31 / 0.96) !important;
   }
 
   .wywa-fire-label.is-expanded,
@@ -916,12 +939,22 @@
   }
 
   .wywa-fire-label__card {
-    transform: translateY(-22px);
+    left: 0;
+    right: auto;
+    top: 0;
+    transform: none;
     width: 210px;
   }
 
   .wywa-fire-label--up .wywa-fire-label__card {
-    transform: translateY(22px);
+    bottom: auto;
+    top: 0;
+    transform: none;
+  }
+
+  .wywa-fire-label--mobile-up .wywa-fire-label__card {
+    bottom: 0;
+    top: auto;
   }
 
   .wywa-fire-label h3 {

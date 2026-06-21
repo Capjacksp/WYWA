@@ -27,6 +27,7 @@ export const wildfireCallouts = [
     enterFrom: "right",
     range: [0.46, 0.58],
     mobileCardPosition: "left",
+    mobileExpandDirection: "down",
   },
   {
     label: "August Complex (2020)",
@@ -69,8 +70,10 @@ export const wildfireCallouts = [
     range: [0.7, 0.86],
     markerPosition: "right",
     mobileCardPosition: "left",
+    mobileExpandDirection: "up",
     expandDirection: "up",
     doesHaveAsterisk:
       "*Recent incident context; figures may evolve with final reporting",
+    defaultOpenOnMobile: true,
   },
 ] satisfies FireCalloutProps[];

@@ -38,6 +38,7 @@ export function ScrambleHover({
     if (
       !root ||
       symbols.length === 0 ||
+      window.matchMedia("(max-width: 767px)").matches ||
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
       return;
