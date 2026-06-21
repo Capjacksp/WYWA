@@ -35,7 +35,7 @@ export default function Menu({ isOpen, onClose, onConnectClick }: MenuProps) {
 
   return (
     <div
-      className={`fixed inset-0 z-40 transition-all duration-500 ease-in-out ${isOpen
+      className={`fixed inset-0 z-[1000] transition-all duration-500 ease-in-out ${isOpen
         ? "opacity-100 pointer-events-auto"
         : "opacity-0 pointer-events-none"
         }`}
