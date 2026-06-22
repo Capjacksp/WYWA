@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import ConnectPopup from "@/components/common/ConnectPopup";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const footerNavLinks = [
   { label: "BLOG", path: "/blog" },
-  { label: "FAQS", path: "/faqs" },
-  { label: "T&C", path: "/terms" },
 ] as const;
 
 const partners = [
@@ -15,6 +14,7 @@ const partners = [
 
 export default function Footer() {
   const [connectOpen, setConnectOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   return (
     <>
@@ -28,14 +28,14 @@ export default function Footer() {
           <div className="flex items-center justify-between px-[50px] py-8 max-md:flex-col max-md:py-0 max-md:gap-0 max-md:px-[0px] max-md:items-stretch border-b border-white/20">
             {/* Left — nav links */}
             <nav
-              className="flex items-center gap-8 max-md:justify-between max-md:px-8 max-md:py-6 max-md:w-full max-md:border-b max-md:border-white/20"
+              className="flex text-center items-center gap-8 max-md:justify-center max-md:px-8 max-md:py-6 max-md:w-full max-md:border-b max-md:border-white/20"
               aria-label="Footer navigation"
             >
               {footerNavLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className="text-body font-[300] tracking-[0.15em] text-white hover:text-white transition-colors uppercase font-body
+                  className="text-body text-center font-[300] tracking-[0.15em] text-white hover:text-white transition-colors uppercase font-body
                   max-md:font-heading max-md:font-[350] max-md:text-[12px]
                   "
                 >
@@ -103,11 +103,15 @@ export default function Footer() {
             </div>
 
             {/* Right — copyright */}
-            <p className="text-xs tracking-[0.1em] text-white font-[400] uppercase font-body
-            max-md:font-body max-md:font-[400] max-md:text-[7px] max-md:pt-6
-            ">
-              COPYRIGHT © {new Date().getFullYear()} WYWA.COM
-            </p>
+            <div className="flex flex-col items-end max-md:flex-row max-md:w-full max-md:justify-between max-md:items-end">
+              <p className="text-xs tracking-[0.1em] text-white font-[400] uppercase font-body">
+                {isMobile ? "" : "Copyright "}© {new Date().getFullYear()} WYWA.COM
+              </p>
+              <span className="flex items-end lowercase text-xs tracking-[0.1em] text-white font-[300] font-body">
+                designed by
+                <img className="h-[18px]" src="/images/antkind-logo.png" />
+              </span>
+            </div>
           </div>
         </div>
       </footer>

@@ -4,39 +4,8 @@ import PageLayout from "@/components/layout/PageLayout";
 import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
 import { Button } from "@/components/common/Button";
 import { ArrowHead } from "@/components/common/ArrowHead";
+import { blogPosts } from "@/features/blog/data/blogPosts";
 import { useIsMobile } from "@/hooks/use-mobile";
-
-const posts = [
-  {
-    date: "December 2, 2025",
-    title: (
-      <>
-        Before
-        <br />
-        We Build,
-        <br />
-        <span className="text-[#F15D59]">We Listen</span>
-      </>
-    ),
-    body: "We spoke with firefighters across the U.S. to understand what early wildfire detection looks like on the ground, not in a lab. The reality: fires are still reported via 911, wrong locations waste critical time, and specialized tools barely exist. That's the problem we're designing for.",
-    image: "/images/blog-before-we-build.png",
-  },
-  {
-    date: "January 2, 2026",
-    title: (
-      <>
-        Building
-        <br />
-        Nature's
-        <br />
-        <span className="text-[#F15D59]">Sixth Sense</span>
-      </>
-    ),
-    body: "Building smart nodes detect wildfire chemistry in real time, filter false alarms on-device, and when multiple nodes agree, a camera activates, and a vision model analyzes smoke, wind, and spread, giving first responders actionable intelligence before the fire spreads.",
-    image: "/images/blog-sixth-sense.png",
-  },
-] as const;
-
 
 export default function Blog() {
   const isMobile = useIsMobile();
@@ -53,7 +22,7 @@ export default function Blog() {
 function DesktopBlog() {
   const { sectionRef, sectionHeight, trackWidth, trackX, slideWidth, scrollYProgress } =
     useHorizontalScroll({
-      slideCount: posts.length,
+      slideCount: blogPosts.length,
     });
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
   const indicatorWidth = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
@@ -62,7 +31,7 @@ function DesktopBlog() {
     if (!section) return;
 
     const scrollDistance = section.offsetHeight - window.innerHeight;
-    const progress = posts.length > 1 ? index / (posts.length - 1) : 0;
+    const progress = blogPosts.length > 1 ? index / (blogPosts.length - 1) : 0;
     const sectionTop = section.getBoundingClientRect().top + window.scrollY;
 
     window.scrollTo({
@@ -96,7 +65,7 @@ function DesktopBlog() {
             className="mt-20 flex h-[calc(100%-11rem)] max-md:mt-12 max-md:h-[calc(100%-6.5rem)]"
             style={{ width: trackWidth, x: trackX }}
           >
-            {posts.map((post, index) => (
+            {blogPosts.map((post, index) => (
               <article
                 key={post.date}
                 className="relative box-border grid h-full shrink-0 grid-cols-[1.3fr_1fr] items-center gap-14 px-[50px] max-lg:grid-cols-1 max-lg:content-center max-lg:gap-6 max-md:px-5"
@@ -124,16 +93,19 @@ function DesktopBlog() {
                     {post.date}
                   </p>
                   <h1 className="mt-10 font-body text-h1 font-normal uppercase leading-[1] tracking-normal text-black max-lg:mt-6 max-md:text-[clamp(2.25rem,10vw,3.5rem)]">
-                    {post.title}
+                    {post.titleLines.map((line) => (
+                      <span key={line}>
+                        {line}
+                        <br />
+                      </span>
+                    ))}
+                    <span className="text-[#F15D59]">{post.highlightedTitle}</span>
                   </h1>
                   <p className="mt-10 max-w-[470px] font-figtree text-body-lg font-normal leading-snug text-[#24242578] max-lg:mt-5 max-md:line-clamp-4">
                     {post.body}
                   </p>
-                  <Button
-                    variant="primary"
-                    className="mt-10"
-                  >
-                    Read More
+                  <Button asChild variant="primary" className="mt-10">
+                    <a href={post.postUrl} target="_blank">Read More</a>
                   </Button>
                 </div>
               </article>
@@ -222,7 +194,7 @@ function MobileBlogRail() {
         aria-label="Blog posts"
       >
         <div className="flex">
-          {posts.map((post, index) => (
+          {blogPosts.map((post, index) => (
             <div key={post.date} data-blog-card-slot className="w-screen shrink-0 snap-center flex justify-center px-5">
 
               <article className="w-full max-w-[340px]">
@@ -246,7 +218,13 @@ function MobileBlogRail() {
                     </button>
                   )}
                   <h2 className="font-body text-[42px] pl-6 font-normal uppercase leading-[0.94] tracking-normal text-black">
-                    {post.title}
+                    {post.titleLines.map((line) => (
+                      <span key={line}>
+                        {line}
+                        <br />
+                      </span>
+                    ))}
+                    <span className="text-[#F15D59]">{post.highlightedTitle}</span>
                   </h2>
                   {index === 1 && (
                     <button
@@ -262,8 +240,8 @@ function MobileBlogRail() {
                 <p className="mt-6 pl-6 font-figtree text-[14px] font-normal leading-snug text-[#24242578] line-clamp-4">
                   {post.body}
                 </p>
-                <Button variant="primary" className="mt-8 ml-6">
-                  Read More
+                <Button asChild variant="primary" className="mt-8 ml-6">
+                  <a href={post.postUrl} target="_blank">Read More</a>
                 </Button>
               </article>
             </div>
@@ -272,7 +250,7 @@ function MobileBlogRail() {
       </div>
 
       <div className="mt-6 flex justify-center gap-3">
-        {posts.map((_, index) => (
+        {blogPosts.map((_, index) => (
           <span
             key={index}
             className={`h-1.5 w-8 transition-colors ${index === activeIndex ? "bg-[#F55656]" : "bg-bg-dark/20"}`}
