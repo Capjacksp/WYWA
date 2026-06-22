@@ -1,5 +1,4 @@
 import { Button } from "@/components/common/Button";
-import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrambleLoadText } from "@/components/ui/scramble-load-text";
 import { RadioGlitchFilter } from "@/components/ui/radio-glitch-filter";
 import { CursorRadialGlow } from "@/components/ui/cursor-radial-glow";
@@ -170,7 +169,7 @@ function DesktopContentPanel() {
 function DesktopHeroTitle() {
   return (
     <div className="absolute left-[50px] top-[20%] z-10 max-md:hidden max-lg:top-[40%]">
-      <ScrambleHover className="w-fit cursor-default">
+      <div className="w-fit cursor-default">
         <ScrambleLoadText
           as="h1"
           className="hero-radio-glitch font-heading text-h1"
@@ -182,7 +181,7 @@ function DesktopHeroTitle() {
             { text: "SIXTH SENSE", className: "text-cta" },
           ]}
         />
-      </ScrambleHover>
+      </div>
     </div>
   );
 }
@@ -191,7 +190,7 @@ function MobileHeroContent() {
   return (
     <>
       <div className="absolute left-[27px] right-5 top-[104px] z-10 hidden max-md:block">
-        <ScrambleHover className="w-fit cursor-default">
+        <div className="w-fit cursor-default">
           <ScrambleLoadText
             as="h1"
             className="hero-radio-glitch font-heading text-[42px] font-[350] uppercase leading-[0.94] tracking-normal text-white min-[390px]:text-[42px]"
@@ -203,7 +202,7 @@ function MobileHeroContent() {
               { text: "Sixth Sense", className: "text-cta" },
             ]}
           />
-        </ScrambleHover>
+        </div>
       </div>
 
       <div className="relative z-10 hidden min-h-[max(266px,calc(100svh-578px))] flex-1 bg-bg-dark px-[26px] pb-8 pt-12 max-md:block">

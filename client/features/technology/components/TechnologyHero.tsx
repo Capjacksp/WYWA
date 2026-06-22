@@ -2,7 +2,6 @@ import {
   LoadTextLines,
   ScrollTextLines,
 } from "@/components/ui/scroll-text-lines";
-import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrambleLoadText } from "@/components/ui/scramble-load-text";
 import { RadioGlitchFilter } from "@/components/ui/radio-glitch-filter";
 import { CursorRadialGlow } from "@/components/ui/cursor-radial-glow";
@@ -34,7 +33,7 @@ function DesktopTechnologyHero() {
     >
 
       <div className="relative z-10 max-w-[1340px]">
-        <ScrambleHover className="w-fit cursor-default">
+        <div className="w-fit cursor-default">
           <ScrambleLoadText
             as="h1"
             className="hero-radio-glitch max-w-[1405px] font-body font-normal text-display uppercase tracking-normal"
@@ -46,7 +45,7 @@ function DesktopTechnologyHero() {
               { text: "single sense." },
             ]}
           />
-        </ScrambleHover>
+        </div>
         <div className="mt-20 grid max-w-[600px] gap-14 max-md:mt-12 max-md:gap-10">
           <div>
             <AnimatedIcon delay={0.72}>
@@ -111,7 +110,7 @@ function MobileSingleSenseScreen() {
       data-header-class=""
       className="relative min-h-[800px] h-screen -mt-16 overflow-hidden bg-bg-dark px-7 pb-10 pt-[110px] text-white"
     >
-      <ScrambleHover className="relative z-10 w-fit cursor-default">
+      <div className="relative z-10 w-fit cursor-default">
         <ScrambleLoadText
           as="h1"
           className="hero-radio-glitch max-w-[335px] font-heading text-[43px] font-[400] uppercase leading-[0.94] tracking-normal text-white"
@@ -128,7 +127,7 @@ function MobileSingleSenseScreen() {
             { text: "sense." },
           ]}
         />
-      </ScrambleHover>
+      </div>
 
       <AnimatedEarth className="bottom-[0px] left-[-40px]" width={550} height={550} />
     </section>

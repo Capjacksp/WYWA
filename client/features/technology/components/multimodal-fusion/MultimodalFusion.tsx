@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { fusionCards } from "@/features/technology/data/technologyCards";
 import { fusionWavePath } from "@/features/technology/data/fusionWavePath";
-import { ScrambleHover } from "@/components/ui/scramble-hover";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 import { CursorRadialGlow } from "@/components/ui/cursor-radial-glow";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -24,7 +23,7 @@ function DesktopMultimodalFusion() {
     >
       <div className="relative z-10 mx-auto flex h-full flex-col">
         <div className="text-center">
-          <ScrambleHover className="mx-auto w-fit cursor-default">
+          <div className="mx-auto w-fit cursor-default">
             <ScrollTextLines
               as="h2"
               className="font-body text-display font-normal uppercase tracking-normal text-cta"
@@ -36,7 +35,7 @@ function DesktopMultimodalFusion() {
               delay={0.08}
               lines={["Multimodal Fusion"]}
             />
-          </ScrambleHover>
+          </div>
         </div>
 
         <div className="mt-[clamp(2rem,6vh,5rem)] flex flex-wrap items-center justify-center gap-x-9 gap-y-5 font-body text-sm uppercase tracking-[0.22em] text-white max-md:mt-12 max-md:tracking-[0.14em]">
@@ -196,7 +195,7 @@ function MobileMultimodalFusion() {
       className="relative min-h-[100svh] overflow-hidden bg-bg-dark pb-0 pt-[104px] text-white md:hidden"
     >
       <div className="px-7 text-center">
-        <ScrambleHover className="mx-auto w-fit cursor-default">
+        <div className="mx-auto w-fit cursor-default">
           <ScrollTextLines
             as="h2"
             className="font-heading text-[38px] font-[400] uppercase leading-[0.94] tracking-normal"
@@ -208,7 +207,7 @@ function MobileMultimodalFusion() {
               "Fusion.",
             ]}
           />
-        </ScrambleHover>
+        </div>
 
         <div className="mx-auto mt-[42px] flex max-w-[330px] flex-col items-center gap-2 font-figtree text-[9px] font-[400] uppercase leading-none tracking-[0.18em] text-white">
           <ScrollTextLines
