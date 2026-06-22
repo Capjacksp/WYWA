@@ -139,7 +139,7 @@ function DesktopHowItWorks() {
             <div className="relative flex min-h-0 flex-1 items-end max-md:items-center max-md:pt-8">
               {/* Skyline fill — clip-path wipe */}
               <div
-                className="pointer-events-none absolute inset-x-0 left-8 bottom-[15%] min-h-[70%] overflow-hidden"
+                className="pointer-events-none absolute inset-x-0 left-8 bottom-[80px] min-h-[70%] overflow-hidden"
                 aria-hidden="true"
               >
                 <AnimatePresence mode="sync">
@@ -505,7 +505,7 @@ function MobileHowItWorks() {
           </AnimatePresence>
 
           {/* Bottom text panel */}
-          <div className="absolute bottom-0 left-0 right-0 h-[40%] z-0 px-5 pt-4 pb-6">
+          <div className="absolute bottom-0 left-1 right-0 h-[40%] z-0 px-5 pt-4 pb-6">
             <MobileGridBackground />
 
             {/* Title — clip-path wipe from bottom */}
@@ -519,7 +519,7 @@ function MobileHowItWorks() {
                 exit="exit"
                 transition={{ duration: 0.5, ease: EASE_EXPO }}
               >
-                <h3 className="font-heading text-[32px] font-[400] -mt-12 uppercase leading-[1.2] tracking-normal text-bg-dark">
+                <h3 className="font-heading text-[32px] font-[400] -mt-[52px] uppercase leading-[1.2] tracking-normal text-bg-dark">
                   <motion.span
                     className={`${activeStep % 2 === 1 ? "text-[#FFFFFF]" : ""} block`}
                     initial={{ clipPath: "inset(0 0 100% 0)" }}

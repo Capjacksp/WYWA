@@ -138,7 +138,7 @@ function MobileBlindSpotScreen() {
   return (
     <section
       data-header-class=""
-      className="min-h-screen bg-bg-dark px-7 pb-12 pt-[50px] text-white"
+      className="min-h-screen bg-bg-dark px-7 pb-12 pt-[20px] text-white"
     >
       <div>
         <AnimatedIcon>
