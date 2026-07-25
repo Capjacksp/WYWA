@@ -129,16 +129,9 @@ export default function ConnectPopup({ open, onOpenChange }: ConnectPopupProps) 
             method="POST"
             action={NETLIFY_FORM_PATH}
             data-netlify="true"
-            {...{ "netlify-honeypot": "bot-field" }}
             onSubmit={handleSubmit}
           >
             <input type="hidden" name="form-name" value="connect" />
-            <p className="hidden" aria-hidden="true">
-              <label>
-                Do not fill this out if you are human:
-                <input name="bot-field" tabIndex={-1} autoComplete="off" />
-              </label>
-            </p>
             <div className="grid grid-cols-2 gap-x-[3vw] gap-y-[2.25vw] max-md:grid-cols-1 max-md:gap-y-3.5">
               <TextField label="Name" name="name" />
               <TextField label="Email" name="email" type="email" />
