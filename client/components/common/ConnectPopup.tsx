@@ -15,6 +15,8 @@ const inquiryTypes = [
   "Insurance Agency",
 ] as const;
 
+const NETLIFY_FORM_PATH = "/__forms.html";
+
 type SubmitStatus =
   | "idle"
   | "submitting"
@@ -91,7 +93,7 @@ export default function ConnectPopup({ open, onOpenChange }: ConnectPopupProps) 
     }
 
     try {
-      const response = await fetch("/", {
+      const response = await fetch(NETLIFY_FORM_PATH, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encodeFormData(formData),
@@ -125,7 +127,7 @@ export default function ConnectPopup({ open, onOpenChange }: ConnectPopupProps) 
             ref={formRef}
             name="connect"
             method="POST"
-            action="/"
+            action={NETLIFY_FORM_PATH}
             data-netlify="true"
             {...{ "netlify-honeypot": "bot-field" }}
             onSubmit={handleSubmit}
