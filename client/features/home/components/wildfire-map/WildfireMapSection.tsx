@@ -78,7 +78,9 @@ function DesktopWildfireMapSection() {
           start: "top top",
           end: "+=90%",
           scrub: 1,
-          anticipatePin: 1,
+          // Let the pin begin exactly at the section boundary. Chrome's
+          // early pin anticipation makes this transition look like a snap.
+          anticipatePin: 0,
           invalidateOnRefresh: true,
         },
       });
@@ -185,7 +187,7 @@ function MobileWildfireMapSection() {
           start: "top top",
           end: "+=100%",
           scrub: 0.8,
-          anticipatePin: 1,
+          anticipatePin: 0,
           invalidateOnRefresh: true,
         },
       });

@@ -20,7 +20,7 @@ export const fusionCards = [
   {
     eyebrow: "",
     title: "Fusion Layer",
-    body: "A cross-attention transformer fuses encodings, dynamically learning contextual weighting chemical data at dawn and visual data in dry conditions.",
+    body: "A cross-attention transformer fuses encodings, dynamically learning contextual weighting of chemical data at dawn and visual data in dry conditions.",
     iconSrc: "/images/tech-multi-4.png",
   },
 ] as const;

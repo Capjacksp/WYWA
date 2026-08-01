@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { Play } from "lucide-react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PageLayout from "@/components/layout/PageLayout";
 import HeroFusionPullScene from "@/features/home/components/HeroFusionPullScene";
 import {
@@ -23,10 +24,15 @@ export default function HomePage() {
 
   const handleVideoPlay = useCallback(() => setIsPlaying(true), []);
   const handleVideoPause = useCallback(() => setIsPlaying(false), []);
+  const handleVideoMetadata = useCallback(() => {
+    // The video's intrinsic dimensions can change the page height in Chrome.
+    // Recalculate the map pin after those dimensions are known.
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+  }, []);
 
   return (
     <PageLayout>
-      <section className="relative bg-bg-dark">
+      <section className="relative bg-white">
         <HeroFusionPullScene />
         {!isMobile && <DesktopFusionRedSection />}
 
@@ -44,6 +50,7 @@ export default function HomePage() {
                   playsInline
                   preload="metadata"
                   controls
+                  onLoadedMetadata={handleVideoMetadata}
                   onPlay={handleVideoPlay}
                   onPause={handleVideoPause}
                 />

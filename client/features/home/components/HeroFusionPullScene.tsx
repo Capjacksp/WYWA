@@ -60,7 +60,7 @@ export default function HeroFusionPullScene() {
         className="pointer-events-none absolute inset-x-0 top-0 h-screen"
       />
 
-      <div className="sticky top-0 h-screen overflow-hidden bg-bg-dark">
+      <div className="sticky top-0 h-screen overflow-hidden bg-white">
         <motion.div
           className="h-full w-full origin-top"
           style={{ scale: heroScale, y: heroY }}

@@ -21,7 +21,7 @@ function HomeHero({
   return (
     <section
       data-header-class={trackHeader ? "header-dark" : undefined}
-      className={`home-hero radio-glitch-paint-boundary relative min-h-screen w-full overflow-hidden bg-[#fafafa] text-[#242425] ${embedded ? "" : "-mt-16"}`}
+      className={`home-hero radio-glitch-paint-boundary relative min-h-screen w-full overflow-hidden bg-[#FFFFFF] text-[#242425] ${embedded ? "" : "-mt-16"}`}
     >
       <RadioGlitchFilter />
       <HeroGrid />

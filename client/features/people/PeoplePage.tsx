@@ -349,7 +349,7 @@ function AdvisorsSection() {
   const isMobile = useIsMobile();
 
   return (
-    <section data-header-class="" className="bg-[#F7F7F7] px-[50px] bg-[#4101F5] pb-28 pt-28 max-md:px-5 max-md:pt-10 ">
+    <section data-header-class="" className="px-[50px] bg-[#4101F5] pb-28 pt-28 max-md:px-5 max-md:pt-10 ">
       {isMobile ? (
         <MobileAdvisorsSection />
       ) : (
