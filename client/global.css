@@ -668,8 +668,11 @@
 .wywa-fire-marker {
   align-items: center;
   background: transparent;
+  border: 0;
+  cursor: pointer;
   display: flex;
   justify-content: center;
+  overflow: visible !important;
 }
 
 .wywa-fire-marker__content {
@@ -678,67 +681,108 @@
   height: 48px;
   justify-content: center;
   opacity: 0;
-  scale: 0.35;
+  position: relative;
+  transform: scale(0.35);
+  transform-origin: center;
+  width: 48px;
 }
 
-.leaflet-wywaLocations-pane.is-visible .wywa-fire-marker__content,
-.leaflet-wywaLocations-pane.is-visible .wywa-location-pop .wywa-fire-label__card {
+.leaflet-wywaLocations-pane.is-visible .wywa-fire-marker__content {
   animation: wywa-location-pop 420ms cubic-bezier(0.2, 0.9, 0.25, 1.25) forwards;
   animation-delay: calc(var(--wywa-location-index, 0) * 90ms);
 }
 
-.wywa-location-pop .wywa-fire-label__card {
-  opacity: 0;
-  scale: 0.75;
-  transform-origin: center;
+.wywa-fire-marker__content::before,
+.wywa-fire-marker__content::after,
+.wywa-fire-marker__pulse {
+  border: 1px solid rgb(255 255 255 / 0.8);
+  content: "";
+  pointer-events: none;
+  position: absolute;
+}
+
+.wywa-fire-marker__content::before {
+  inset: 6px;
+}
+
+.wywa-fire-marker__content::after {
+  inset: 12px;
+}
+
+.wywa-fire-marker__pulse {
+  animation: wywa-marker-square-pulse 2.8s ease-out infinite;
+  inset: 0;
+}
+
+.wywa-fire-marker__content.is-active::before,
+.wywa-fire-marker__content.is-active::after,
+.wywa-fire-marker__content.is-active .wywa-fire-marker__pulse {
+  border-color: #f55656;
+}
+
+.wywa-fire-marker__content.is-active .wywa-fire-marker__pulse {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+.wywa-fire-marker__core {
+  background: white;
+  height: 22px;
+  position: relative;
+  width: 22px;
+  z-index: 1;
+}
+
+.wywa-fire-marker__content.is-active .wywa-fire-marker__core {
+  height: 28px;
+  width: 28px;
+}
+
+.wywa-fire-marker__label {
+  color: white;
+  font-family: var(--font-figtree);
+  font-size: 11px;
+  font-weight: 600;
+  left: 50%;
+  line-height: 1.1;
+  position: absolute;
+  text-align: center;
+  text-shadow: 0 2px 8px rgb(0 0 0 / 0.8);
+  text-transform: uppercase;
+  top: 58px;
+  transform: translateX(-50%);
+  width: 140px;
+  z-index: 2;
 }
 
 @keyframes wywa-location-pop {
   0% {
     opacity: 0;
-    scale: 0.35;
+    transform: scale(0.35);
   }
 
   70% {
     opacity: 1;
-    scale: 1.08;
+    transform: scale(1.08);
   }
 
   100% {
     opacity: 1;
-    scale: 1;
+    transform: scale(1);
   }
 }
 
-.wywa-fire-marker__pulse {
-  animation: wywa-marker-pulse 2.4s ease-out infinite;
-  border: 3px solid rgb(255 255 255 / 0.85);
-  border-radius: 9999px;
-  height: 42px;
-  position: absolute;
-  width: 42px;
-}
-
-.wywa-fire-marker__core {
-  background: #f55656;
-  border: 6px solid white;
-  border-radius: 9999px;
-  box-shadow: 0 0 18px rgb(245 86 86 / 0.7);
-  height: 28px;
-  position: relative;
-  width: 28px;
-}
-
-@keyframes wywa-marker-pulse {
+@keyframes wywa-marker-square-pulse {
   0% {
-    opacity: 0.85;
-    transform: scale(0.55);
+    opacity: 0.75;
+    transform: scale(0.85);
   }
 
   75%,
   100% {
     opacity: 0;
-    transform: scale(1.45);
+    transform: scale(1.2);
   }
 }
 

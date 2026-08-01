@@ -1,13 +1,21 @@
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+export type FireStatValue =
+  | string
+  | Array<{
+      text: string;
+      className?: string;
+    }>;
+
 export interface FireCalloutProps {
   label: string;
+  image: string;
   coordinates: [number, number];
   stats: {
-    scale: string;
-    delay: string;
-    impact: string;
+    scale: FireStatValue;
+    delay: FireStatValue;
+    impact: FireStatValue;
   };
   className: string;
   enterFrom: "left" | "right";
@@ -19,6 +27,8 @@ export interface FireCalloutProps {
   defaultOpenOnMobile?: boolean;
   expandDirection?: "up" | "down";
   doesHaveAsterisk?: string;
+  sourceUrl?: string;
+  sourceName?: string;
 }
 
 export function FireCallout({
@@ -133,11 +143,19 @@ export function FireCallout({
   );
 }
 
-function CalloutStat({ label, value }: { label: string; value: string }) {
+function CalloutStat({ label, value }: { label: string; value: FireStatValue }) {
   return (
     <div className="grid grid-cols-[64px_1fr] gap-3 px-5">
       <span className="font-bold text-cta">{label}</span>
-      <span className="text-white/85">{value}</span>
+      <span className="text-white/85">
+        {typeof value === "string"
+          ? value
+          : value.map((segment, index) => (
+              <span key={`${segment.text}-${index}`} className={segment.className}>
+                {segment.text}
+              </span>
+            ))}
+      </span>
     </div>
   );
 }

@@ -30,10 +30,10 @@ export default function HomePage() {
         <HeroFusionPullScene />
         {!isMobile && <DesktopFusionRedSection />}
 
-        <div className="relative z-20 h-[100vh]">
+        <div className="relative z-20">
           <section
             data-header-class=""
-            className="h-full relative flex items-center justify-center bg-[#F15D59]  md:px-8 md:py-16"
+            className="relative flex min-h-screen items-center justify-center bg-[#F15D59] md:px-8 md:py-16"
           >
             <div className="w-full px-32 pt-24 pb-14 max-w-[1460px] overflow-hidden  bg-[#F15D59]">
               <div className="group relative aspect-video w-full">

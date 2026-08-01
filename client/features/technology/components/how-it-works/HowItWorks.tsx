@@ -121,7 +121,7 @@ function DesktopHowItWorks() {
               >
                 <ArrowHead
                   direction="left"
-                  size={18}
+                  size={16}
                   color={activeStep === 0 ? "#D5D5D5" : "#242425"}
                 />
               </button>
@@ -138,7 +138,7 @@ function DesktopHowItWorks() {
               >
                 <ArrowHead
                   direction="right"
-                  size={18}
+                  size={16}
                   color={
                     activeStep === howItWorksSteps.length - 1
                       ? "#D5D5D5"
@@ -310,9 +310,8 @@ function DesktopHowItWorks() {
               {thresholds.map((_, index) => (
                 <span
                   key={index}
-                  className={`h-1.5 w-8 transition-colors ${
-                    index === activeStep ? "bg-[#f15d59]" : "bg-bg-dark/20"
-                  }`}
+                  className={`h-1.5 w-8 transition-colors ${index === activeStep ? "bg-[#f15d59]" : "bg-bg-dark/20"
+                    }`}
                 />
               ))}
             </div>
@@ -651,12 +650,12 @@ function PixelSkylineMask({
               reduceMotion
                 ? false
                 : {
-                    opacity: 0,
-                    x: x + insetX,
-                    y: y + insetY,
-                    width: tileWidth * 0.15,
-                    height: tileHeight * 0.15,
-                  }
+                  opacity: 0,
+                  x: x + insetX,
+                  y: y + insetY,
+                  width: tileWidth * 0.15,
+                  height: tileHeight * 0.15,
+                }
             }
             animate={{
               opacity: 1,

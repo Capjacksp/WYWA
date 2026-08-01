@@ -1,4 +1,5 @@
-import { type RefObject, useRef } from "react";
+import { type RefObject, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -6,6 +7,13 @@ import { LeafletWildfireMap } from "@/features/home/components/wildfire-map/Leaf
 import { ArrowHead } from "@/components/common/ArrowHead";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 import { useIsMobile } from "@/hooks/use-mobile";
+import type { FireCalloutProps } from "@/features/home/components/wildfire-map/FireCallout";
+import {
+  ScrambleLoadText,
+  useScrambleText,
+} from "@/components/ui/scramble-load-text";
+import type { FireStatValue } from "@/features/home/components/wildfire-map/FireCallout";
+import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -16,12 +24,14 @@ export function WildfireMapSection() {
 }
 
 function DesktopWildfireMapSection() {
+  const [selectedFire, setSelectedFire] = useState<FireCalloutProps | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
   const mapOverlayRef = useRef<HTMLDivElement>(null);
   const locationsRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<any | null>(null);
+  const clearMapSelectionRef = useRef<(() => void) | null>(null);
 
   useGSAP(
     () => {
@@ -59,6 +69,8 @@ function DesktopWildfireMapSection() {
         onReverseComplete: () => {
           locations.classList.remove("is-visible");
           setMapInteractive(false);
+          setSelectedFire(null);
+          clearMapSelectionRef.current?.();
         },
         scrollTrigger: {
           trigger: section,
@@ -80,6 +92,10 @@ function DesktopWildfireMapSection() {
             const revealingMap = timeline.scrollTrigger?.direction !== -1;
             locations.classList.toggle("is-visible", revealingMap);
             setMapInteractive(revealingMap);
+            if (!revealingMap) {
+              setSelectedFire(null);
+              clearMapSelectionRef.current?.();
+            }
           },
           [],
           0.24,
@@ -101,7 +117,12 @@ function DesktopWildfireMapSection() {
         ref={panelRef}
         className="relative h-screen overflow-hidden text-white"
       >
-        <LeafletWildfireMap locationsLayerRef={locationsRef} mapRef={mapRef} />
+        <LeafletWildfireMap
+          locationsLayerRef={locationsRef}
+          mapRef={mapRef}
+          onSelect={setSelectedFire}
+          clearSelectionRef={clearMapSelectionRef}
+        />
 
         <div
           ref={mapOverlayRef}
@@ -109,7 +130,11 @@ function DesktopWildfireMapSection() {
         />
         <WildfireMapIntro introRef={introRef} />
 
-        <div className="pointer-events-none absolute bottom-0 right-0 z-[510] hidden w-[500px] lg:block">
+        <WildfireMapDetailsPanel
+          fire={selectedFire}
+        />
+
+        <div className="pointer-events-none absolute bottom-0 right-0 z-[510] hidden w-[400px] lg:block">
           <img
             src="/images/wave-logo.png"
             className="object-cover align-bottom"
@@ -122,12 +147,14 @@ function DesktopWildfireMapSection() {
 }
 
 function MobileWildfireMapSection() {
+  const [selectedFire, setSelectedFire] = useState<FireCalloutProps | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
   const mapOverlayRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const locationsRef = useRef<HTMLDivElement | null>(null);
+  const clearMapSelectionRef = useRef<(() => void) | null>(null);
 
   useGSAP(
     () => {
@@ -149,6 +176,8 @@ function MobileWildfireMapSection() {
       const timeline = gsap.timeline({
         onReverseComplete: () => {
           locations.classList.remove("is-visible");
+          setSelectedFire(null);
+          clearMapSelectionRef.current?.();
         },
         scrollTrigger: {
           trigger: section,
@@ -172,6 +201,10 @@ function MobileWildfireMapSection() {
           () => {
             const revealingMap = timeline.scrollTrigger?.direction !== -1;
             locations.classList.toggle("is-visible", revealingMap);
+            if (!revealingMap) {
+              setSelectedFire(null);
+              clearMapSelectionRef.current?.();
+            }
           },
           [],
           0.24,
@@ -192,13 +225,21 @@ function MobileWildfireMapSection() {
         ref={panelRef}
         className="relative h-[100svh] overflow-hidden text-white"
       >
-        <LeafletWildfireMap locationsLayerRef={locationsRef} />
+        <LeafletWildfireMap
+          locationsLayerRef={locationsRef}
+          onSelect={setSelectedFire}
+          clearSelectionRef={clearMapSelectionRef}
+        />
 
         <div
           ref={mapOverlayRef}
           className="pointer-events-none absolute inset-0 z-[500] bg-[#24242578]"
         />
         <WildfireMapIntro introRef={introRef} />
+
+        <WildfireMapDetailsPanel
+          fire={selectedFire}
+        />
 
         <div
           ref={logoRef}
@@ -248,7 +289,6 @@ const WildfireMapIntro = ({
       <ScrollTextLines
         as="p"
         className="max-w-[780px] font-heading text-h3 font-[350] uppercase leading-[1.2] text-white"
-        smoothProgress
         lines={[
           <>
             We detect at ignition, providing a{" "}
@@ -261,3 +301,135 @@ const WildfireMapIntro = ({
     </div>
   </div>
 );
+
+function WildfireMapDetailsPanel({
+  fire,
+}: {
+  fire: FireCalloutProps | null;
+}) {
+  return (
+    <aside
+      className={cn(
+        "absolute bottom-0 left-0 top-0 z-[700] w-[min(420px,100vw)] border-b border-white overflow-y-auto bg-[#000000]/40 px-14 pb-12 pt-12 text-white transition-transform duration-500 max-md:bottom-0 max-md:left-0 max-md:top-auto max-md:h-[min(70svh,580px)] max-md:w-full max-md:px-5 max-md:pb-8 max-md:pt-14",
+        fire ? "translate-x-0" : "pointer-events-none -translate-x-full max-md:translate-y-full max-md:translate-x-0",
+      )}
+      style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
+      aria-hidden={!fire}
+    >
+      {fire ? (
+        <div key={fire.label} className="relative">
+          <div className="relative overflow-hidden">
+            <img
+              src={fire.image}
+              alt={`${fire.label} wildfire incident image`}
+              className="w-[300px] object-cover"
+            />
+            <ScrambleLoadText
+              as="h2"
+              lines={[{ text: fire.label.toUpperCase() }]}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center font-heading text-[24px] font-medium uppercase leading-[1.2] max-md:text-[24px]"
+              duration={0.75}
+              resolveInterval={42}
+              distance={40}
+            />
+          </div>
+
+          {fire.sourceUrl && fire.sourceName && (
+            <a
+              href={fire.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-2 inline-block text-xs uppercase underline underline-offset-2 transition-colors hover:text-cta"
+            >
+              {fire.sourceName}
+            </a>
+          )}
+
+          <div className="mt-8 border-t border-white pt-4 max-md:mt-8 max-md:pt-6">
+            <WildfireDetailStat label="SCALE:" value={fire.stats.scale} />
+            <WildfireDetailStat label="DELAY:" value={fire.stats.delay} />
+            <WildfireDetailStat label="IMPACT:" value={fire.stats.impact} />
+          </div>
+          {fire.doesHaveAsterisk &&
+            <div className="text-[12px] mt-8 w-[180px] font-figtree text-[#FFFFFF75]">
+              {fire.doesHaveAsterisk}
+            </div>
+          }
+
+        </div>
+      ) : null}
+      <div className="border-t mt-2 w-full border-white max-md:mt-12" />
+    </aside>
+  );
+}
+
+function WildfireDetailStat({
+  label,
+  value,
+}: {
+  label: string;
+  value: FireStatValue;
+}) {
+  return (
+    <div className="grid grid-cols-[120px_1fr] gap-4 py-4 font-heading text-[12px] uppercase leading-[1.4] max-md:grid-cols-[82px_1fr] max-md:text-[14px]">
+      <ScrambleLoadText
+        as="div"
+        lines={[{ text: label, className: "text-white" }]}
+        duration={0.5}
+        resolveInterval={36}
+        distance={30}
+      />
+      <ScrambleStatValue value={value} />
+    </div>
+  );
+}
+
+function ScrambleStatValue({ value }: { value: FireStatValue }) {
+  const segments = typeof value === "string" ? [{ text: value }] : value;
+
+  return (
+    <span className="inline leading-[1.2] lowercase">
+      {segments.map((segment, index) => (
+        <ScrambleStatSegment
+          key={`${segment.text}-${index}`}
+          text={segment.text}
+          className={segment.className}
+          delay={index * 0.08}
+        />
+      ))}
+    </span>
+  );
+}
+
+function ScrambleStatSegment({
+  text,
+  className,
+  delay,
+}: {
+  text: string;
+  className?: string;
+  delay: number;
+}) {
+  const reduceMotion = useReducedMotion();
+  const displayText = useScrambleText({
+    text,
+    delay,
+    resolveInterval: 34,
+  });
+
+  return (
+    <motion.span
+      className={cn("inline", className)}
+      initial={reduceMotion ? false : { opacity: 0, x: 36 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{
+        duration: reduceMotion ? 0 : 0.8,
+        delay: reduceMotion ? 0 : delay,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      aria-label={text}
+    >
+      <span aria-hidden="true">{displayText}</span>
+    </motion.span>
+  );
+}

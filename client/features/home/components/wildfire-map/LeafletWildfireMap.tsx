@@ -1,51 +1,17 @@
 import { type MutableRefObject, useLayoutEffect, useRef } from "react";
 import { wildfireCallouts } from "@/features/home/data/wildfireCallouts";
-
-const SCRAMBLE_SYMBOLS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*+-<>";
-
-function animateCardText(card: HTMLElement) {
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const elements = card.querySelectorAll<HTMLElement>("[data-animate-text]");
-
-  elements.forEach((element, elementIndex) => {
-    const text = element.dataset.animateText ?? element.textContent ?? "";
-    if (reduceMotion) {
-      element.textContent = text;
-      return;
-    }
-
-    const startedAt = performance.now() + elementIndex * 70;
-    const duration = Math.max(320, text.length * 32);
-
-    const update = (now: number) => {
-      if (now < startedAt) {
-        requestAnimationFrame(update);
-        return;
-      }
-
-      const progress = Math.min(1, (now - startedAt) / duration);
-      const resolvedCount = Math.floor(progress * text.length);
-      element.textContent = Array.from(text)
-        .map((character, index) => {
-          if (character === " " || index < resolvedCount) return character;
-          return SCRAMBLE_SYMBOLS[Math.floor(Math.random() * SCRAMBLE_SYMBOLS.length)];
-        })
-        .join("");
-
-      if (progress < 1) requestAnimationFrame(update);
-      else element.textContent = text;
-    };
-
-    requestAnimationFrame(update);
-  });
-}
+import type { FireCalloutProps } from "@/features/home/components/wildfire-map/FireCallout";
 
 export function LeafletWildfireMap({
   locationsLayerRef,
   mapRef,
+  onSelect,
+  clearSelectionRef,
 }: {
   locationsLayerRef: MutableRefObject<HTMLDivElement | null>;
   mapRef?: MutableRefObject<any | null>;
+  onSelect?: (fire: FireCalloutProps | null) => void;
+  clearSelectionRef?: MutableRefObject<(() => void) | null>;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -88,9 +54,6 @@ export function LeafletWildfireMap({
     locationsPane.style.zIndex = "600";
     locationsLayerRef.current = locationsPane;
 
-    const labelsPane = map.createPane("wywaLabels", locationsPane);
-    labelsPane.style.zIndex = "650";
-
     const incidentBounds = leaflet.latLngBounds(
       wildfireCallouts.map((fire) => fire.coordinates),
     );
@@ -99,167 +62,104 @@ export function LeafletWildfireMap({
       maxZoom: 6,
     });
 
+    let activeIndex: number | null = null;
+    const markers: any[] = [];
+
+    const createMarkerIcon = (index: number) =>
+      leaflet.divIcon({
+        className: `wywa-fire-marker wywa-location-${index}`,
+        html: `<span class="wywa-fire-marker__content" style="--wywa-location-index:${index}"><span class="wywa-fire-marker__pulse"></span><span class="wywa-fire-marker__core"></span></span>`,
+        iconSize: [64, 64],
+        iconAnchor: [32, 32],
+        popupAnchor: [0, -22],
+      });
+
+    const setMarkerLabel = (marker: any, fire: (typeof wildfireCallouts)[number], visible: boolean) => {
+      const markerElement = marker.getElement?.() as HTMLElement | undefined;
+      const content = markerElement?.querySelector<HTMLElement>(
+        ".wywa-fire-marker__content",
+      );
+      if (!content) return;
+
+      const existingLabel = content.querySelector<HTMLElement>(
+        ".wywa-fire-marker__label",
+      );
+      if (visible && !existingLabel) {
+        const label = document.createElement("span");
+        label.className = "wywa-fire-marker__label";
+        label.textContent = fire.label;
+        content.append(label);
+      } else if (!visible) {
+        existingLabel?.remove();
+      }
+    };
+
     wildfireCallouts.forEach((fire, index) => {
       const displayLabel = fire.label;
-      const mobileExpandsUp =
-        (fire.mobileExpandDirection ?? fire.expandDirection) === "up";
-      const labelDirection = isMobile
-        ? mobileExpandsUp
-          ? "top"
-          : "bottom"
-        : fire.markerPosition === "left"
-          ? "right"
-          : "left";
-      const expandsUp = fire.expandDirection === "up";
       const marker = leaflet.marker(fire.coordinates, {
         title: displayLabel,
         alt: displayLabel,
         pane: "wywaLocations",
         zIndexOffset: isMobile ? 1000 : 0,
-        icon: leaflet.divIcon({
-          className: `wywa-fire-marker wywa-location-${index}`,
-          html: `<span class="wywa-fire-marker__content" style="--wywa-location-index:${index}"><span class="wywa-fire-marker__pulse"></span><span class="wywa-fire-marker__core"></span></span>`,
-          iconSize: [48, 48],
-          iconAnchor: [24, 24],
-          popupAnchor: [0, -22],
-        }),
+        icon: createMarkerIcon(index),
       });
 
-      marker.bindTooltip(
-        `<article class="wywa-fire-label__card">
-          <h3>${displayLabel}</h3>
-          <div class="wywa-fire-label__details">
-            <div class="wywa-fire-label__details-inner">
-              <dl>
-                <div><dt data-animate-text="Scale:">Scale:</dt><dd data-animate-text="${fire.stats.scale}">${fire.stats.scale}</dd></div>
-                <div><dt data-animate-text="Delay:">Delay:</dt><dd data-animate-text="${fire.stats.delay}">${fire.stats.delay}</dd></div>
-                <div><dt data-animate-text="Impact:">Impact:</dt><dd data-animate-text="${fire.stats.impact}">${fire.stats.impact}</dd></div>
-              </dl>
-              ${fire.doesHaveAsterisk ? `<p data-animate-text="${fire.doesHaveAsterisk}">${fire.doesHaveAsterisk}</p>` : ""}
-            </div>
-          </div>
-        </article>`,
-        {
-          permanent: true,
-          interactive: true,
-          direction: labelDirection,
-          offset: isMobile
-            ? [0, mobileExpandsUp ? -24 : 24]
-            : [labelDirection === "right" ? 20 : -20, 0],
-          pane: "wywaLabels",
-          className: `wywa-fire-label wywa-location-pop wywa-location-${index}${isMobile && mobileExpandsUp ? " wywa-fire-label--mobile-up" : ""}${!isMobile && expandsUp ? " wywa-fire-label--up" : ""}`,
-        },
-      );
+      marker.on("mouseover", () => setMarkerLabel(marker, fire, true));
+      marker.on("mouseout", () => setMarkerLabel(marker, fire, false));
 
-      const getTooltipElement = () => marker.getTooltip()?.getElement();
-      let closeTimer = 0;
-      const clearActiveLocation = () => {
-        locationsPane.classList.remove("has-active-location");
-        container
-          .querySelectorAll<HTMLElement>(".is-location-dimmed")
-          .forEach((element) => element.classList.remove("is-location-dimmed"));
-      };
+      marker.on("click", () => {
+        const nextIndex = activeIndex === index ? null : index;
+        activeIndex = nextIndex;
 
-      const openDetails = () => {
-        const tooltipElement = getTooltipElement();
-        if (!tooltipElement) return;
+        markers.forEach((item, markerIndex) => {
+          const markerElement = item.getElement?.() as HTMLElement | undefined;
+          const content = markerElement?.querySelector<HTMLElement>(
+            ".wywa-fire-marker__content",
+          );
+          if (!markerElement || !content) return;
 
-        window.clearTimeout(closeTimer);
-        if (tooltipElement.classList.contains("is-expanded")) return;
+          const isActive = markerIndex === nextIndex;
+          markerElement.classList.toggle("is-active", isActive);
+          content.classList.toggle("is-active", isActive);
+        });
 
-        (labelsPane.querySelectorAll(
-          ".wywa-fire-label.is-expanded",
-        ) as NodeListOf<HTMLElement>)
-          .forEach((label) => label.classList.remove("is-expanded"));
-
-        clearActiveLocation();
-        tooltipElement.classList.add("is-expanded");
-        locationsPane.classList.add("has-active-location");
-        container
-          .querySelectorAll<HTMLElement>(".wywa-fire-label, .wywa-fire-marker")
-          .forEach((element) => {
-            if (!element.classList.contains(`wywa-location-${index}`)) {
-              element.classList.add("is-location-dimmed");
-            }
-          });
-        animateCardText(tooltipElement);
-      };
-
-      const closeDetails = () => {
-        const tooltipElement = getTooltipElement();
-        if (!tooltipElement?.classList.contains("is-expanded")) return;
-
-        window.clearTimeout(closeTimer);
-        tooltipElement.classList.remove("is-expanded");
-        clearActiveLocation();
-      };
-
-      const toggleDetails = () => {
-        const tooltipElement = getTooltipElement();
-        if (tooltipElement?.classList.contains("is-expanded")) {
-          closeDetails();
-        } else {
-          openDetails();
-        }
-      };
-
-      const scheduleCloseDetails = () => {
-        window.clearTimeout(closeTimer);
-        closeTimer = window.setTimeout(() => {
-          const tooltipElement = getTooltipElement();
-          if (
-            tooltipElement?.classList.contains("is-expanded") &&
-            !tooltipElement.matches(":hover")
-          ) {
-            tooltipElement.classList.remove("is-expanded");
-            clearActiveLocation();
-          }
-        }, 90);
-      };
-
-      if (!isMobile) {
-        marker.on("mouseover", openDetails);
-        marker.on("mouseout", scheduleCloseDetails);
-      } else {
-        marker.on("click", toggleDetails);
-      }
-
-      marker.on("tooltipopen", () => {
-        const tooltipElement = getTooltipElement();
-        if (!tooltipElement || tooltipElement.dataset.clickReady === "true") return;
-
-        tooltipElement.dataset.clickReady = "true";
-        tooltipElement.style.setProperty("--wywa-location-index", String(index));
-        tooltipElement.setAttribute("role", "button");
-        tooltipElement.setAttribute("tabindex", "0");
-        tooltipElement.setAttribute("aria-label", `Toggle details for ${displayLabel}`);
-
-        tooltipElement.removeAttribute("role");
-        tooltipElement.removeAttribute("tabindex");
-        tooltipElement.removeAttribute("aria-label");
-        if (!isMobile) {
-          tooltipElement.addEventListener("mouseenter", openDetails);
-          tooltipElement.addEventListener("mouseleave", scheduleCloseDetails);
-        }
-
-        if (isMobile && fire.defaultOpenOnMobile) {
-          requestAnimationFrame(openDetails);
-        }
+        locationsPane.classList.toggle("has-active-location", nextIndex !== null);
+        onSelect?.(nextIndex === null ? null : fire);
       });
 
       marker.addTo(map);
+      markers.push(marker);
     });
+
+    const clearSelection = () => {
+      activeIndex = null;
+      markers.forEach((marker, markerIndex) => {
+        const markerElement = marker.getElement?.() as HTMLElement | undefined;
+        const content = markerElement?.querySelector<HTMLElement>(
+          ".wywa-fire-marker__content",
+        );
+        if (!markerElement || !content) return;
+
+        markerElement.classList.remove("is-active");
+        content.classList.remove("is-active");
+        setMarkerLabel(marker, wildfireCallouts[markerIndex], false);
+      });
+      locationsPane.classList.remove("has-active-location");
+    };
+
+    if (clearSelectionRef) clearSelectionRef.current = clearSelection;
 
     const resizeObserver = new ResizeObserver(() => map.invalidateSize());
     resizeObserver.observe(container);
 
     return () => {
       resizeObserver.disconnect();
+      if (clearSelectionRef) clearSelectionRef.current = null;
       locationsLayerRef.current = null;
       if (mapRef) mapRef.current = null;
       map.remove();
     };
-  }, [locationsLayerRef, mapRef]);
+  }, [clearSelectionRef, locationsLayerRef, mapRef, onSelect]);
 
   return (
     <div

@@ -180,7 +180,7 @@ function DesktopBlog({
                     >
                       <ArrowHead
                         direction="left"
-                        size={20}
+                        size={16}
                         color={isFirstPost ? "#D5D5D5" : "#242425"}
                       />
                     </button>
@@ -197,7 +197,7 @@ function DesktopBlog({
                     >
                       <ArrowHead
                         direction="right"
-                        size={20}
+                        size={16}
                         color={isLastPost ? "#D5D5D5" : "#242425"}
                       />
                     </button>
