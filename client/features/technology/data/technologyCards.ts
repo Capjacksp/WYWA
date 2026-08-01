@@ -2,25 +2,25 @@ export const fusionCards = [
   {
     eyebrow: "Encoder 1",
     title: "Chemical",
-    body: "The VOC time series is processed with 1D convolutions to capture gas-concentration slopes, enabling visual detection 45 seconds earlier.",
+    body: "1D convolutions capture VOC concentration slopes, enabling detection 45 seconds earlier.",
     iconSrc: "/images/tech-multi-1.png",
   },
   {
     eyebrow: "Encoder 2",
     title: "Visual",
-    body: "Live camera feeds are processed by a vision transformer that extracts spatial features and identifies anomalous regions.",
+    body: "A vision transformer scans live camera feeds to flag anomalous regions.",
     iconSrc: "/images/tech-multi-2.png",
   },
   {
     eyebrow: "Encoder 3",
     title: "Temporal",
-    body: "Motion vectors across 5-second clips are analyzed to distinguish rising smoke plumes from drifting fog.",
+    body: "Motion vectors over 5-second clips distinguish rising smoke from drifting fog.",
     iconSrc: "/images/tech-multi-3.png",
   },
   {
     eyebrow: "",
     title: "Fusion Layer",
-    body: "A cross-attention transformer fuses the encodings. The model dynamically learns contextual weighting; chemical data is weighted higher at dawn, and visual data is weighted higher in dry conditions.",
+    body: "A cross-attention transformer fuses encodings, dynamically learning contextual weighting chemical data at dawn and visual data in dry conditions.",
     iconSrc: "/images/tech-multi-4.png",
   },
 ] as const;

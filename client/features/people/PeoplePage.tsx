@@ -1,5 +1,8 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import {
+  AnimatePresence,
+  motion,
+} from "framer-motion";
+import { useRef, useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
 import {
   LoadTextLines,
@@ -7,135 +10,179 @@ import {
 } from "@/components/ui/scroll-text-lines";
 import { ArrowHead } from "@/components/common/ArrowHead";
 import { useIsMobile, useMediaQuery } from "@/hooks/use-mobile";
+import { useScrollStepNavigation } from "@/hooks/use-scroll-step-navigation";
 import { type TeamMember, teamMembers, advisors } from "./data/peopleData";
 
 function TeamStageCard({
   member,
-  activeId,
-  setActiveId,
+  index,
+  isFirst,
+  isLast,
+  isActive,
+  onNavigate,
 }: {
   member: TeamMember;
-  activeId: null | string;
-  setActiveId: (id: null | string) => void;
+  index: number;
+  isFirst: boolean;
+  isLast: boolean;
+  isActive: boolean;
+  onNavigate: (index: number) => void;
 }) {
-  const isActive = activeId === member.id;
-
   return (
-    <button
-      type="button"
-      onMouseEnter={() => setActiveId(member.id)}
-      onFocus={() => setActiveId(member.id)}
-      className={`absolute overflow-hidden text-left transition duration-300 focus:outline-none ${member.stageClassName} ${isActive ? "grayscale-0" : "grayscale"
-        }`}
-    >
-      <img
-        src={isActive && member.activeImage ? member.activeImage : member.image}
-        alt={member.name}
-        className="aspect-[1.07/1] w-full object-cover"
-      />
-    </button>
-  );
-}
-
-function TeamOverlay({ member }: { member: TeamMember }) {
-  return (
-    <AnimatePresence>
-      {member ? (
-        <motion.div
-          key={member.id}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
-          className={` absolute z-40 flex flex-col overflow-hidden rounded-[18px] ${member.count % 2 != 0 ? (member.count == 3 ? "rounded-bl-none" : "rounded-tl-none") : "rounded-br-none rounded-tr-none"}  bg-[#242425ED] px-[clamp(1rem,2vw,2.8rem)] py-[clamp(1rem,2.15vw,3.25rem)] text-white shadow-[0_18px_60px_rgba(0,0,0,0.22)] ${member.panelClassName}`}
+    <div className="relative text-left transition duration-300 focus:outline-none">
+      {isActive && !isLast && (
+        <button
+          type="button"
+          className="absolute right-[-74px] top-1/2 z-20 -translate-y-1/2 border-0 bg-transparent p-3 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425]"
+          onClick={() => onNavigate(index + 1)}
+          aria-label={`Show ${teamMembers[index + 1]?.name ?? "next team member"}`}
         >
-          <div className="flex shrink-0 items-start justify-between gap-5">
-            <div className="flex min-w-0 items-start gap-[clamp(0.75rem,1.4vw,2rem)]">
-              <ArrowHead
-                direction="right"
-                color="var(--color-cta)"
-                className="mt-[clamp(0.15rem,0.35vw,0.5rem)]"
-                style={{
-                  borderTopWidth: "clamp(0.5rem,0.9vw,1.25rem)",
-                  borderBottomWidth: "clamp(0.5rem,0.9vw,1.25rem)",
-                  borderLeftWidth: "clamp(0.5rem,0.9vw,1.25rem)",
-                }}
-              />
-              <div className="min-w-0">
-                <h2
-                  className="font-body text-h3 font-normal uppercase leading-none tracking-normal"
-                  style={{ color: member.panelTitleColor ?? "#90E8FF" }}
-                >
-                  {member.name}
-                </h2>
-                <p className="mt-[clamp(0.25rem,0.35vw,0.45rem)] font-figtree text-body-lg font-normal uppercase leading-none tracking-[0.18em] text-white">
-                  {member.role}
-                </p>
-              </div>
-            </div>
-            <a
-              href={member.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${member.name} on LinkedIn`}
-              className="text-white hover:text-white transition-colors"
-            >
-              <svg
-                width="28"
-                height="28"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-              </svg>
-            </a>
-          </div>
+          <ArrowHead size={20} color="#242425" />
+        </button>
+      )}
+      {isActive && !isFirst && (
+        <button
+          type="button"
+          className="absolute left-[-74px] top-1/2 z-20 -translate-y-1/2 border-0 bg-transparent p-3 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425]"
+          onClick={() => onNavigate(index - 1)}
+          aria-label={`Show ${teamMembers[index - 1]?.name ?? "previous team member"}`}
+        >
+          <ArrowHead
+            size={20}
+            color="#242425"
+            direction="left"
+          />
+        </button>
+      )}
+      {/* Image with thick border */}
+      <div className="bg-[#242425]/85 backdrop-blur-[15px] p-6">
+        <img
+          src={member.image}
+          alt={member.name}
+          className="w-[350px] object-cover"
+        />
 
-          <div className="mt-[clamp(1rem,2.6vw,4.5rem)] max-w-[94%] overflow-hidden whitespace-pre-line font-figtree text-body font-normal leading-[clamp(1.08rem,1.45vw,1.625rem)] text-white">
-            {member.bio}
+        <div className="mt-4 flex items-start justify-between">
+          <div>
+            <h3 className="font-body text-[24px] font-[400] uppercase leading-[28px] tracking-normal text-cta">
+              {member.name}
+            </h3>
+            <p className="mt-0.5 font-figtree text-[16px] font-[400] uppercase leading-[28px] tracking-[0.15em] text-white">
+              {member.role}
+            </p>
           </div>
-        </motion.div>
-      ) : null}
-    </AnimatePresence>
+          <div>
+            {member.linkedin && (
+              <a
+                href={member.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${member.name} on LinkedIn`}
+                className="text-white transition-colors hover:text-white/80"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <LinkedInIcon className="h-6 w-6" />
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
+
 
 function TeamHero() {
   const useCompactTeamStage = useMediaQuery("(max-width: 1023px)");
-  const [activeId, setActiveId] = useState<null | string>(null);
-  const activeMember =
-    teamMembers.find((member) => member.id === activeId) ?? null;
+  const sectionRef = useRef<HTMLElement>(null);
+  const stageCount = teamMembers.length + 1;
+  const { activeIndex: activeStageIndex, scrollToIndex } =
+    useScrollStepNavigation({
+      itemCount: stageCount,
+      sectionRef,
+    });
+  const activeTeamIndex = activeStageIndex - 1;
+  const activeTeamMember =
+    activeTeamIndex >= 0 ? teamMembers[activeTeamIndex] : null;
+
+  const scrollToTeamMember = (index: number) => {
+    scrollToIndex(index + 1);
+  };
 
   return (
-    <section className="bg-[#F7F7F7] px-[50px] pt-0 max-md:px-5">
+    <section
+      ref={sectionRef}
+      className={`bg-[#F7F7F7] -mt-16 max-md:px-5 ${useCompactTeamStage ? "" : "relative"
+        }`}
+      style={
+        useCompactTeamStage
+          ? undefined
+          : { height: `${stageCount * 100}vh` }
+      }
+    >
       {useCompactTeamStage ? (
         <MobileTeamStage />
       ) : (
+
         <div
-          className="relative mx-auto aspect-[16/9] w-full max-w-[1920px] overflow-hidden"
-          onMouseLeave={() => setActiveId(null)}
+          className="sticky top-0 mx-auto h-screen w-full max-w-[1920px] overflow-hidden"
         >
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.10]"
+            style={{
+              backgroundImage:
+                "linear-gradient(#242425 1px, transparent 1px), linear-gradient(90deg, #242425 1px, transparent 1px)",
+              backgroundSize: "32px 32px",
+            }}
+          />
+
           <LoadTextLines
-            className="pointer-events-none absolute left-[1.35%] top-[11.8%] z-0 font-body text-[clamp(8rem,17.6vw,18rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
+            className="pointer-events-none absolute left-[30px] top-[100px] z-0 font-body text-[clamp(8rem,17.6vw,18rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
             lines={["Our"]}
           />
           <LoadTextLines
-            className="pointer-events-none absolute bottom-[1.7%] right-[1.1%] z-0 font-body text-[clamp(8rem,17.4vw,18rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
+            className="pointer-events-none absolute bottom-[50px] right-[1.1%] z-0 font-body text-[clamp(8rem,17.4vw,18rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
             delay={0.12}
             lines={["Team"]}
           />
 
-          {teamMembers.map((member) => (
-            <TeamStageCard
-              key={member.id}
-              member={member}
-              activeId={activeId}
-              setActiveId={setActiveId}
-            />
-          ))}
+          <div className="absolute bottom-[70px] left-[50px] max-w-[385px] font-figtree text-[18px] leading-[22px] tracking-normal text-bg-dark">
+            <p>
+              We're a team of engineers, scientists, and researchers from NVIDIA, Amazon Lab126, CMU, and MIT, based in San Francisco and advised by climate scientists and first responders.
+            </p>
+            <br />
+            <p>
+              Our sensors and AI deliver real-time environmental data at ground level, processed locally, with alerts that reach communities and emergency responders even where cell coverage doesn't. The result: faster wildfire response, safer communities, and a network that's fully open source.
+            </p>
+          </div>
 
-          {activeMember ? <TeamOverlay member={activeMember} /> : null}
+          <div
+            className="relative z-10 flex h-full items-center justify-center overflow-hidden"
+            aria-label="Team members"
+          >
+            <AnimatePresence mode="wait">
+              {activeTeamMember ? (
+                <motion.div
+                  key={activeTeamMember.id}
+                  data-team-slide
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.22, ease: "easeOut" }}
+                >
+                  <TeamStageCard
+                    member={activeTeamMember}
+                    index={activeTeamIndex}
+                    isFirst={activeTeamIndex === 0}
+                    isLast={activeTeamIndex === teamMembers.length - 1}
+                    isActive
+                    onNavigate={scrollToTeamMember}
+                  />
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+          </div>
+
         </div>
       )}
     </section>
@@ -191,7 +238,7 @@ function MobileTeamStage() {
                 aria-label={`Show ${member.name}`}
               >
                 <img
-                  src={isActive && member.activeImage ? member.activeImage : member.image}
+                  src={member.image}
                   alt={member.name}
                   className="aspect-[1.07/1] w-full object-cover"
                 />
@@ -263,10 +310,6 @@ function MobileTeamBioPanel({
           <LinkedInIcon className="h-5 w-5" />
         </a>
       </div>
-
-      <p className="mt-8 whitespace-pre-line font-figtree text-[12px] font-[400] leading-[1.2] text-white">
-        {member.bio}
-      </p>
     </motion.article>
   );
 }
@@ -306,61 +349,61 @@ function AdvisorsSection() {
   const isMobile = useIsMobile();
 
   return (
-    <section className="bg-[#F7F7F7] px-[50px] pb-28 pt-20 max-md:px-5 max-md:pt-10">
+    <section data-header-class="" className="bg-[#F7F7F7] px-[50px] bg-[#4101F5] pb-28 pt-28 max-md:px-5 max-md:pt-10 ">
       {isMobile ? (
         <MobileAdvisorsSection />
       ) : (
-      <div className="mx-auto max-w-[1920px]">
-        <ScrollTextLines
-          as="h2"
-          className="text-center font-body text-display font-normal uppercase leading-[0.9] tracking-normal text-bg-dark"
-          lines={["Our Advisors"]}
-        />
+        <div className="mx-auto max-w-[1920px] ">
+          <ScrollTextLines
+            as="h2"
+            className="text-center font-body text-display font-normal uppercase leading-[0.9] tracking-normal text-[#90E8FF]"
+            lines={["Our Advisors"]}
+          />
 
-        <div className="mt-36 grid grid-cols-3 gap-10 max-lg:grid-cols-2 max-lg:gap-6 max-md:mt-16 max-md:grid-cols-1">
-          {advisors.map((advisor) => (
-            <article key={advisor.name}>
-              <div className="relative overflow-hidden bg-cta">
-                <img
-                  src={advisor.image}
-                  alt={advisor.name}
-                  className="aspect-[1.365/1] w-full object-cover"
-                />
-                <div className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-[4px]">
-                  <a
-                    href={advisor.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`${advisor.name} on LinkedIn`}
-                    className="text-bg-dark/80 hover:text-bg-dark transition-colors"
-                  >
-                    <svg
-                      width="28"
-                      height="28"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      xmlns="http://www.w3.org/2000/svg"
+          <div className="mt-28 grid grid-cols-3 gap-10 max-lg:grid-cols-2 max-lg:gap-6 max-md:mt-16 max-md:grid-cols-1">
+            {advisors.map((advisor) => (
+              <article key={advisor.name}>
+                <div className="relative overflow-hidden bg-cta">
+                  <img
+                    src={advisor.image}
+                    alt={advisor.name}
+                    className="w-full object-cover"
+                  />
+                  <div className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-[4px]">
+                    <a
+                      href={advisor.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${advisor.name} on LinkedIn`}
+                      className="text-bg-dark/80 hover:text-bg-dark transition-colors"
                     >
-                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                    </svg>
-                  </a>
+                      <svg
+                        width="28"
+                        height="28"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                      </svg>
+                    </a>
+                  </div>
                 </div>
-              </div>
-              <ScrollTextLines
-                as="h3"
-                className="mt-8 font-body text-h3 font-[500] uppercase leading-none tracking-normal text-bg-dark"
-                lines={[advisor.name]}
-              />
-              <ScrollTextLines
-                as="p"
-                className="mt-2 font-figtree text-body font-[400] uppercase leading-none tracking-[0.18em] text-bg-dark"
-                delay={0.08}
-                lines={[advisor.role]}
-              />
-            </article>
-          ))}
+                <ScrollTextLines
+                  as="h3"
+                  className="mt-8 font-body text-h3 font-[500] uppercase leading-none tracking-normal text-white"
+                  lines={[advisor.name]}
+                />
+                <ScrollTextLines
+                  as="p"
+                  className="mt-2 font-figtree text-body font-[400] uppercase leading-none tracking-[0.18em] text-white"
+                  delay={0.08}
+                  lines={[advisor.role]}
+                />
+              </article>
+            ))}
+          </div>
         </div>
-      </div>
       )}
     </section>
   );

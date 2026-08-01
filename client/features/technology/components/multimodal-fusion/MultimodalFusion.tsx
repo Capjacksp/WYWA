@@ -38,7 +38,7 @@ function DesktopMultimodalFusion() {
           </div>
         </div>
 
-        <div className="mt-[clamp(2rem,6vh,5rem)] flex flex-wrap items-center justify-center gap-x-9 gap-y-5 font-body text-sm uppercase tracking-[0.22em] text-white max-md:mt-12 max-md:tracking-[0.14em]">
+        <div className="mt-[clamp(2rem,6vh,5rem)] flex flex-wrap items-center justify-center gap-x-4 gap-y-5 font-body text-[16px] font-[350] uppercase leading-[28px] tracking-normal text-center text-white max-md:mt-12">
           <ScrollTextLines as="span" lines={["Three Signal Types"]} />
           <span className="h-6 w-[2px] bg-white" />
           <ScrollTextLines
@@ -209,7 +209,7 @@ function MobileMultimodalFusion() {
           />
         </div>
 
-        <div className="mx-auto mt-[42px] flex max-w-[330px] flex-col items-center gap-2 font-figtree text-[9px] font-[400] uppercase leading-none tracking-[0.18em] text-white">
+        <div className="mx-auto mt-[42px] flex max-w-[330px] flex-col items-center gap-2 font-body text-[20px] font-[350] uppercase leading-[28px] tracking-normal text-center text-white">
           <ScrollTextLines
             as="span"
             lineClassName="inline-flex items-center gap-2"

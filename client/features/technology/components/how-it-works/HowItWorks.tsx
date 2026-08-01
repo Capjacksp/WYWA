@@ -6,12 +6,13 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { howItWorksSteps } from "@/features/technology/data/howItWorksSteps";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 import { cn } from "@/lib/utils";
 import { ArrowHead } from "@/components/common/ArrowHead";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useScrollStepNavigation } from "@/hooks/use-scroll-step-navigation";
 
 // ─── shared spring config ─────────────────────────────────────────────────────
 const SPRING = {
@@ -34,8 +35,6 @@ export function HowItWorks() {
 function DesktopHowItWorks() {
   const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
-  const [activeStep, setActiveStep] = useState(0);
-  const [direction, setDirection] = useState(1);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"],
@@ -57,42 +56,28 @@ function DesktopHowItWorks() {
     [],
   );
 
-  useEffect(() => {
-    return scrollYProgress.on("change", (latest) => {
-      const stepProgress = Math.min(latest / DESKTOP_STEP_PROGRESS_END, 0.999);
-      const nextStep = Math.min(
-        howItWorksSteps.length - 1,
-        Math.floor(stepProgress * howItWorksSteps.length),
-      );
-
-      setActiveStep((previous) => {
-        if (previous !== nextStep) {
-          setDirection(nextStep > previous ? 1 : -1);
-        }
-        return nextStep;
-      });
-    });
-  }, [scrollYProgress]);
-
-  const scrollToStep = (targetStep: number) => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const nextStep = Math.max(
-      0,
-      Math.min(howItWorksSteps.length - 1, targetStep),
+  const getDesktopStepFromProgress = useCallback((sectionProgress: number) => {
+    const stepProgress = Math.min(
+      sectionProgress / DESKTOP_STEP_PROGRESS_END,
+      0.999,
     );
-    const scrollDistance = section.offsetHeight - window.innerHeight;
-    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-    const targetProgress =
-      ((nextStep + STEP_PROGRESS_OFFSET) / howItWorksSteps.length) *
-      DESKTOP_STEP_PROGRESS_END;
 
-    window.scrollTo({
-      top: sectionTop + scrollDistance * targetProgress,
-      behavior: "smooth",
-    });
-  };
+    return Math.min(
+      howItWorksSteps.length - 1,
+      Math.floor(stepProgress * howItWorksSteps.length),
+    );
+  }, []);
+
+  const {
+    activeIndex: activeStep,
+    direction,
+    scrollToIndex: scrollToStep,
+  } = useScrollStepNavigation({
+    itemCount: howItWorksSteps.length,
+    sectionRef,
+    targetProgressEnd: DESKTOP_STEP_PROGRESS_END,
+    getActiveIndexForProgress: getDesktopStepFromProgress,
+  });
 
   const step = howItWorksSteps[activeStep];
 
@@ -108,7 +93,8 @@ function DesktopHowItWorks() {
               lines={[
                 "Single senses create",
                 <>
-                  blind spots. <span className="text-[#F15D59]">Multimodal</span>
+                  blind spots.{" "}
+                  <span className="text-[#F15D59]">Multimodal</span>
                 </>,
                 <span className="text-[#F15D59]">
                   intelligence closes them.
@@ -123,6 +109,45 @@ function DesktopHowItWorks() {
       <section ref={sectionRef} className="relative h-[400vh]">
         <div className="sticky top-0 h-screen overflow-hidden px-[50px] pb-12 pt-12 max-md:h-auto max-md:min-h-screen max-md:px-5">
           <div className="mx-auto flex h-full flex-col">
+            <div className="absolute left-[50px] top-[200px] z-30 flex items-center gap-8">
+              <button
+                type="button"
+                className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+                onClick={() => scrollToStep(activeStep - 1)}
+                aria-label={
+                  activeStep === 1 ? "Show first step" : "Show previous step"
+                }
+                disabled={activeStep === 0}
+              >
+                <ArrowHead
+                  direction="left"
+                  size={18}
+                  color={activeStep === 0 ? "#D5D5D5" : "#242425"}
+                />
+              </button>
+              <button
+                type="button"
+                className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+                onClick={() => scrollToStep(activeStep + 1)}
+                aria-label={
+                  activeStep === howItWorksSteps.length - 2
+                    ? "Show last step"
+                    : "Show next step"
+                }
+                disabled={activeStep === howItWorksSteps.length - 1}
+              >
+                <ArrowHead
+                  direction="right"
+                  size={18}
+                  color={
+                    activeStep === howItWorksSteps.length - 1
+                      ? "#D5D5D5"
+                      : "#242425"
+                  }
+                />
+              </button>
+            </div>
+
             <div className="mt-20 flex items-center gap-5 max-md:mt-12">
               <span className="shrink-0 font-body font-normal text-sm uppercase tracking-[0.22em] text-bg-dark">
                 How it works
@@ -210,27 +235,6 @@ function DesktopHowItWorks() {
                 </AnimatePresence>
               </div>
 
-              {activeStep + 1 < howItWorksSteps.length && (
-                <button
-                  type="button"
-                  className="absolute bottom-[15%] z-20 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F15D59] max-md:mb-8 max-md:ml-0"
-                  onClick={() => scrollToStep(activeStep + 1)}
-                  aria-label="Show next step"
-                >
-                  <ArrowHead direction="right" size={18} />
-                </button>
-              )}
-              {activeStep > 0 && (
-                <button
-                  type="button"
-                  className="absolute bottom-[15%] right-0 z-20 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F15D59] max-md:mb-8 max-md:ml-0"
-                  onClick={() => scrollToStep(activeStep - 1)}
-                  aria-label="Show previous step"
-                >
-                  <ArrowHead direction="left" size={18} />
-                </button>
-              )}
-
               {/* Text grid — staggered children via variants */}
               <div className="relative z-10 grid w-full grid-cols-[1fr_1fr] h-full items-center gap-0 max-lg:grid-cols-[1fr_1fr] max-md:grid-cols-1 max-md:gap-6">
                 <AnimatePresence mode="wait" custom={direction}>
@@ -286,7 +290,11 @@ function DesktopHowItWorks() {
                       initial="enter"
                       animate="center"
                       exit="exit"
-                      transition={{ duration: 0.5, ease: EASE_EXPO, delay: 0.08 }}
+                      transition={{
+                        duration: 0.5,
+                        ease: EASE_EXPO,
+                        delay: 0.08,
+                      }}
                       className="max-w-[300px] ml-24 font-figtree text-body font-normal leading-snug text-bg-dark text-left max-md:max-w-none"
                     >
                       {step.body}
@@ -302,8 +310,9 @@ function DesktopHowItWorks() {
               {thresholds.map((_, index) => (
                 <span
                   key={index}
-                  className={`h-1.5 w-8 transition-colors ${index === activeStep ? "bg-[#f15d59]" : "bg-bg-dark/20"
-                    }`}
+                  className={`h-1.5 w-8 transition-colors ${
+                    index === activeStep ? "bg-[#f15d59]" : "bg-bg-dark/20"
+                  }`}
                 />
               ))}
             </div>
@@ -628,7 +637,7 @@ function PixelSkylineMask({
         const column = index % columns;
         const randomRank = randomDelayOrder[index];
         const revealDelay =
-          pixelCount > 1 ? (randomRank / (pixelCount - 1)) * 0.80 : 0;
+          pixelCount > 1 ? (randomRank / (pixelCount - 1)) * 0.8 : 0;
         const x = column * tileWidth;
         const y = row * tileHeight;
         const insetX = tileWidth * 0.425;
@@ -642,12 +651,12 @@ function PixelSkylineMask({
               reduceMotion
                 ? false
                 : {
-                  opacity: 0,
-                  x: x + insetX,
-                  y: y + insetY,
-                  width: tileWidth * 0.15,
-                  height: tileHeight * 0.15,
-                }
+                    opacity: 0,
+                    x: x + insetX,
+                    y: y + insetY,
+                    width: tileWidth * 0.15,
+                    height: tileHeight * 0.15,
+                  }
             }
             animate={{
               opacity: 1,

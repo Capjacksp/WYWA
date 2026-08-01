@@ -2,6 +2,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
 import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
+import { useScrollStepNavigation } from "@/hooks/use-scroll-step-navigation";
 import { Button } from "@/components/common/Button";
 import { ArrowHead } from "@/components/common/ArrowHead";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -128,19 +129,16 @@ function DesktopBlog({
     damping: 30,
   });
   const indicatorWidth = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
-  const scrollToPost = (index: number) => {
-    const section = sectionRef.current;
-    if (!section || blogPosts.length === 0) return;
-
-    const scrollDistance = section.offsetHeight - window.innerHeight;
-    const progress = blogPosts.length > 1 ? index / (blogPosts.length - 1) : 0;
-    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-
-    window.scrollTo({
-      top: sectionTop + scrollDistance * progress,
-      behavior: "smooth",
-    });
-  };
+  const {
+    activeIndex,
+    hasMultipleItems: hasMultiplePosts,
+    isFirstItem: isFirstPost,
+    isLastItem: isLastPost,
+    scrollToIndex: scrollToPost,
+  } = useScrollStepNavigation({
+    itemCount: blogPosts.length,
+    sectionRef,
+  });
 
   return (
     <PageLayout headerClassName="header-dark">
@@ -162,83 +160,95 @@ function DesktopBlog({
               />
             </div>
           </div>
-
-          {blogPosts.length === 0 ? (
-            <BlogStatusMessage status={status} />
-          ) : (
-            <motion.div
-              className="mt-20 flex h-[calc(100%-11rem)] max-md:mt-12 max-md:h-[calc(100%-6.5rem)]"
-              style={{ width: trackWidth, x: trackX }}
-            >
-              {blogPosts.map((post, index) => (
-                <article
-                  key={post.id}
-                  className="relative box-border grid h-full shrink-0 grid-cols-[1.3fr_1fr] items-center gap-14 px-[50px] max-lg:grid-cols-1 max-lg:content-center max-lg:gap-6 max-md:px-5"
-                  style={{ width: slideWidth }}
-                >
-                  {blogPosts.length > 1 && index != blogPosts.length - 1 && (
+          <div className="relative">
+            {blogPosts.length === 0 ? (
+              <BlogStatusMessage status={status} />
+            ) : (
+              <>
+                {hasMultiplePosts && (
+                  <div className="absolute left-[50px] top-[-50px] z-20 flex items-center gap-8 max-lg:left-8 max-md:left-5">
                     <button
                       type="button"
-                      className="absolute left-[50px] bottom-[100px] z-10 -translate-y-1/2 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F15D59] max-lg:top-auto max-lg:bottom-4 max-lg:translate-y-0"
-                      onClick={() =>
-                        scrollToPost(
-                          index === blogPosts.length - 1 ? 0 : index + 1,
-                        )
-                      }
+                      className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+                      onClick={() => scrollToPost(activeIndex - 1)}
                       aria-label={
-                        index === blogPosts.length - 2
-                          ? "Show last blog post"
-                          : "Show next blog post"
-                      }
-                    >
-                      <ArrowHead direction="right" size={20} />
-                    </button>
-                  )}
-
-                  {blogPosts.length > 1 && index != 0 && (
-                    <button
-                      type="button"
-                      className="absolute right-[50px] bottom-[100px] z-10 -translate-y-1/2 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F15D59] max-lg:top-auto max-lg:bottom-4 max-lg:translate-y-0"
-                      onClick={() => scrollToPost(index === 0 ? 0 : index - 1)}
-                      aria-label={
-                        index === 1
+                        activeIndex === 1
                           ? "Show first blog post"
                           : "Show previous blog post"
                       }
+                      disabled={isFirstPost}
                     >
-                      <ArrowHead direction="left" size={20} />
+                      <ArrowHead
+                        direction="left"
+                        size={20}
+                        color={isFirstPost ? "#D5D5D5" : "#242425"}
+                      />
                     </button>
-                  )}
-
-                  <div className="ml-[100px] max-lg:ml-16 max-md:ml-0">
-                    <img
-                      src={post.image}
-                      alt=""
-                      className="aspect-[1.39/1] w-full max-w-[910px] object-cover max-md:max-h-[38vh]"
-                    />
+                    <button
+                      type="button"
+                      className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+                      onClick={() => scrollToPost(activeIndex + 1)}
+                      aria-label={
+                        activeIndex === blogPosts.length - 2
+                          ? "Show last blog post"
+                          : "Show next blog post"
+                      }
+                      disabled={isLastPost}
+                    >
+                      <ArrowHead
+                        direction="right"
+                        size={20}
+                        color={isLastPost ? "#D5D5D5" : "#242425"}
+                      />
+                    </button>
                   </div>
+                )}
 
-                  <div className="max-w-[560px] max-lg:ml-16 max-md:ml-0">
-                    <p className="font-figtree text-body-lg font-[400] uppercase tracking-[0.28em] text-[#24242578] max-md:tracking-[0.16em]">
-                      {post.date}
-                    </p>
-                    <BlogTitle
-                      title={post.title}
-                      className="mt-10 w-[520px] max-w-full font-body text-h1 font-normal uppercase leading-[1] tracking-normal text-black max-lg:mt-6 max-md:text-[clamp(2.25rem,10vw,3.5rem)]"
-                    />
-                    <p className="mt-10 max-w-[470px] font-figtree text-body-lg font-normal leading-snug text-[#24242578] max-lg:mt-5 max-md:line-clamp-4">
-                      {post.body}
-                    </p>
-                    <Button asChild variant="primary" className="mt-10">
-                      <a href={post.postUrl} target="_blank" rel="noreferrer">
-                        Read More
-                      </a>
-                    </Button>
-                  </div>
-                </article>
-              ))}
-            </motion.div>
-          )}
+                <motion.div
+                  className="mt-20 flex h-[calc(100%-11rem)] max-md:mt-12 max-md:h-[calc(100%-6.5rem)]"
+                  style={{ width: trackWidth, x: trackX }}
+                >
+                  {blogPosts.map((post) => (
+                    <article
+                      key={post.id}
+                      className="relative box-border grid h-full shrink-0 grid-cols-[1.3fr_1fr] items-center gap-14 px-[50px] max-lg:grid-cols-1 max-lg:content-center max-lg:gap-6 max-md:px-5"
+                      style={{ width: slideWidth }}
+                    >
+                      <div className="ml-[100px] max-lg:ml-16 max-md:ml-0">
+                        <img
+                          src={post.image}
+                          alt=""
+                          className="aspect-[1.39/1] w-full max-w-[910px] object-cover max-md:max-h-[38vh]"
+                        />
+                      </div>
+
+                      <div className="max-w-[560px] max-lg:ml-16 max-md:ml-0">
+                        <p className="font-figtree text-body-lg font-[400] uppercase tracking-[0.28em] text-[#24242578] max-md:tracking-[0.16em]">
+                          {post.date}
+                        </p>
+                        <BlogTitle
+                          title={post.title}
+                          className="mt-10 w-[520px] max-w-full font-body text-h1 font-normal uppercase leading-[1] tracking-normal text-black max-lg:mt-6 max-md:text-[clamp(2.25rem,10vw,3.5rem)]"
+                        />
+                        <p className="mt-10 max-w-[470px] font-figtree text-body-lg font-normal leading-snug text-[#24242578] max-lg:mt-5 max-md:line-clamp-4">
+                          {post.body}
+                        </p>
+                        <Button asChild variant="primary" className="mt-10">
+                          <a
+                            href={post.postUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Read More
+                          </a>
+                        </Button>
+                      </div>
+                    </article>
+                  ))}
+                </motion.div>
+              </>
+            )}
+          </div>
         </div>
       </section>
     </PageLayout>

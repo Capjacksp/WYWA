@@ -143,10 +143,10 @@ export default function ConnectPopup({ open, onOpenChange }: ConnectPopupProps) 
             <p className="mt-5 font-figtree text-body-lg uppercase leading-none tracking-normal text-bg-dark max-md:text-sm">
               Or email us at{" "}
               <a
-                href="mailto:connect@wywa.ai"
+                href="mailto:nveeturi@wywa.ai"
                 className="text-[#F15D59] underline underline-offset-2"
               >
-                connect@wywa.ai
+                nveeturi@wywa.ai
               </a>
             </p>
           </form>

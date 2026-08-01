@@ -56,7 +56,7 @@ export default function HeroFusionPullScene() {
   return (
     <section ref={sceneRef} className="relative -mt-16">
       <div
-        data-header-class=""
+        data-header-class="header-dark"
         className="pointer-events-none absolute inset-x-0 top-0 h-screen"
       />
 

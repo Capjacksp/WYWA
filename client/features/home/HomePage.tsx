@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useCallback, useState } from "react";
+import { Play } from "lucide-react";
 import PageLayout from "@/components/layout/PageLayout";
 import HeroFusionPullScene from "@/features/home/components/HeroFusionPullScene";
 import {
@@ -15,46 +15,14 @@ const VIDEO_POSTER_SRC = "/images/video-overlay.webp";
 
 export default function HomePage() {
   const isMobile = useIsMobile();
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const loadedVideoSrcRef = useRef<string | null>(null);
-  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const videoSrc = useResponsiveVideoSource({
     desktop: DESKTOP_VIDEO_SRC,
     mobile: MOBILE_VIDEO_SRC,
   });
 
-  const handleVideoReady = useCallback(() => {
-    ScrollTrigger.refresh();
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShouldLoadVideo(true);
-        } else {
-          video.pause();
-        }
-      },
-      { rootMargin: "100px 0px", threshold: 0.15 },
-    );
-
-    observer.observe(video);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !shouldLoadVideo) return;
-
-    if (loadedVideoSrcRef.current !== videoSrc) {
-      loadedVideoSrcRef.current = videoSrc;
-      video.load();
-    }
-  }, [shouldLoadVideo, videoSrc]);
+  const handleVideoPlay = useCallback(() => setIsPlaying(true), []);
+  const handleVideoPause = useCallback(() => setIsPlaying(false), []);
 
   return (
     <PageLayout>
@@ -62,23 +30,41 @@ export default function HomePage() {
         <HeroFusionPullScene />
         {!isMobile && <DesktopFusionRedSection />}
 
-        <div className="relative z-20">
-          <div
+        <div className="relative z-20 h-[100vh]">
+          <section
             data-header-class=""
-            className="sticky top-0 h-screen min-h-[500px] w-full overflow-hidden bg-bg-dark shadow-[0_-24px_60px_rgba(0,0,0,0.18)]"
+            className="h-full relative flex items-center justify-center bg-[#F15D59]  md:px-8 md:py-16"
           >
-            <video
-              ref={videoRef}
-              className="h-full w-full object-cover"
-              src={shouldLoadVideo ? videoSrc : undefined}
-              loop
-              playsInline
-              preload={shouldLoadVideo ? "metadata" : "none"}
-              poster={VIDEO_POSTER_SRC}
-              controls
-              onLoadedMetadata={handleVideoReady}
-            />
-          </div>
+            <div className="w-full px-32 pt-24 pb-14 max-w-[1460px] overflow-hidden  bg-[#F15D59]">
+              <div className="group relative aspect-video w-full">
+                <video
+                  className="h-full w-full object-cover rounded-2xl"
+                  src={videoSrc}
+                  poster={VIDEO_POSTER_SRC}
+                  playsInline
+                  preload="metadata"
+                  controls
+                  onPlay={handleVideoPlay}
+                  onPause={handleVideoPause}
+                />
+
+                {!isPlaying && (
+                  <Play
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-20 w-24 cursor-pointer fill-current stroke-[1.5] text-white transition-transform duration-200 hover:scale-105 max-md:h-11 max-md:w-11"
+                    aria-label="Play WYWA wildfire detection video"
+                    role="button"
+                    tabIndex={0}
+                    onClick={(event) => {
+                      const video = event.currentTarget.previousElementSibling;
+                      if (video instanceof HTMLVideoElement) {
+                        void video.play();
+                      }
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+          </section>
 
           <div className="relative z-30">
             <WildfireMapSection />
