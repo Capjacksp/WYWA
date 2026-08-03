@@ -49,25 +49,26 @@ export default function HomePage() {
                   poster={VIDEO_POSTER_SRC}
                   playsInline
                   preload="metadata"
-                  controls
+                  controls={isPlaying}
                   onLoadedMetadata={handleVideoMetadata}
                   onPlay={handleVideoPlay}
                   onPause={handleVideoPause}
                 />
 
                 {!isPlaying && (
-                  <Play
-                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-20 w-24 cursor-pointer fill-current stroke-[1.5] text-white transition-transform duration-200 hover:scale-105 max-md:h-11 max-md:w-11"
+                  <button
+                    type="button"
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer text-white transition-transform duration-200 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
                     aria-label="Play WYWA wildfire detection video"
-                    role="button"
-                    tabIndex={0}
                     onClick={(event) => {
                       const video = event.currentTarget.previousElementSibling;
                       if (video instanceof HTMLVideoElement) {
                         void video.play();
                       }
                     }}
-                  />
+                  >
+                    <Play className="h-20 w-24 fill-current stroke-[1.5] max-md:h-11 max-md:w-11" />
+                  </button>
                 )}
               </div>
             </div>

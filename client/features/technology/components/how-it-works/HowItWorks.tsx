@@ -106,7 +106,7 @@ function DesktopHowItWorks() {
       </div>
 
       {/* STICKY HORIZONTAL SCROLL PART */}
-      <section ref={sectionRef} className="relative h-[400vh]">
+      <section ref={sectionRef} className="relative h-[500vh]">
         <div className="sticky top-0 h-screen overflow-hidden px-[50px] pb-12 pt-12 max-md:h-auto max-md:min-h-screen max-md:px-5">
           <div className="mx-auto flex h-full flex-col">
             <div className="absolute left-[50px] top-[200px] z-30 flex items-center gap-8">
@@ -417,7 +417,7 @@ function MobileHowItWorks() {
         </div>
       </div>
 
-      <section ref={sectionRef} className="relative h-[420vh]">
+      <section ref={sectionRef} className="relative h-[520vh]">
         <div className="sticky top-0 h-screen overflow-hidden bg-[#F7F7F7] px-5 pb-10 pt-32">
           <div className="flex items-center gap-3 mb-2">
             <span className="shrink-0 font-heading text-[14px] font-[400] uppercase tracking-[0.22em] text-bg-dark">
