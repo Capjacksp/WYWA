@@ -209,10 +209,10 @@ function MobileMultimodalFusion() {
           />
         </div>
 
-        <div className="mx-auto mt-[42px] flex max-w-[330px] flex-col items-center gap-2 font-body font-[350] uppercase leading-[28px] tracking-normal text-center text-white">
+        <div className="mx-auto mt-[42px] flex max-w-[330px] flex-col items-center font-body font-[350] uppercase leading-[28px] tracking-normal text-center text-white">
           <ScrollTextLines
             as="span"
-            lineClassName="inline-flex text-[18px] items-center gap-2"
+            lineClassName="inline-flex text-[11px] items-center gap-2"
             lines={[
               <>
                 <span className="h-4 w-px bg-white" />
@@ -223,7 +223,7 @@ function MobileMultimodalFusion() {
           />
           <ScrollTextLines
             as="span"
-            lineClassName="inline-flex text-[18px] items-center gap-2"
+            lineClassName="inline-flex text-[11px] items-center gap-2"
             delay={0.08}
             lines={[
               <>
@@ -235,7 +235,7 @@ function MobileMultimodalFusion() {
           />
           <ScrollTextLines
             as="span"
-            lineClassName="inline-flex text-[18px] items-center gap-2"
+            lineClassName="inline-flex text-[11px] items-center gap-2"
             delay={0.16}
             lines={[
               <>

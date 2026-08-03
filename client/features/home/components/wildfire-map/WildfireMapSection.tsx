@@ -134,6 +134,10 @@ function DesktopWildfireMapSection() {
 
         <WildfireMapDetailsPanel
           fire={selectedFire}
+          onClose={() => {
+            setSelectedFire(null);
+            clearMapSelectionRef.current?.();
+          }}
         />
 
         <div className="pointer-events-none absolute bottom-0 right-0 z-[510] hidden w-[400px] lg:block">
@@ -241,6 +245,10 @@ function MobileWildfireMapSection() {
 
         <WildfireMapDetailsPanel
           fire={selectedFire}
+          onClose={() => {
+            setSelectedFire(null);
+            clearMapSelectionRef.current?.();
+          }}
         />
 
         <div
@@ -306,25 +314,36 @@ const WildfireMapIntro = ({
 
 function WildfireMapDetailsPanel({
   fire,
+  onClose,
 }: {
   fire: FireCalloutProps | null;
+  onClose: () => void;
 }) {
   return (
     <aside
       className={cn(
-        "absolute bottom-0 left-0 top-0 z-[700] w-[min(420px,100vw)] border-b border-white overflow-y-auto bg-[#000000]/40 px-14 pb-12 pt-12 text-white transition-transform duration-500 max-md:bottom-0 max-md:left-0 max-md:top-auto max-md:h-[min(70svh,580px)] max-md:w-full max-md:px-5 max-md:pb-8 max-md:pt-14",
+        "absolute bottom-0 left-0 top-0 z-[700] w-[min(420px,100vw)] overflow-y-auto border-b border-white bg-[#000000]/40 px-14 pb-12 pt-12 text-white transition-transform duration-500 max-md:bottom-2 max-md:left-2 max-md:right-2 max-md:top-16 max-md:h-auto max-md:w-auto max-md:rounded-[6px] max-md:bg-[#242425]/95 max-md:px-5 max-md:pb-8 max-md:pt-14",
         fire ? "translate-x-0" : "pointer-events-none -translate-x-full max-md:translate-y-full max-md:translate-x-0",
       )}
       style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
       aria-hidden={!fire}
     >
+      <button
+        type="button"
+        onClick={onClose}
+        className="absolute right-4 top-4 z-10 inline-flex h-8 items-center justify-center border border-white/70 px-3 font-figtree text-[11px] uppercase tracking-[0.16em] text-white transition-colors hover:border-white hover:bg-white hover:text-bg-dark md:hidden"
+        aria-label="Cancel wildfire details"
+      >
+        Close
+      </button>
+
       {fire ? (
         <div key={fire.label} className="relative">
           <div className="relative overflow-hidden">
             <img
               src={fire.image}
               alt={`${fire.label} wildfire incident image`}
-              className="w-[300px] object-cover"
+              className="w-[300px] object-cover max-md:w-full"
             />
             <ScrambleLoadText
               as="h2"

@@ -431,27 +431,38 @@ function MobileHowItWorks() {
             </div>
           </div>
 
-          {activeStep + 1 < howItWorksSteps.length && (
+          <div className="mt-6 flex items-center gap-8">
             <button
               type="button"
-              className="absolute top-[28%] left-0 z-20 ml-5 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F55656]"
-              onClick={() => scrollToStep(activeStep + 1)}
-              aria-label="Show next step"
-            >
-              <ArrowHead direction="right" size={13} color="#F55656" />
-            </button>
-          )}
-
-          {activeStep > 0 && (
-            <button
-              type="button"
-              className="absolute right-[0] top-[28%] z-20 mr-5 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F55656]"
+              className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
               onClick={() => scrollToStep(activeStep - 1)}
               aria-label="Show previous step"
+              disabled={activeStep === 0}
             >
-              <ArrowHead direction="left" size={13} color="#F55656" />
+              <ArrowHead
+                direction="left"
+                size={16}
+                color={activeStep === 0 ? "#D5D5D5" : "#242425"}
+              />
             </button>
-          )}
+            <button
+              type="button"
+              className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+              onClick={() => scrollToStep(activeStep + 1)}
+              aria-label="Show next step"
+              disabled={activeStep === howItWorksSteps.length - 1}
+            >
+              <ArrowHead
+                direction="right"
+                size={16}
+                color={
+                  activeStep === howItWorksSteps.length - 1
+                    ? "#D5D5D5"
+                    : "#242425"
+                }
+              />
+            </button>
+          </div>
 
           {/* Skyline — clip-path horizontal wipe */}
           <AnimatePresence mode="sync">

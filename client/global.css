@@ -589,6 +589,16 @@
   overflow-x: clip;
 }
 
+.home-hero-grid {
+  background-size: 32px 32px;
+}
+
+@media (max-width: 767px) {
+  .home-hero-grid {
+    background-size: 16px 16px;
+  }
+}
+
 .hero-radio-glitch>span {
   overflow: visible;
 }

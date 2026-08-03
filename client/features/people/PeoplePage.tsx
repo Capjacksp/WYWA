@@ -1,8 +1,5 @@
-import {
-  AnimatePresence,
-  motion,
-} from "framer-motion";
-import { useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef } from "react";
 import PageLayout from "@/components/layout/PageLayout";
 import {
   LoadTextLines,
@@ -10,6 +7,7 @@ import {
 } from "@/components/ui/scroll-text-lines";
 import { ArrowHead } from "@/components/common/ArrowHead";
 import { useIsMobile, useMediaQuery } from "@/hooks/use-mobile";
+import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
 import { useScrollStepNavigation } from "@/hooks/use-scroll-step-navigation";
 import { type TeamMember, teamMembers, advisors } from "./data/peopleData";
 
@@ -20,6 +18,7 @@ function TeamStageCard({
   isLast,
   isActive,
   onNavigate,
+  className = "",
 }: {
   member: TeamMember;
   index: number;
@@ -27,9 +26,12 @@ function TeamStageCard({
   isLast: boolean;
   isActive: boolean;
   onNavigate: (index: number) => void;
+  className?: string;
 }) {
   return (
-    <div className="relative text-left transition duration-300 focus:outline-none">
+    <div
+      className={`relative text-left transition duration-300 focus:outline-none ${className}`}
+    >
       {isActive && !isLast && (
         <button
           type="button"
@@ -47,11 +49,7 @@ function TeamStageCard({
           onClick={() => onNavigate(index - 1)}
           aria-label={`Show ${teamMembers[index - 1]?.name ?? "previous team member"}`}
         >
-          <ArrowHead
-            size={20}
-            color="#242425"
-            direction="left"
-          />
+          <ArrowHead size={20} color="#242425" direction="left" />
         </button>
       )}
       {/* Image with thick border */}
@@ -59,7 +57,7 @@ function TeamStageCard({
         <img
           src={member.image}
           alt={member.name}
-          className="w-[350px] object-cover"
+          className="w-full max-w-[350px] object-cover"
         />
 
         <div className="mt-4 flex items-start justify-between">
@@ -91,7 +89,6 @@ function TeamStageCard({
   );
 }
 
-
 function TeamHero() {
   const useCompactTeamStage = useMediaQuery("(max-width: 1023px)");
   const sectionRef = useRef<HTMLElement>(null);
@@ -112,21 +109,17 @@ function TeamHero() {
   return (
     <section
       ref={sectionRef}
-      className={`bg-[#F7F7F7] -mt-16 max-md:px-5 ${useCompactTeamStage ? "" : "relative"
-        }`}
+      className={`bg-[#F7F7F7] -mt-16 max-md:px-5 max-md:-mt-8 ${
+        useCompactTeamStage ? "" : "relative"
+      }`}
       style={
-        useCompactTeamStage
-          ? undefined
-          : { height: `${stageCount * 100}vh` }
+        useCompactTeamStage ? undefined : { height: `${stageCount * 100}vh` }
       }
     >
       {useCompactTeamStage ? (
         <MobileTeamStage />
       ) : (
-
-        <div
-          className="sticky top-0 mx-auto h-screen w-full max-w-[1920px] overflow-hidden"
-        >
+        <div className="sticky top-0 mx-auto h-screen w-full max-w-[1920px] overflow-hidden">
           <div
             className="pointer-events-none absolute inset-0 opacity-[0.10]"
             style={{
@@ -148,11 +141,17 @@ function TeamHero() {
 
           <div className="absolute bottom-[70px] left-[50px] max-w-[385px] font-figtree text-[18px] leading-[22px] tracking-normal text-bg-dark">
             <p>
-              We're a team of engineers, scientists, and researchers from NVIDIA, Amazon Lab126, CMU, and MIT, based in San Francisco and advised by climate scientists and first responders.
+              We're a team of engineers, scientists, and researchers from
+              NVIDIA, Amazon Lab126, CMU, and MIT, based in San Francisco and
+              advised by climate scientists and first responders.
             </p>
             <br />
             <p>
-              Our sensors and AI deliver real-time environmental data at ground level, processed locally, with alerts that reach communities and emergency responders even where cell coverage doesn't. The result: faster wildfire response, safer communities, and a network that's fully open source.
+              Our sensors and AI deliver real-time environmental data at ground
+              level, processed locally, with alerts that reach communities and
+              emergency responders even where cell coverage doesn't. The result:
+              faster wildfire response, safer communities, and a network that's
+              fully open source.
             </p>
           </div>
 
@@ -182,7 +181,6 @@ function TeamHero() {
               ) : null}
             </AnimatePresence>
           </div>
-
         </div>
       )}
     </section>
@@ -190,145 +188,204 @@ function TeamHero() {
 }
 
 function MobileTeamStage() {
-  const [activeId, setActiveId] = useState<null | string>(null);
-  const activeMember =
-    teamMembers.find((member) => member.id === activeId) ?? null;
+  const cardCount = teamMembers.length + 1;
+  const { sectionRef, sectionHeight } = useHorizontalScroll({
+    slideCount: cardCount,
+  });
+  const { activeIndex, scrollToIndex } = useScrollStepNavigation({
+    itemCount: cardCount,
+    sectionRef,
+  });
+  const activeIndexRef = useRef(activeIndex);
+  const touchStartRef = useRef<{ index: number; y: number } | null>(null);
+  const isSnappingRef = useRef(false);
+
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
+
+  useEffect(() => {
+    const isSectionInView = () => {
+      const section = sectionRef.current;
+      if (!section) return false;
+
+      const bounds = section.getBoundingClientRect();
+      const viewportCenter = window.innerHeight / 2;
+      return bounds.top <= viewportCenter && bounds.bottom >= viewportCenter;
+    };
+
+    const snapToIndex = (index: number) => {
+      const nextIndex = Math.min(cardCount - 1, Math.max(0, index));
+      activeIndexRef.current = nextIndex;
+      isSnappingRef.current = true;
+      scrollToIndex(nextIndex);
+      window.setTimeout(() => {
+        isSnappingRef.current = false;
+      }, 950);
+    };
+
+    const snapByDirection = (direction: 1 | -1) => {
+      const currentIndex = activeIndexRef.current;
+      const nextIndex = Math.min(
+        cardCount - 1,
+        Math.max(0, currentIndex + direction),
+      );
+
+      if (nextIndex === currentIndex) return false;
+
+      snapToIndex(nextIndex);
+      return true;
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      if (
+        !isSectionInView() ||
+        Math.abs(event.deltaY) <= Math.abs(event.deltaX) ||
+        Math.abs(event.deltaY) < 2
+      ) {
+        return;
+      }
+
+      if (isSnappingRef.current) {
+        event.preventDefault();
+        scrollToIndex(activeIndexRef.current);
+        return;
+      }
+
+      if (snapByDirection(event.deltaY > 0 ? 1 : -1)) {
+        event.preventDefault();
+      }
+    };
+
+    const handleTouchStart = (event: TouchEvent) => {
+      if (!isSectionInView()) return;
+
+      touchStartRef.current = {
+        index: activeIndexRef.current,
+        y: event.touches[0]?.clientY ?? 0,
+      };
+    };
+
+    const handleTouchEnd = (event: TouchEvent) => {
+      const touchStart = touchStartRef.current;
+      touchStartRef.current = null;
+      if (!touchStart || !isSectionInView()) return;
+
+      const touchEndY = event.changedTouches[0]?.clientY ?? touchStart.y;
+      const distance = touchStart.y - touchEndY;
+      if (Math.abs(distance) < 24) return;
+
+      const direction = distance > 0 ? 1 : -1;
+      const nextIndex = Math.min(
+        cardCount - 1,
+        Math.max(0, touchStart.index + direction),
+      );
+
+      if (nextIndex !== touchStart.index) {
+        snapToIndex(nextIndex);
+      }
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [cardCount, scrollToIndex, sectionRef]);
 
   return (
-    <div
-      className="relative min-h-screen  pb-14 pt-[92px] lg:hidden"
-      onClick={() => setActiveId(null)}
+    <section
+      ref={sectionRef}
+      className="relative -mx-5 bg-[#F7F7F7] lg:hidden"
+      style={{ height: sectionHeight }}
     >
-      <LoadTextLines
-        as="h1"
-        className="pointer-events-none absolute left-0 top-[50px] z-0 font-body text-[105px] font-[400] uppercase tracking-normal text-bg-dark"
-        lines={["Our"]}
-      />
+      <div className="sticky top-0 h-screen overflow-hidden">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.10]"
+          style={{
+            backgroundImage:
+              "linear-gradient(#242425 1px, transparent 1px), linear-gradient(90deg, #242425 1px, transparent 1px)",
+            backgroundSize: "16px 16px",
+          }}
+        />
 
-      <div className="relative z-10" onClick={(event) => event.stopPropagation()}>
-        {teamMembers.map((member, index) => {
-          const isActive = member.id === activeId;
-          const positionClassName = [
-            "left-0 top-[3vh] w-[50%]",
-            "left-0 top-[37vh] w-[50%]",
-            "right-0 top-[50vh] w-[50%]",
-            "right-0 top-[18vh] w-[50%]",
-          ][index];
-          const panelPlacementClassName = getMobileTeamPanelPlacementClassName(
-            member.id,
-            index,
-          );
+        <LoadTextLines
+          as="h1"
+          className="pointer-events-none absolute left-0 top-[50px] z-0 font-body text-[105px] font-[400] uppercase leading-[0.92] tracking-normal text-bg-dark"
+          lines={["Our"]}
+        />
 
-          return (
-            <div
-              key={member.id}
-              className={`absolute ${positionClassName} ${isActive ? "z-40" : "z-10"
-                }`}
-            >
-              <button
-                type="button"
-                onClick={() => setActiveId(member.id)}
-                className={`block w-full overflow-hidden bg-[#D6D6D6] text-left transition duration-300 focus:outline-none ${!activeMember
-                  ? "opacity-100 grayscale-0"
-                  : isActive
-                    ? "opacity-100 grayscale-0"
-                    : "opacity-35 grayscale"
-                  }`}
-                aria-pressed={isActive}
-                aria-label={`Show ${member.name}`}
+        <div
+          className="relative z-10 flex h-full items-center justify-center px-5"
+          aria-label="Team members"
+        >
+          <AnimatePresence mode="wait">
+            {activeIndex === 0 ? (
+              <motion.div
+                key="team-intro"
+                initial={{ opacity: 0, scale: 0.94, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.98, y: -8 }}
+                transition={{ duration: 0.26, ease: "easeOut" }}
               >
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="aspect-[1.07/1] w-full object-cover"
+                <MobileTeamIntroCard />
+              </motion.div>
+            ) : (
+              <motion.div
+                key={teamMembers[activeIndex - 1]?.id}
+                initial={{ opacity: 0, scale: 0.94, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.98, y: -8 }}
+                transition={{ duration: 0.26, ease: "easeOut" }}
+              >
+                <TeamStageCard
+                  member={teamMembers[activeIndex - 1]}
+                  index={activeIndex - 1}
+                  isFirst={activeIndex === 1}
+                  isLast={activeIndex === cardCount - 1}
+                  isActive={false}
+                  onNavigate={() => undefined}
+                  className="w-[calc(100vw-40px)] max-w-[398px]"
                 />
-              </button>
-
-              <AnimatePresence>
-                {isActive ? (
-                  <MobileTeamBioPanel
-                    member={member}
-                    className={panelPlacementClassName}
-                  />
-                ) : null}
-              </AnimatePresence>
-            </div>
-          );
-        })}
-      </div>
-
-      <LoadTextLines
-        className="pointer-events-none absolute z-0 bottom-[50px] right-[0px] text-right font-body text-[105px] font-[400] uppercase tracking-normal text-bg-dark"
-        delay={0.08}
-        lines={["Team"]}
-      />
-    </div>
-  );
-}
-
-function MobileTeamBioPanel({
-  member,
-  className,
-}: {
-  member: TeamMember;
-  className: string;
-}) {
-  return (
-    <motion.article
-      key={member.id}
-      initial={{ opacity: 0, y: className.includes("bottom-full") ? -12 : 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: className.includes("bottom-full") ? -10 : 10 }}
-      transition={{ duration: 0.24, ease: "easeOut" }}
-      className={`absolute z-30 w-[calc(100vw-40px)] rounded-[6px] bg-[#242425ED] px-4 pb-6 pt-6 text-white ${className}`}
-      onClick={(event) => event.stopPropagation()}
-    >
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex min-w-0 items-start gap-3">
-          <ArrowHead
-            direction="right"
-            size={10}
-            color="var(--color-cta)"
-          />
-          <div className="min-w-0">
-            <h2 className="font-body text-[14px] font-[400] uppercase leading-none tracking-normal text-cta">
-              {member.name}
-            </h2>
-            <p className="mt-1 font-figtree text-[10px] font-[400] uppercase leading-none tracking-[0.18em] text-white">
-              {member.role}
-            </p>
-          </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        <a
-          href={member.linkedin}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${member.name} on LinkedIn`}
-          className="shrink-0 text-white transition-colors hover:text-white/80"
-        >
-          <LinkedInIcon className="h-5 w-5" />
-        </a>
+        <LoadTextLines
+          className="pointer-events-none absolute bottom-[50px] right-0 z-20 text-right font-body text-[105px] font-[400] uppercase leading-[0.92] tracking-normal text-bg-dark"
+          delay={0.08}
+          lines={["Team"]}
+        />
       </div>
-    </motion.article>
+    </section>
   );
 }
 
-function getMobileTeamPanelPlacementClassName(memberId: string, index: number) {
-  const horizontalClassName = index === 0 || index === 1 ? "left-0" : "right-0";
-
-  switch (memberId) {
-    case "anirudh":
-      return `top-full rounded-tl-none ${horizontalClassName}`;
-    case "isha":
-      return `top-full rounded-tr-none ${horizontalClassName}`;
-    case "ravi":
-      return `bottom-full rounded-bl-none ${horizontalClassName}`;
-    case "dev":
-      return `bottom-full rounded-br-none ${horizontalClassName}`;
-    default:
-      return `top-full ${horizontalClassName}`;
-  }
+function MobileTeamIntroCard() {
+  return (
+    <article className="flex min-h-[390px] w-[calc(100vw-40px)] max-w-[398px] flex-col justify-center p-6 text-[#242425] sm:min-h-[445px]">
+      <div className="font-figtree text-[16px] leading-[22px] tracking-normal">
+        <p>
+          We're a team of engineers, scientists, and researchers from NVIDIA,
+          Amazon Lab126, CMU, and MIT, based in San Francisco and advised by
+          climate scientists and first responders.
+        </p>
+        <br />
+        <p>
+          Our sensors and AI deliver real-time environmental data at ground
+          level, processed locally, with alerts that reach communities and
+          emergency responders even where cell coverage doesn't. The result:
+          faster wildfire response, safer communities, and a network that's
+          fully open source.
+        </p>
+      </div>
+    </article>
+  );
 }
 
 function LinkedInIcon({ className }: { className?: string }) {
@@ -349,7 +406,10 @@ function AdvisorsSection() {
   const isMobile = useIsMobile();
 
   return (
-    <section data-header-class="" className="px-[50px] bg-[#4101F5] pb-28 pt-28 max-md:px-5 max-md:pt-10 ">
+    <section
+      data-header-class=""
+      className="px-[50px] bg-[#4101F5] pb-28 pt-28 max-md:px-5 max-md:pt-10 "
+    >
       {isMobile ? (
         <MobileAdvisorsSection />
       ) : (
@@ -414,26 +474,26 @@ function MobileAdvisorsSection() {
     <div className="md:hidden">
       <ScrollTextLines
         as="h2"
-        className="font-heading text-[42px] font-[400] uppercase leading-[0.94] tracking-normal text-bg-dark"
+        className="font-heading text-[42px] font-[400] uppercase leading-[0.94] tracking-normal text-[#90E8FF]"
         lines={["Our", "Advisors"]}
       />
 
       <div className="mt-6 flex flex-col">
         {advisors.map((advisor, index) => {
-          const alignmentClassName =
-            index === 1 ? "self-end" : "self-start";
+          const alignmentClassName = index === 1 ? "self-end" : "self-start";
 
           return (
             <article
               key={advisor.name}
-              className={`w-[min(63vw,250px)] ${alignmentClassName} ${index === 0 ? "" : "mt-4"
-                }`}
+              className={`w-[min(63vw,250px)] ${alignmentClassName} ${
+                index === 0 ? "" : "mt-4"
+              }`}
             >
               <div className="relative overflow-hidden bg-cta">
                 <img
                   src={advisor.image}
                   alt={advisor.name}
-                  className="aspect-[1.21/1] w-full object-contain object-top"
+                  className="w-full object-contain object-top"
                 />
                 <a
                   href={advisor.linkedin}
@@ -444,21 +504,18 @@ function MobileAdvisorsSection() {
                 >
                   <LinkedInIcon className="h-4 w-4" />
                 </a>
-
-                <div className="absolute inset-x-0 bottom-0 bg-bg-dark px-4 py-2 text-center text-white">
-                  <ScrollTextLines
-                    as="h3"
-                    className="font-body text-[15px] font-[500] uppercase leading-none tracking-normal"
-                    lines={[advisor.name]}
-                  />
-                  <ScrollTextLines
-                    as="p"
-                    className="mt-1 font-figtree text-[10px] font-[400] uppercase leading-none tracking-[0.18em]"
-                    delay={0.08}
-                    lines={[advisor.role]}
-                  />
-                </div>
               </div>
+              <ScrollTextLines
+                as="h3"
+                className="mt-4 font-body text-[15px] font-[500] uppercase leading-none tracking-normal text-white"
+                lines={[advisor.name]}
+              />
+              <ScrollTextLines
+                as="p"
+                className="mt-1 font-figtree text-[10px] font-[400] uppercase leading-none tracking-[0.18em] text-white"
+                delay={0.08}
+                lines={[advisor.role]}
+              />
             </article>
           );
         })}

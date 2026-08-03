@@ -39,12 +39,12 @@ export default function HomePage() {
         <div className="relative z-20">
           <section
             data-header-class=""
-            className="relative flex min-h-screen items-center justify-center bg-[#F15D59] md:px-8 md:py-16"
+            className="relative flex min-h-screen items-center justify-center bg-[#F15D59] md:px-8 md:py-16 max-md:min-h-0 max-md:px-5 max-md:py-10"
           >
-            <div className="w-full px-32 pt-24 pb-14 max-w-[1460px] overflow-hidden  bg-[#F15D59]">
+            <div className="w-full max-w-[1460px] overflow-hidden bg-[#F15D59] px-32 pb-14 pt-24 max-md:px-0 max-md:py-0">
               <div className="group relative aspect-video w-full">
                 <video
-                  className="h-full w-full object-cover rounded-2xl"
+                  className="h-full w-full rounded-2xl object-cover max-md:rounded-lg"
                   src={videoSrc}
                   poster={VIDEO_POSTER_SRC}
                   playsInline

@@ -157,7 +157,7 @@ export function DesktopFusionRedSection() {
 
 function MobileFusionSection() {
   return (
-    <div className="relative z-10 shadow-[0_-18px_44px_rgba(0,0,0,0.2)] md:hidden">
+    <div className="relative z-10 md:hidden">
       <MobileFusionSensorScreen />
       <MobileFusionCopyScreen />
     </div>

@@ -28,10 +28,10 @@ function HomeHero({
       <HeroForestImage />
 
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-[1920px]">
-        <div className="absolute left-[6.8%] top-[16%] max-w-[680px] max-md:left-5 max-md:right-5 max-md:top-[14%]">
+        <div className="absolute left-[6.8%] top-[16%] max-w-[680px] max-md:left-[7.4vw] max-md:right-[7.4vw] max-md:top-[11.8%]">
           <ScrambleLoadText
             as="h1"
-            className="hero-radio-glitch font-heading text-h1 font-[400] uppercase leading-[94%] tracking-[0%] text-[#242425] max-md:text-[42px] max-md:leading-[94%]"
+            className="hero-radio-glitch font-heading text-h1 font-[400] uppercase leading-[94%] tracking-[0%] text-[#242425] max-md:text-[30px] max-md:leading-[94%]"
             delay={0.12}
             {...HERO_TEXT_MOTION}
             lines={[
@@ -42,7 +42,7 @@ function HomeHero({
           />
         </div>
 
-        <div className="pointer-events-none absolute left-1/2 top-[6%] z-20 h-[89%] -translate-x-1/2 max-md:top-[30%] max-md:h-[45%]">
+        <div className="pointer-events-none absolute left-1/2 top-[6%] z-20 h-[89%] -translate-x-1/2 max-md:top-[34.4%] max-md:h-[45%]">
           <motion.div
             className="h-full"
             initial={reduceMotion ? false : { opacity: 0, y: 34 }}
@@ -78,11 +78,10 @@ function HeroGrid() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 opacity-[0.10]"
+      className="home-hero-grid pointer-events-none absolute inset-0 opacity-[0.10]"
       style={{
         backgroundImage:
           "linear-gradient(#242425 1px, transparent 1px), linear-gradient(90deg, #242425 1px, transparent 1px)",
-        backgroundSize: "32px 32px",
       }}
     />
   );
@@ -90,21 +89,41 @@ function HeroGrid() {
 
 function HeroForestImage() {
   return (
-    <img
-      src="/images/home-hero-image.png"
-      alt=""
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center max-md:object-[54%_center]"
-    />
+    <picture className="pointer-events-none absolute inset-0 block">
+      <source
+        media="(max-width: 767px)"
+        srcSet="/images/home-hero-image-mobile.png"
+      />
+      <img
+        src="/images/home-hero-image.png"
+        alt=""
+        aria-hidden="true"
+        className="h-full w-full object-cover object-center"
+      />
+    </picture>
   );
 }
 
 function HeroCallout() {
   return (
-    <div className="absolute bottom-[9.2%] left-[70%] z-30 w-[min(28vw,420px)] max-md:bottom-[6%] max-md:left-5 max-md:right-5 max-md:w-auto">
+    <div className="absolute bottom-[9.2%] left-[70%] z-30 w-[min(28vw,420px)] max-md:bottom-auto max-md:left-[7.4vw] max-md:right-[7.4vw] max-md:top-[24.5%] max-md:w-auto">
+      <div className="hidden max-md:block">
+        <ScrambleLoadText
+          as="h2"
+          className="font-heading text-[14px] font-[400] uppercase leading-[1] tracking-[0%] text-[#242425]"
+          delay={0.42}
+          {...HERO_TEXT_MOTION}
+          lines={[
+            { text: "SYSTEMS THAT DETECT" },
+            { text: "WILDFIRES BEFORE" },
+            { text: "THEY BECOME VISIBLE" },
+          ]}
+        />
+      </div>
+
       <ScrambleLoadText
         as="h2"
-        className="font-heading text-[28px] font-[400] uppercase leading-[28px] tracking-[0%] text-[#242425] max-md:text-[clamp(1.7rem,8vw,2.4rem)] max-md:leading-[0.88]"
+        className="font-heading text-[28px] font-[400] uppercase leading-[28px] tracking-[0%] text-[#242425] max-md:hidden"
         delay={0.42}
         {...HERO_TEXT_MOTION}
         lines={[
@@ -118,7 +137,7 @@ function HeroCallout() {
       <Button
         asChild
         variant="primary"
-        className="mt-6 h-[32px] min-w-[140px] bg-[#4300ff] px-5 font-figtree text-[16px] font-[500] leading-none tracking-[0.18em] text-white hover:bg-[#3500d6] max-md:mt-5 max-md:h-[34px] max-md:min-w-0 max-md:px-5 max-md:text-[13px]"
+        className="mt-6 h-[32px] min-w-[140px] bg-[#4300ff] px-5 font-figtree text-[16px] font-[500] leading-none tracking-[0.18em] text-white hover:bg-[#3500d6] max-md:mt-3 max-md:h-[18px] max-md:min-w-[94px] max-md:px-3 max-md:text-[9px]"
       >
         <a href="/technology">LEARN MORE</a>
       </Button>

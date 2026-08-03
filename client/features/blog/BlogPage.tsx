@@ -336,9 +336,44 @@ function MobileBlogRail({
         <BlogStatusMessage status={status} />
       ) : (
         <>
+          {blogPosts.length > 1 && (
+            <div className="mt-6 flex items-center gap-8 px-5">
+              <button
+                type="button"
+                className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+                onClick={() => scrollToPost(activeIndex - 1)}
+                aria-label="Show previous blog post"
+                disabled={activeIndex === 0}
+              >
+                <ArrowHead
+                  direction="left"
+                  size={16}
+                  color={activeIndex === 0 ? "#D5D5D5" : "#242425"}
+                />
+              </button>
+              <button
+                type="button"
+                className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+                onClick={() => scrollToPost(activeIndex + 1)}
+                aria-label="Show next blog post"
+                disabled={activeIndex === blogPosts.length - 1}
+              >
+                <ArrowHead
+                  direction="right"
+                  size={16}
+                  color={
+                    activeIndex === blogPosts.length - 1
+                      ? "#D5D5D5"
+                      : "#242425"
+                  }
+                />
+              </button>
+            </div>
+          )}
+
           <div
             ref={railRef}
-            className="mt-10 snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="mt-8 snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             onScroll={handleScroll}
             aria-label="Blog posts"
           >
@@ -359,35 +394,11 @@ function MobileBlogRail({
                       {post.date}
                     </p>
                     <div className="mt-6 relative flex items-start gap-0">
-                      {blogPosts.length > 1 &&
-                        index !== blogPosts.length - 1 && (
-                          <button
-                            type="button"
-                            className="absolute -left-4 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F55656]"
-                            onClick={() => scrollToPost(index + 1)}
-                            aria-label="Show next blog post"
-                          >
-                            <ArrowHead
-                              size={{ x: 16, y: 16 }}
-                              direction="right"
-                            />
-                          </button>
-                        )}
                       <BlogTitle
                         as="h2"
                         title={post.title}
                         className="w-[290px] max-w-[calc(100%-2rem)] break-words pl-6 font-body text-[clamp(2rem,11vw,2.625rem)] font-normal uppercase leading-[0.94] tracking-normal text-black [overflow-wrap:anywhere]"
                       />
-                      {blogPosts.length > 1 && index !== 0 && (
-                        <button
-                          type="button"
-                          className="absolute -right-4 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F55656]"
-                          onClick={() => scrollToPost(index - 1)}
-                          aria-label="Show previous blog post"
-                        >
-                          <ArrowHead size={{ x: 16, y: 16 }} direction="left" />
-                        </button>
-                      )}
                     </div>
                     <p className="mt-6 max-w-[calc(100%-1.5rem)] break-words pl-6 font-figtree text-[14px] font-normal leading-snug text-[#24242578] line-clamp-4 [overflow-wrap:anywhere]">
                       {post.body}
