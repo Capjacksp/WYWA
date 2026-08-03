@@ -30,6 +30,15 @@
 
   <body>
     <div id="root"></div>
+    <form name="connect" method="POST" data-netlify="true" hidden>
+      <input type="hidden" name="form-name" value="connect" />
+      <input name="name" />
+      <input name="email" type="email" />
+      <input name="phone" type="tel" />
+      <input name="organization" />
+      <input name="inquiryType" />
+      <textarea name="message"></textarea>
+    </form>
     <script
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
       crossorigin=""
