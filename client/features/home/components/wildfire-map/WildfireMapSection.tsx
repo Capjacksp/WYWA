@@ -322,8 +322,10 @@ function WildfireMapDetailsPanel({
   return (
     <aside
       className={cn(
-        "absolute bottom-0 left-0 top-0 z-[700] w-[min(420px,100vw)] overflow-y-auto border-b border-white bg-[#000000]/40 px-14 pb-12 pt-12 text-white transition-transform duration-500 max-md:bottom-2 max-md:left-2 max-md:right-2 max-md:top-16 max-md:h-auto max-md:w-auto max-md:rounded-[6px] max-md:bg-[#242425]/95 max-md:px-5 max-md:pb-8 max-md:pt-14",
-        fire ? "translate-x-0" : "pointer-events-none -translate-x-full max-md:translate-y-full max-md:translate-x-0",
+        "absolute bottom-0 left-0 top-0 z-[700] w-[min(420px,100vw)] overflow-y-auto border-b border-white bg-[#000000]/40 px-14 pb-12 pt-12 text-white transition-[transform,opacity,visibility] duration-500 max-md:bottom-2 max-md:left-2 max-md:right-2 max-md:top-16 max-md:h-auto max-md:w-auto max-md:rounded-[6px] max-md:bg-[#242425]/95 max-md:px-5 max-md:pb-8 max-md:pt-14",
+        fire
+          ? "visible translate-x-0 opacity-100"
+          : "pointer-events-none invisible -translate-x-full opacity-0 max-md:translate-y-full max-md:translate-x-0",
       )}
       style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
       aria-hidden={!fire}
@@ -343,7 +345,7 @@ function WildfireMapDetailsPanel({
             <img
               src={fire.image}
               alt={`${fire.label} wildfire incident image`}
-              className="w-[300px] object-cover max-md:w-full"
+              className="w-[300px] object-cover max-md:mx-auto max-md:w-[75%]"
             />
             <ScrambleLoadText
               as="h2"

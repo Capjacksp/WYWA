@@ -139,7 +139,7 @@ function HeroCallout() {
         variant="primary"
         className="mt-6 h-[32px] min-w-[140px] bg-[#4300ff] px-5 font-figtree text-[16px] font-[500] leading-none tracking-[0.18em] text-white hover:bg-[#3500d6] max-md:mt-3 max-md:h-[18px] max-md:min-w-[94px] max-md:px-3 max-md:text-[9px]"
       >
-        <a href="/technology">LEARN MORE</a>
+        <a href="/technology#how-it-works">LEARN MORE</a>
       </Button>
     </div>
   );

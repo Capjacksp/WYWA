@@ -82,7 +82,11 @@ function DesktopHowItWorks() {
   const step = howItWorksSteps[activeStep];
 
   return (
-    <div data-header-class="header-dark" className="bg-bg-light max-md:hidden">
+    <div
+      id="how-it-works"
+      data-header-class="header-dark"
+      className="bg-bg-light max-md:hidden"
+    >
       {/* STATIC HEADER PART */}
       <div className="px-[50px] pt-32 max-md:px-5 max-md:pt-20">
         <div className="mx-auto">
@@ -398,7 +402,11 @@ function MobileHowItWorks() {
   const step = howItWorksSteps[activeStep];
 
   return (
-    <div data-header-class="header-dark" className="bg-[#F7F7F7] md:hidden">
+    <div
+      id="how-it-works"
+      data-header-class="header-dark"
+      className="bg-[#F7F7F7] md:hidden"
+    >
       {/* Static heading — outside the scroll section */}
       <div className="px-7 pt-24 pb-6">
         <div className="w-fit cursor-default">
