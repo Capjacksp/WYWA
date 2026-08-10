@@ -304,8 +304,7 @@ const WildfireMapIntro = ({
             We detect at ignition, providing a{" "}
             <span className="font-bold">15-minute</span>
           </>,
-          "head start before the invisible becomes",
-          "inevitable, because every minute counts.",
+          "head start.",
         ]}
       />
     </div>

@@ -119,7 +119,7 @@ export function DesktopFusionRedSection() {
           />
         </div>
 
-        <div className="ml-auto max-w-[260px] flex-1">
+        <div className="ml-auto max-w-[270px] flex-1">
           <motion.div
             className="align-right font-figtree text-body font-[400] leading-[1.5] text-white opacity-90"
             initial="hidden"
@@ -138,15 +138,7 @@ export function DesktopFusionRedSection() {
             }}
           >
             <p>
-              Our models are trained on VOC signatures from fast-igniting fuels
-              like Red Brome, Medusahead, Cheatgrass, and Wild Oats to detect
-              wildfire-specific combustion signatures in real time, filtering
-              out false triggers like diesel emissions or dust.
-              Edge AI then verifies ignition by interpreting motion patterns in
-              flame and rising smoke.
-              Trained in simulated wildfire environments using real-world and
-              simulated data, the system detects fire alerts within a minute,
-              providing a critical 15-minute head start.
+              Our models are trained on VOC signatures from fast-igniting fuels like Red Brome, Medusahead, Cheatgrass, and Wild Oats, detecting wildfire-specific combustion in real time while filtering out false triggers like diesel emissions or dust. Edge AI verifies ignition by reading motion patterns in flame and rising smoke, flagging alerts within a minute for a critical head start.
             </p>
           </motion.div>
         </div>
@@ -195,23 +187,12 @@ function MobileFusionCopyScreen() {
         delay={0.1}
         lines={[
           <>
-            Our models are trained on VOC signatures from fast-igniting fuels
-            like Red Brome, Medusahead, Cheatgrass, and Wild Oats to detect
-            wildfire-specific combustion signatures in real time, filtering out
-            false triggers like diesel emissions or dust.
+            Our models are trained on VOC signatures from fast-igniting fuels like Red Brome, Medusahead, Cheatgrass, and Wild Oats, detecting wildfire-specific combustion in real time while filtering out false triggers like diesel emissions or dust
             <br />
             <br />
           </>,
           <>
-            Edge AI then verifies ignition by interpreting motion patterns in
-            flame and rising smoke.
-            <br />
-            <br />
-          </>,
-          <>
-            Trained in simulated wildfire environments using real-world and
-            simulated data, the system detects fire alerts within a minute,
-            providing a critical 15-minute head start.
+            Edge AI verifies ignition by reading motion patterns in flame and rising smoke, flagging alerts within a minute for a critical head start.
           </>,
         ]}
       />

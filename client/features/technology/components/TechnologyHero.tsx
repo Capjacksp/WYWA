@@ -57,7 +57,7 @@ function DesktopTechnologyHero() {
               delay={0.42}
               {...HERO_TEXT_MOTION}
               lines={[
-                "Satellites and ground cameras watch for heat or smoke. But satellites can take 15-45 minutes to confirm thermal signatures, while ground cameras must wait for visible smoke. Fog, dust, glare, and reflections often mimic smoke or flame, leading to unreliable alerts.",
+                "Satellites and ground cameras watch for heat or smoke, but confirmation can take up to 45 minutes, while fog, dust, or glare often trigger false alerts.",
               ]}
             />
           </div>
@@ -69,11 +69,11 @@ function DesktopTechnologyHero() {
 
             <LoadTextLines
               as="p"
-              className="font-figtree font-normal text-[22px] leading-snug w-[480px]"
+              className="font-figtree font-normal text-[22px] leading-snug w-[520px]"
               delay={0.62}
               {...HERO_TEXT_MOTION}
               lines={[
-                "Other systems monitor gases released during combustion, detecting chemical traces in the air. But isolated signals often create noise and false alarms without additional verification.",
+                "Other systems track combustion gases in the air, but isolated signals alone create noise and false alarms.",
               ]}
             />
           </div>
@@ -149,12 +149,9 @@ function MobileBlindSpotScreen() {
           className="font-figtree text-[15px] font-[400] leading-[1.18] text-white"
           delay={0.04}
           lines={[
-            "Satellites and ground cameras watch for",
-            "heat or smoke. But satellites can take 15-45",
-            "minutes to confirm thermal signatures, while",
-            "ground cameras must wait for visible smoke.",
-            "Fog, dust, glare, and reflections often mimic",
-            "smoke or flame, leading to unreliable alerts.",
+            "Satellites and ground cameras watch for heat or smoke,",
+            "but confirmation can take up to 45 minutes,",
+            "while fog, dust, or glare often trigger false alerts.",
           ]}
         />
       </div>
@@ -168,11 +165,9 @@ function MobileBlindSpotScreen() {
           className="font-figtree text-[15px] font-[400] leading-[1.18] text-white"
           delay={0.08}
           lines={[
-            "Other systems monitor gases released",
-            "during combustion, detecting chemical",
-            "traces in the air. But isolated signals",
-            "often create noise and false alarms",
-            "without additional verification.",
+            "Other systems track combustion gases",
+            "in the air, but isolated signals alone",
+            "create noise and false alarms.",
           ]}
         />
       </div>

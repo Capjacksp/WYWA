@@ -109,9 +109,8 @@ function TeamHero() {
   return (
     <section
       ref={sectionRef}
-      className={`bg-[#F7F7F7] -mt-16 max-md:px-5 max-md:-mt-8 ${
-        useCompactTeamStage ? "" : "relative"
-      }`}
+      className={`bg-[#F7F7F7] -mt-16 max-md:px-5 max-md:-mt-8 ${useCompactTeamStage ? "" : "relative"
+        }`}
       style={
         useCompactTeamStage ? undefined : { height: `${stageCount * 100}vh` }
       }
@@ -141,17 +140,15 @@ function TeamHero() {
 
           <div className="absolute bottom-[70px] left-[50px] max-w-[385px] font-figtree text-[18px] leading-[22px] tracking-normal text-bg-dark">
             <p>
-              We're a team of engineers, scientists, and researchers from
-              NVIDIA, Amazon Lab126, CMU, and MIT, based in San Francisco and
-              advised by climate scientists and first responders.
+              WYWA started in San Francisco - engineers, scientists, and researchers from NVIDIA, Amazon Lab126, CMU, and MIT who wanted to understand the environment better. Advised by climate scientists and first responders.
             </p>
             <br />
             <p>
-              Our sensors and AI deliver real-time environmental data at ground
-              level, processed locally, with alerts that reach communities and
-              emergency responders even where cell coverage doesn't. The result:
-              faster wildfire response, safer communities, and a network that's
-              fully open source.
+              We're building sensors and AI that give communities, governments, and responders real-time environmental data. Ground-level detection. Local inference. Alerts that work where cell towers don't.
+            </p>
+            <br />
+            <p>
+              The goal: a sensing network that makes wildfire response faster and communities safer. All open source.
             </p>
           </div>
 
@@ -371,17 +368,15 @@ function MobileTeamIntroCard() {
     <article className="flex min-h-[390px] w-[calc(100vw-40px)] max-w-[398px] flex-col justify-center p-6 text-[#242425] sm:min-h-[445px]">
       <div className="font-figtree text-[16px] leading-[22px] tracking-normal">
         <p>
-          We're a team of engineers, scientists, and researchers from NVIDIA,
-          Amazon Lab126, CMU, and MIT, based in San Francisco and advised by
-          climate scientists and first responders.
+          WYWA started in San Francisco - engineers, scientists, and researchers from NVIDIA, Amazon Lab126, CMU, and MIT who wanted to understand the environment better. Advised by climate scientists and first responders.
         </p>
         <br />
         <p>
-          Our sensors and AI deliver real-time environmental data at ground
-          level, processed locally, with alerts that reach communities and
-          emergency responders even where cell coverage doesn't. The result:
-          faster wildfire response, safer communities, and a network that's
-          fully open source.
+          We're building sensors and AI that give communities, governments, and responders real-time environmental data. Ground-level detection. Local inference. Alerts that work where cell towers don't.
+        </p>
+        <br />
+        <p>
+          The goal: a sensing network that makes wildfire response faster and communities safer. All open source.
         </p>
       </div>
     </article>
@@ -408,7 +403,7 @@ function AdvisorsSection() {
   return (
     <section
       data-header-class=""
-      className="px-[50px] bg-[#4101F5] pb-28 pt-28 max-md:px-5 max-md:pt-10 "
+      className="px-[50px] bg-[#4101F5] pb-28 pt-28 max-md:px-5 max-md:pt-10 hidden"
     >
       {isMobile ? (
         <MobileAdvisorsSection />
@@ -485,9 +480,8 @@ function MobileAdvisorsSection() {
           return (
             <article
               key={advisor.name}
-              className={`w-[min(63vw,250px)] ${alignmentClassName} ${
-                index === 0 ? "" : "mt-4"
-              }`}
+              className={`w-[min(63vw,250px)] ${alignmentClassName} ${index === 0 ? "" : "mt-4"
+                }`}
             >
               <div className="relative overflow-hidden bg-cta">
                 <img
