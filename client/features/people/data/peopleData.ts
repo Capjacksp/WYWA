@@ -14,7 +14,7 @@ export const teamMembers: TeamMember[] = [
     count: 1,
     role: "Co-Founder",
     image: "/images/navya.png",
-    linkedin: "https://www.linkedin.com/company/wywa-ai",
+    linkedin: "https://www.linkedin.com/in/navya-v-72331332/",
   },
   {
     id: "anirudh",
@@ -22,7 +22,7 @@ export const teamMembers: TeamMember[] = [
     count: 2,
     role: "Co-Founder",
     image: "/images/anirudh.png",
-    linkedin: "https://www.linkedin.com/company/wywa-ai",
+    linkedin: "https://www.linkedin.com/in/zwanderer/",
   },
 
 ] as const;
