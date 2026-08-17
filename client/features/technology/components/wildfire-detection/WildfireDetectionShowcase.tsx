@@ -60,6 +60,8 @@ function DesktopWildfireDetectionShowcase() {
             arrowDirection="right"
             arrowLabel="Show lab tests"
             onArrowClick={() => scrollToSlide(1)}
+            arrowPosition="above-cards"
+            arrowSize={12}
             width={slideWidth}
           >
             <div className="mt-auto grid grid-cols-3 items-end gap-4 max-lg:gap-3 max-md:grid-cols-1">
@@ -87,6 +89,8 @@ function DesktopWildfireDetectionShowcase() {
             arrowDirection="left"
             arrowLabel="Show wildfire detection classes"
             onArrowClick={() => scrollToSlide(0)}
+            arrowPosition="above-cards"
+            arrowSize={12}
             width={slideWidth}
             titleSpacingClassName="mb-[clamp(2.5rem,9vh,12rem)]"
           >
@@ -406,6 +410,8 @@ function ShowcaseSlide({
   width,
   titleSpacingClassName = "mb-[clamp(2.5rem,9vh,7rem)]",
   animatedTitleLines,
+  arrowPosition = "title",
+  arrowSize = 27,
   children,
 }: {
   title: ReactNode;
@@ -415,24 +421,30 @@ function ShowcaseSlide({
   width: string;
   titleSpacingClassName?: string;
   animatedTitleLines?: ReactNode[];
+  arrowPosition?: "title" | "above-cards";
+  arrowSize?: number | { x: number; y: number };
   children: ReactNode;
 }) {
+  const arrowButton = (
+    <button
+      type="button"
+      className="shrink-0 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F15D59]"
+      onClick={onArrowClick}
+      aria-label={arrowLabel}
+    >
+      <ArrowHead direction={arrowDirection} size={arrowSize} />
+    </button>
+  );
+
   return (
     <div
-      className="box-border flex h-full shrink-0 flex-col justify-start px-[50px] pt-16 pb-[clamp(2rem,6.5vh,6rem)] max-md:px-5"
+      className="box-border flex h-full shrink-0 flex-col justify-start px-[50px] pt-16 pb-[60px] max-md:px-5"
       style={{ width }}
     >
       <div
         className={`${titleSpacingClassName} flex items-start gap-24 max-md:mb-16 max-md:gap-8`}
       >
-        <button
-          type="button"
-          className="mt-4 shrink-0 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F15D59] max-md:mt-1"
-          onClick={onArrowClick}
-          aria-label={arrowLabel}
-        >
-          <ArrowHead direction={arrowDirection} />
-        </button>
+        {arrowPosition === "title" && <span className="mt-4 max-md:mt-1">{arrowButton}</span>}
         {animatedTitleLines ? (
           <ScrollTextLines
             as="h2"
@@ -446,7 +458,14 @@ function ShowcaseSlide({
         )}
       </div>
 
-      {children}
+      {arrowPosition === "above-cards" ? (
+        <div className="relative mt-auto">
+          <div className="absolute bottom-full right-0 mb-5">{arrowButton}</div>
+          {children}
+        </div>
+      ) : (
+        children
+      )}
     </div>
   );
 }

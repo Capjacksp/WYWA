@@ -96,7 +96,7 @@ export function DesktopFusionRedSection() {
       />
       <JaggedRedBackground active={redAreaInView} />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1700px] items-end gap-32 px-[50px] max-lg:flex-col max-md:px-5">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1700px] items-start gap-32 px-[50px] max-lg:flex-col max-md:px-5">
         <div className="max-w-[850px] flex-[1.5]">
           <CharacterReveal
             className="text-justify text-h1-md uppercase text-white"

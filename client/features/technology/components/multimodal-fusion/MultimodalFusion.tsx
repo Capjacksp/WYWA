@@ -1,10 +1,11 @@
-import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
 import { fusionCards } from "@/features/technology/data/technologyCards";
+import { useEffect, useRef, useState } from "react";
 import { fusionWavePath } from "@/features/technology/data/fusionWavePath";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 import { CursorRadialGlow } from "@/components/ui/cursor-radial-glow";
 import { useIsMobile } from "@/hooks/use-mobile";
+
+const FUSION_WAVE_STROKE = "#f5f5f502";
 
 export function MultimodalFusion() {
   const isMobile = useIsMobile();
@@ -13,15 +14,13 @@ export function MultimodalFusion() {
 }
 
 function DesktopMultimodalFusion() {
-  const [activeIndex, setActiveIndex] = useState(0);
-
   return (
     <CursorRadialGlow
       as="section"
       data-header-class=""
-      className="sticky top-0 z-20 h-screen min-h-[720px] overflow-hidden bg-bg-dark pt-16 pb-[10px] text-white max-md:hidden"
+      className="sticky top-0 z-20 h-screen min-h-[720px] overflow-hidden bg-bg-dark text-white max-md:hidden"
     >
-      <div className="relative z-10 mx-auto flex h-full flex-col">
+      <div className="relative z-10 mx-auto flex h-full pt-16 flex-col">
         <div className="text-center">
           <div className="mx-auto w-fit cursor-default">
             <ScrollTextLines
@@ -53,61 +52,53 @@ function DesktopMultimodalFusion() {
             lines={["Each Modality Catches What The Others Miss"]}
           />
         </div>
-
         <div className="relative mt-auto max-md:mt-16">
-          <FusionWave activeIndex={activeIndex} />
+          <FusionWave />
 
-          <div className="relative z-10 grid min-h-[360px] grid-cols-4 items-end gap-2 px-[50px] max-lg:grid-cols-2 max-md:min-h-0 max-md:grid-cols-1">
+          <div className="relative z-10 grid min-h-[360px] grid-cols-4 overflow-visible items-end gap-2 px-[70px] max-lg:grid-cols-2 max-md:min-h-0 max-md:grid-cols-1">
             {fusionCards.map(({ eyebrow, title, body, iconSrc }, index) => {
-              const isActive = index === activeIndex;
-              const isActiveFusionLayer = isActive && index === 3;
+              const isFusionLayer = index === 3;
 
               return (
-                <motion.button
-                  type="button"
+                <article
                   key={title}
-                  onMouseEnter={() => setActiveIndex(index)}
-                  onFocus={() => setActiveIndex(index)}
-                  className={`group relative min-h-[120px] overflow-hidden px-7 py-4 text-left transition-colors duration-300 max-md:min-h-[230px] ${isActive
-                    ? isActiveFusionLayer
-                      ? "bg-[#F15D59] text-white"
-                      : "bg-white text-bg-dark"
-                    : "bg-[#676767] text-white hover:bg-[#777777]"
+                  className={`relative h-[360px] px-7 py-4 text-left ${isFusionLayer
+                    ? "overflow-visible bg-[#90E8FF] text-bg-dark"
+                    : "overflow-hidden bg-transparent text-white"
                     }`}
-                  animate={{
-                    height: isActive ? 360 : 120,
-                  }}
-                  transition={{ type: "spring", stiffness: 130, damping: 20 }}
                 >
-                  {!isActiveFusionLayer && (
-                    <span className="block font-body text-sm font-normal uppercase tracking-[0.2em]">
-                      {!(index === 3) && eyebrow}
+                  {!isFusionLayer && (
+                    <span className="block font-body text-xs font-normal uppercase tracking-[0.2em]">
+                      {eyebrow}
                     </span>
                   )}
                   <span
-                    className={`${isActiveFusionLayer ? "" : "mt-2"} block font-body text-h3 font-bold uppercase leading-none tracking-normal`}
+                    className={`${isFusionLayer ? "mt-5" : "mt-2 text-cta"} block font-body text-[20px] font-bold uppercase leading-none tracking-normal`}
                   >
                     {title}
                   </span>
 
-                  <motion.div
-                    className="mt-10"
-                    animate={{
-                      opacity: isActive ? 1 : 0,
-                      y: isActive ? 0 : 18,
-                    }}
-                    transition={{ duration: 0.25 }}
-                  >
+                  <div className="mt-20">
                     <FusionCardIcon
                       iconSrc={iconSrc}
-                      isHighlighted={isActiveFusionLayer}
-                      className="mb-8 h-20 w-20"
+                      isOnLightBackground={isFusionLayer}
+                      className="mb-8 h-14 w-14"
                     />
                     <p className="max-w-[340px] font-figtree text-body font-normal leading-snug">
                       {body}
                     </p>
-                  </motion.div>
-                </motion.button>
+                  </div>
+                  {isFusionLayer && (
+                    <div className="absolute -top-[54px] -right-[37px]">
+                      <svg className="ml-[-17px]" width="17" height="17" viewBox="0 0 17 17" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="17" height="17" fill="#90E8FF" />
+                      </svg>
+                      <svg width="37" height="37" viewBox="0 0 37 37" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="37" height="37" fill="#90E8FF" />
+                      </svg>
+                    </div>
+                  )}
+                </article>
               );
             })}
           </div>
@@ -124,15 +115,14 @@ function MobileMultimodalFusion() {
   const scrollDebounce = useRef<number>();
   const intervalRef = useRef<number>();
 
-  // Restart the auto-cycle timer (called on manual interaction)
-  const restartInterval = () => {
+  const restartAutoScroll = () => {
     if (intervalRef.current) window.clearInterval(intervalRef.current);
+
     intervalRef.current = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % fusionCards.length);
     }, 3000);
   };
 
-  // Scroll active card to center of rail whenever activeIndex changes
   useEffect(() => {
     const rail = railRef.current;
     if (!rail) return;
@@ -140,30 +130,33 @@ function MobileMultimodalFusion() {
     const cards = Array.from(
       rail.querySelectorAll<HTMLElement>("[data-fusion-card-slot]"),
     );
-    const card = cards[activeIndex];
-    if (!card) return;
-
-    const targetScroll =
-      card.offsetLeft + card.offsetWidth / 2 - rail.clientWidth / 2;
+    const activeCard = cards[activeIndex];
+    if (!activeCard) return;
 
     isAutoScrolling.current = true;
-    rail.scrollTo({ left: targetScroll, behavior: "smooth" });
-    const t = window.setTimeout(() => {
+    rail.scrollTo({
+      left:
+        activeCard.offsetLeft +
+        activeCard.offsetWidth / 2 -
+        rail.clientWidth / 2,
+      behavior: "smooth",
+    });
+
+    const timeout = window.setTimeout(() => {
       isAutoScrolling.current = false;
     }, 700);
-    return () => window.clearTimeout(t);
+
+    return () => window.clearTimeout(timeout);
   }, [activeIndex]);
 
-  // Auto-cycle on mount
   useEffect(() => {
-    restartInterval();
+    restartAutoScroll();
+
     return () => {
       if (intervalRef.current) window.clearInterval(intervalRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Detect nearest card when user manually scrolls and snap to it
   const handleScroll = () => {
     if (isAutoScrolling.current) return;
 
@@ -176,16 +169,19 @@ function MobileMultimodalFusion() {
       const cards = Array.from(
         rail.querySelectorAll<HTMLElement>("[data-fusion-card-slot]"),
       );
+      const nearestCard = cards.reduce(
+        (closest, card, index) => {
+          const distance = Math.abs(
+            card.offsetLeft + card.offsetWidth / 2 - railCenter,
+          );
 
-      let nearest = { index: 0, dist: Infinity };
-      cards.forEach((card, i) => {
-        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-        const dist = Math.abs(cardCenter - railCenter);
-        if (dist < nearest.dist) nearest = { index: i, dist };
-      });
+          return distance < closest.distance ? { index, distance } : closest;
+        },
+        { index: 0, distance: Infinity },
+      );
 
-      setActiveIndex(nearest.index);
-      restartInterval(); // reset timer so auto-cycle doesn't interrupt
+      setActiveIndex(nearestCard.index);
+      restartAutoScroll();
     }, 80);
   };
 
@@ -248,29 +244,24 @@ function MobileMultimodalFusion() {
         </div>
       </div>
 
-      <MobileFusionWave activeIndex={activeIndex} />
+      <MobileFusionWave />
 
       <div
         ref={railRef}
-        className="relative z-10 mt-[132px] flex h-[350px] items-end overflow-x-auto px-[calc(50%-150px)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="relative z-10 mt-[132px] flex h-[350px] items-end gap-3 overflow-x-auto px-[calc(50%-150px)] snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         aria-label="Multimodal fusion encoders"
         onScroll={handleScroll}
       >
         {fusionCards.map((card, index) => (
-          <MobileFusionCard
-            key={card.title}
-            card={card}
-            index={index}
-            isActive={index === activeIndex}
-          />
+          <MobileFusionCard key={card.title} card={card} index={index} />
         ))}
       </div>
 
-      <div className="mt-5 flex justify-center gap-3 pb-8">
+      <div className="mt-5 flex justify-center gap-3 pb-8" aria-hidden="true">
         {fusionCards.map((card, index) => (
           <span
             key={card.title}
-            className={`h-1.5 w-8 transition-colors ${index === activeIndex ? "bg-[#F55656]" : "bg-white/20"
+            className={`h-1.5 w-8 transition-colors ${index === activeIndex ? "bg-[#90E8FF]" : "bg-white/20"
               }`}
           />
         ))}
@@ -282,116 +273,78 @@ function MobileMultimodalFusion() {
 function MobileFusionCard({
   card,
   index,
-  isActive,
 }: {
   card: (typeof fusionCards)[number];
   index: number;
-  isActive: boolean;
 }) {
-  const isActiveFusionLayer = isActive && index === 3;
+  const isFusionLayer = index === 3;
 
   return (
-    <motion.article
+    <article
       data-fusion-card-slot
-      className={`overflow-hidden text-left ${isActive
-        ? isActiveFusionLayer
-          ? "bg-[#F15D59] text-white"
-          : "bg-white text-bg-dark"
-        : "bg-[#676767] text-white"
+      className={`h-[330px] w-[300px] shrink-0 snap-center overflow-hidden px-[18px] py-[22px] text-left ${isFusionLayer
+        ? "bg-[#90E8FF] text-bg-dark"
+        : "bg-transparent text-white"
         }`}
-      initial={{
-        width: 300,
-        height: 120,
-        paddingLeft: 14,
-        paddingRight: 14,
-        paddingTop: 14,
-        paddingBottom: 14,
-      }}
-      animate={{
-        width: 300,
-        height: isActive ? 330 : 120,
-        paddingLeft: isActive ? 18 : 14,
-        paddingRight: isActive ? 18 : 14,
-        paddingTop: isActive ? 22 : 14,
-        paddingBottom: isActive ? 22 : 14,
-      }}
-      style={{ flexShrink: 0 }}
-      transition={{ type: "spring", stiffness: 160, damping: 22 }}
     >
-      {!isActiveFusionLayer && (
+      {!isFusionLayer && (
         <p className="font-figtree text-[10px] font-[500] uppercase tracking-[0.12em]">
           {card.eyebrow}
         </p>
       )}
       <h3
-        className={`${isActiveFusionLayer ? "" : "mt-1"} font-heading text-[18px] font-[800] uppercase leading-none tracking-normal`}
+        className={`${isFusionLayer ? "" : "mt-1 text-cta"} font-heading text-[18px] font-[800] uppercase leading-none tracking-normal`}
       >
         {card.title}
       </h3>
 
-      <motion.div
-        animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 14 }}
-        transition={{ duration: 0.22 }}
-      >
+      <div>
         <FusionCardIcon
           iconSrc={card.iconSrc}
-          isHighlighted={isActiveFusionLayer}
+          isOnLightBackground={isFusionLayer}
           className="mt-8 h-20 w-20"
         />
 
         <p className="mt-[48px] max-w-[280px] font-figtree text-[12px] font-[400] leading-[1.45]">
           {getMobileFusionBody(card.title, card.body)}
         </p>
-      </motion.div>
-    </motion.article>
+      </div>
+    </article>
   );
 }
 
 function FusionCardIcon({
   iconSrc,
-  isHighlighted,
+  isOnLightBackground,
   className,
 }: {
   iconSrc: string;
-  isHighlighted: boolean;
+  isOnLightBackground: boolean;
   className: string;
 }) {
-  if (isHighlighted) {
-    return (
-      <span
-        aria-hidden="true"
-        className={`block bg-[#90E8FF] ${className}`}
-        style={{
-          maskImage: `url(${iconSrc})`,
-          maskPosition: "center",
-          maskRepeat: "no-repeat",
-          maskSize: "contain",
-          WebkitMaskImage: `url(${iconSrc})`,
-          WebkitMaskPosition: "center",
-          WebkitMaskRepeat: "no-repeat",
-          WebkitMaskSize: "contain",
-        }}
-      />
-    );
-  }
-
   return (
-    <img
-      src={iconSrc}
-      alt=""
-      className={`object-contain ${className}`}
+    <span
       aria-hidden="true"
+      className={`block ${isOnLightBackground ? "bg-bg-dark" : "bg-[#90E8FF]"} ${className}`}
+      style={{
+        maskImage: `url(${iconSrc})`,
+        maskPosition: "center",
+        maskRepeat: "no-repeat",
+        maskSize: "contain",
+        WebkitMaskImage: `url(${iconSrc})`,
+        WebkitMaskPosition: "center",
+        WebkitMaskRepeat: "no-repeat",
+        WebkitMaskSize: "contain",
+      }}
     />
   );
 }
 
-function MobileFusionWave({ activeIndex }: { activeIndex: number }) {
+function MobileFusionWave() {
   return (
-    <motion.div
+    <div
       aria-hidden="true"
-      className="pointer-events-none absolute left-[-24px] top-[490px] z-0 h-[140px] overflow-hidden"
-      animate={{ width: `calc(${(activeIndex + 0.5) * 25}% + 24px)` }}
-      transition={{ type: "spring", stiffness: 130, damping: 20 }}
+      className="pointer-events-none absolute left-[-24px] right-0 top-[490px] z-0 h-[140px] overflow-hidden"
     >
       <svg
         className="absolute left-0 top-0 h-[130px] w-[340px] text-white/10"
@@ -405,7 +358,7 @@ function MobileFusionWave({ activeIndex }: { activeIndex: number }) {
           strokeWidth="30"
         />
       </svg>
-    </motion.div>
+    </div>
   );
 }
 
@@ -417,35 +370,40 @@ function getMobileFusionBody(title: string, fallback: string) {
   return fallback;
 }
 
-function FusionWave({ activeIndex }: { activeIndex: number }) {
+function FusionWave() {
   return (
-    <motion.div
+    <div
       aria-hidden="true"
-      className="pointer-events-none absolute left-[-50px] top-[-16px] z-0 h-[230px] overflow-hidden max-md:hidden"
-      animate={{ width: `calc(${(activeIndex + 0.5) * 25}% + 50px)` }}
-      transition={{ type: "spring", stiffness: 130, damping: 20 }}
+      className="pointer-events-none absolute inset-0 z-0 max-md:hidden"
     >
       <svg
-        className="absolute left-0 top-0 h-[230px] w-[1800px] overflow-visible"
+        className="absolute bottom-[16px] left-0 h-[90vh] w-[32px]"
+        preserveAspectRatio="none"
+        viewBox="0 0 48 100"
+      >
+        <path
+          d="M24 0V100"
+          fill="none"
+          stroke={FUSION_WAVE_STROKE}
+          strokeWidth="48"
+        />
+      </svg>
+      <svg
+        className="absolute bottom-0 left-[-60px] h-[230px] w-[1800px] overflow-visible"
         viewBox="0 0 2650 339"
         preserveAspectRatio="xMinYMin meet"
       >
-        <motion.g
-          key={activeIndex}
-          initial={{ opacity: 0.52 }}
-          animate={{ opacity: [0.52, 0.52, 0.52] }}
-          transition={{ opacity: { duration: 0.48, ease: "easeOut" } }}
-        >
+        <g>
           <path
             d={fusionWavePath}
             fill="none"
-            stroke="#F5F5F54A"
+            stroke={FUSION_WAVE_STROKE}
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth="48"
           />
-        </motion.g>
+        </g>
       </svg>
-    </motion.div>
+    </div>
   );
 }

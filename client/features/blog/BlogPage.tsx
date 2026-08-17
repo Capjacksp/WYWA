@@ -165,61 +165,64 @@ function DesktopBlog({
               <BlogStatusMessage status={status} />
             ) : (
               <>
-                {hasMultiplePosts && (
-                  <div className="absolute left-[50px] top-[-50px] z-20 flex items-center gap-8 max-lg:left-8 max-md:left-5">
-                    <button
-                      type="button"
-                      className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
-                      onClick={() => scrollToPost(activeIndex - 1)}
-                      aria-label={
-                        activeIndex === 1
-                          ? "Show first blog post"
-                          : "Show previous blog post"
-                      }
-                      disabled={isFirstPost}
-                    >
-                      <ArrowHead
-                        direction="left"
-                        size={16}
-                        color={isFirstPost ? "#D5D5D5" : "#242425"}
-                      />
-                    </button>
-                    <button
-                      type="button"
-                      className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
-                      onClick={() => scrollToPost(activeIndex + 1)}
-                      aria-label={
-                        activeIndex === blogPosts.length - 2
-                          ? "Show last blog post"
-                          : "Show next blog post"
-                      }
-                      disabled={isLastPost}
-                    >
-                      <ArrowHead
-                        direction="right"
-                        size={16}
-                        color={isLastPost ? "#D5D5D5" : "#242425"}
-                      />
-                    </button>
-                  </div>
-                )}
-
                 <motion.div
                   className="mt-20 flex h-[calc(100%-11rem)] max-md:mt-12 max-md:h-[calc(100%-6.5rem)]"
                   style={{ width: trackWidth, x: trackX }}
                 >
-                  {blogPosts.map((post) => (
+                  {blogPosts.map((post, index) => (
                     <article
                       key={post.id}
                       className="relative box-border grid h-full shrink-0 grid-cols-[1.3fr_1fr] items-center gap-14 px-[50px] max-lg:grid-cols-1 max-lg:content-center max-lg:gap-6 max-md:px-5"
                       style={{ width: slideWidth }}
                     >
-                      <div className="ml-[100px] max-lg:ml-16 max-md:ml-0">
+                      <div className="relative ml-[100px] max-lg:ml-16 max-md:ml-0">
                         <img
                           src={post.image}
                           alt=""
                           className="aspect-[1.39/1] w-full max-w-[910px] object-cover max-md:max-h-[38vh]"
                         />
+                        {hasMultiplePosts && (
+                          <div className="absolute left-[calc(100vw-200px)] top-0 z-20 flex -translate-x-full items-start gap-8 max-lg:left-[calc(100vw-164px)]">
+                            <button
+                              type="button"
+                              className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+                              onClick={() => scrollToPost(index - 1)}
+                              aria-label={
+                                index === 1
+                                  ? "Show first blog post"
+                                  : "Show previous blog post"
+                              }
+                              disabled={index === 0}
+                            >
+                              <ArrowHead
+                                direction="left"
+                                size={12}
+                                color={index === 0 ? "#D5D5D5" : "#242425"}
+                              />
+                            </button>
+                            <button
+                              type="button"
+                              className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+                              onClick={() => scrollToPost(index + 1)}
+                              aria-label={
+                                index === blogPosts.length - 2
+                                  ? "Show last blog post"
+                                  : "Show next blog post"
+                              }
+                              disabled={index === blogPosts.length - 1}
+                            >
+                              <ArrowHead
+                                direction="right"
+                                size={12}
+                                color={
+                                  index === blogPosts.length - 1
+                                    ? "#D5D5D5"
+                                    : "#242425"
+                                }
+                              />
+                            </button>
+                          </div>
+                        )}
                       </div>
 
                       <div className="max-w-[560px] max-lg:ml-16 max-md:ml-0">

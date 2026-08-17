@@ -42,7 +42,7 @@ function HomeHero({
           />
         </div>
 
-        <div className="pointer-events-none absolute left-1/2 top-[6%] z-20 h-[89%] -translate-x-1/2 max-md:top-[34.4%] max-md:h-[45%]">
+        <div className="pointer-events-none absolute left-1/2 top-[10%] z-20 h-[80%] -translate-x-1/2 max-md:top-[34.4%] max-md:h-[45%]">
           <motion.div
             className="h-full"
             initial={reduceMotion ? false : { opacity: 0, y: 34 }}
@@ -52,7 +52,7 @@ function HomeHero({
             <motion.img
               src="/images/home-hero-overlay-image.png"
               alt="WYWA wildfire detection sensor"
-              className="block h-full w-auto object-contain"
+              className="block h-full w-auto object-contain "
               animate={
                 reduceMotion
                   ? undefined

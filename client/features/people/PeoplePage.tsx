@@ -92,18 +92,17 @@ function TeamStageCard({
 function TeamHero() {
   const useCompactTeamStage = useMediaQuery("(max-width: 1023px)");
   const sectionRef = useRef<HTMLElement>(null);
-  const stageCount = teamMembers.length + 1;
+  const stageCount = teamMembers.length;
   const { activeIndex: activeStageIndex, scrollToIndex } =
     useScrollStepNavigation({
       itemCount: stageCount,
       sectionRef,
     });
-  const activeTeamIndex = activeStageIndex - 1;
-  const activeTeamMember =
-    activeTeamIndex >= 0 ? teamMembers[activeTeamIndex] : null;
+  const activeTeamIndex = activeStageIndex;
+  const activeTeamMember = teamMembers[activeTeamIndex];
 
   const scrollToTeamMember = (index: number) => {
-    scrollToIndex(index + 1);
+    scrollToIndex(index);
   };
 
   return (
@@ -129,26 +128,22 @@ function TeamHero() {
           />
 
           <LoadTextLines
-            className="pointer-events-none absolute left-[30px] top-[100px] z-0 font-body text-[clamp(8rem,17.6vw,18rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
+            className="pointer-events-none absolute left-[30px] top-[100px] z-0 font-body text-[clamp(6rem,11vw,12rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
             lines={["Our"]}
           />
           <LoadTextLines
-            className="pointer-events-none absolute bottom-[50px] right-[1.1%] z-0 font-body text-[clamp(8rem,17.4vw,18rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
+            className="pointer-events-none absolute bottom-[50px] right-[1.1%] z-0 font-body text-[clamp(6rem,11vw,12rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
             delay={0.12}
             lines={["Team"]}
           />
 
           <div className="absolute bottom-[70px] left-[50px] max-w-[385px] font-figtree text-[18px] leading-[22px] tracking-normal text-bg-dark">
             <p>
-              WYWA started in San Francisco - engineers, scientists, and researchers from NVIDIA, Amazon Lab126, CMU, and MIT who wanted to understand the environment better. Advised by climate scientists and first responders.
+              We're a team of engineers, scientists, and researchers from NVIDIA, Amazon Lab126, CMU, and MIT, based in San Francisco and advised by climate scientists and first responders.
             </p>
             <br />
             <p>
-              We're building sensors and AI that give communities, governments, and responders real-time environmental data. Ground-level detection. Local inference. Alerts that work where cell towers don't.
-            </p>
-            <br />
-            <p>
-              The goal: a sensing network that makes wildfire response faster and communities safer. All open source.
+              Our sensors and AI deliver real-time environmental data at ground level, processed locally, with alerts that reach communities and emergency responders even where cell coverage doesn't. The result: faster wildfire response, safer communities, and a network that's fully open source.
             </p>
           </div>
 
@@ -185,7 +180,7 @@ function TeamHero() {
 }
 
 function MobileTeamStage() {
-  const cardCount = teamMembers.length + 1;
+  const cardCount = teamMembers.length;
   const { sectionRef, sectionHeight } = useHorizontalScroll({
     slideCount: cardCount,
   });
@@ -321,35 +316,23 @@ function MobileTeamStage() {
           aria-label="Team members"
         >
           <AnimatePresence mode="wait">
-            {activeIndex === 0 ? (
-              <motion.div
-                key="team-intro"
-                initial={{ opacity: 0, scale: 0.94, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.98, y: -8 }}
-                transition={{ duration: 0.26, ease: "easeOut" }}
-              >
-                <MobileTeamIntroCard />
-              </motion.div>
-            ) : (
-              <motion.div
-                key={teamMembers[activeIndex - 1]?.id}
-                initial={{ opacity: 0, scale: 0.94, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.98, y: -8 }}
-                transition={{ duration: 0.26, ease: "easeOut" }}
-              >
-                <TeamStageCard
-                  member={teamMembers[activeIndex - 1]}
-                  index={activeIndex - 1}
-                  isFirst={activeIndex === 1}
-                  isLast={activeIndex === cardCount - 1}
-                  isActive={false}
-                  onNavigate={() => undefined}
-                  className="w-[calc(100vw-40px)] max-w-[398px]"
-                />
-              </motion.div>
-            )}
+            <motion.div
+              key={teamMembers[activeIndex]?.id}
+              initial={{ opacity: 0, scale: 0.94, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.98, y: -8 }}
+              transition={{ duration: 0.26, ease: "easeOut" }}
+            >
+              <TeamStageCard
+                member={teamMembers[activeIndex]}
+                index={activeIndex}
+                isFirst={activeIndex === 0}
+                isLast={activeIndex === cardCount - 1}
+                isActive={false}
+                onNavigate={() => undefined}
+                className="w-[calc(100vw-40px)] max-w-[398px]"
+              />
+            </motion.div>
           </AnimatePresence>
         </div>
 
@@ -360,26 +343,6 @@ function MobileTeamStage() {
         />
       </div>
     </section>
-  );
-}
-
-function MobileTeamIntroCard() {
-  return (
-    <article className="flex min-h-[390px] w-[calc(100vw-40px)] max-w-[398px] flex-col justify-center p-6 text-[#242425] sm:min-h-[445px]">
-      <div className="font-figtree text-[16px] leading-[22px] tracking-normal">
-        <p>
-          WYWA started in San Francisco - engineers, scientists, and researchers from NVIDIA, Amazon Lab126, CMU, and MIT who wanted to understand the environment better. Advised by climate scientists and first responders.
-        </p>
-        <br />
-        <p>
-          We're building sensors and AI that give communities, governments, and responders real-time environmental data. Ground-level detection. Local inference. Alerts that work where cell towers don't.
-        </p>
-        <br />
-        <p>
-          The goal: a sensing network that makes wildfire response faster and communities safer. All open source.
-        </p>
-      </div>
-    </article>
   );
 }
 
