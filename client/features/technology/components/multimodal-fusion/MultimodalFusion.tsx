@@ -377,7 +377,7 @@ function FusionWave() {
       className="pointer-events-none absolute inset-0 z-0 max-md:hidden"
     >
       <svg
-        className="absolute bottom-[16px] left-0 h-[90vh] w-[32px]"
+        className="absolute bottom-[16px] left-0 h-[100vh] w-[32px]"
         preserveAspectRatio="none"
         viewBox="0 0 48 100"
       >
