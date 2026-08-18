@@ -9,7 +9,7 @@ const menuLinks = [
 
 interface MenuProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: (shouldRestoreScroll?: boolean) => void;
   onConnectClick: () => void;
 }
 
@@ -29,7 +29,8 @@ export default function Menu({ isOpen, onClose, onConnectClick }: MenuProps) {
       onClose();
       setTimeout(() => onConnectClick(), 150);
     } else {
-      onClose();
+      // The destination route owns the new scroll position.
+      onClose(false);
     }
   };
 

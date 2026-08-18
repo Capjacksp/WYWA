@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Logo from "@/components/common/Logo";
 import Menu from "./Menu";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 interface HeaderProps {
@@ -11,6 +11,7 @@ interface HeaderProps {
 
 export default function Header({ onConnectClick, className }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const shouldRestoreScrollRef = useRef(true);
 
   const isDark = className?.includes("header-dark") && !isMenuOpen;
   const logoColor = isDark ? "#242425" : "#FFFFFF";
@@ -37,12 +38,30 @@ export default function Header({ onConnectClick, className }: HeaderProps) {
     return () => {
       documentElement.style.overflow = previousStyles.htmlOverflow;
       body.style.paddingRight = previousStyles.bodyPaddingRight;
-      window.scrollTo(0, scrollY);
+
+      // Keep the current position when simply closing the overlay, but do not
+      // overwrite the route scroll handling after a menu navigation.
+      if (shouldRestoreScrollRef.current) {
+        window.scrollTo(0, scrollY);
+      }
     };
   }, [isMenuOpen]);
 
-  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
-  const closeMenu = () => setIsMenuOpen(false);
+  const toggleMenu = () => {
+    if (isMenuOpen) {
+      shouldRestoreScrollRef.current = true;
+      setIsMenuOpen(false);
+      return;
+    }
+
+    shouldRestoreScrollRef.current = true;
+    setIsMenuOpen(true);
+  };
+
+  const closeMenu = (shouldRestoreScroll = true) => {
+    shouldRestoreScrollRef.current = shouldRestoreScroll;
+    setIsMenuOpen(false);
+  };
 
   return (
     <>
@@ -60,7 +79,7 @@ export default function Header({ onConnectClick, className }: HeaderProps) {
               <Link
                 to="/"
                 className="relative z-50"
-                onClick={closeMenu}
+                onClick={() => closeMenu(false)}
               >
                 <Logo
                   width={100}
