@@ -7,6 +7,7 @@ import {
   wildfireClassCards,
 } from "@/features/technology/data/technologyCards";
 import { NavigationArrowButton } from "@/components/common/NavigationArrowButton";
+import { LazyVideo } from "@/components/common/LazyVideo";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { scrollToSectionProgress } from "@/lib/scroll-to-section-progress";
@@ -347,12 +348,12 @@ function ClassVideo({
   });
 
   return (
-    <video
+    <LazyVideo
       className={className}
       src={source}
       poster={card.image}
       aria-label={`${card.label}: ${card.title}`}
-      autoPlay
+      playWhenVisible
       loop
       muted
       playsInline
@@ -369,12 +370,12 @@ function LabVideo({
   className: string;
 }) {
   return (
-    <video
+    <LazyVideo
       className={className}
       src={card.video}
       poster={card.image}
       aria-label={`${card.title}: ${card.result}`}
-      autoPlay
+      playWhenVisible
       loop
       muted
       playsInline

@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { Play } from "lucide-react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { LazyVideo } from "@/components/common/LazyVideo";
 import PageLayout from "@/components/layout/PageLayout";
 import HeroFusionPullScene from "@/features/home/components/HeroFusionPullScene";
 import {
@@ -43,7 +44,7 @@ export default function HomePage() {
           >
             <div className="w-full max-w-[1460px] overflow-hidden bg-[#F15D59] px-32 pb-14 pt-24 max-md:px-0 max-md:py-0">
               <div className="group relative aspect-video w-full">
-                <video
+                <LazyVideo
                   className="h-full w-full rounded-2xl object-cover max-md:rounded-lg"
                   src={videoSrc}
                   poster={VIDEO_POSTER_SRC}

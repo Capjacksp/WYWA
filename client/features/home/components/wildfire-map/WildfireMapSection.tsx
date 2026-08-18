@@ -25,6 +25,7 @@ export function WildfireMapSection() {
 
 function DesktopWildfireMapSection() {
   const [selectedFire, setSelectedFire] = useState<FireCalloutProps | null>(null);
+  const [isMapReady, setIsMapReady] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
@@ -35,6 +36,7 @@ function DesktopWildfireMapSection() {
 
   useGSAP(
     () => {
+      if (!isMapReady) return;
       if (window.matchMedia("(max-width: 767px)").matches) return;
 
       const section = sectionRef.current;
@@ -105,7 +107,7 @@ function DesktopWildfireMapSection() {
         .to(locations, { autoAlpha: 1, duration: 0.18, ease: "none" }, 0.24)
         .to({}, { duration: 0.72 });
     },
-    { scope: sectionRef },
+    { scope: sectionRef, dependencies: [isMapReady], revertOnUpdate: true },
   );
 
   return (
@@ -124,6 +126,7 @@ function DesktopWildfireMapSection() {
           mapRef={mapRef}
           onSelect={setSelectedFire}
           clearSelectionRef={clearMapSelectionRef}
+          onReady={setIsMapReady}
         />
 
         <div
@@ -154,6 +157,7 @@ function DesktopWildfireMapSection() {
 
 function MobileWildfireMapSection() {
   const [selectedFire, setSelectedFire] = useState<FireCalloutProps | null>(null);
+  const [isMapReady, setIsMapReady] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
@@ -164,6 +168,7 @@ function MobileWildfireMapSection() {
 
   useGSAP(
     () => {
+      if (!isMapReady) return;
       if (!window.matchMedia("(max-width: 767px)").matches) return;
 
       const section = sectionRef.current;
@@ -218,7 +223,7 @@ function MobileWildfireMapSection() {
         .to(locations, { autoAlpha: 1, duration: 0.18, ease: "none" }, 0.24)
         .to({}, { duration: 0.72 });
     },
-    { scope: sectionRef },
+    { scope: sectionRef, dependencies: [isMapReady], revertOnUpdate: true },
   );
 
   return (
@@ -235,6 +240,7 @@ function MobileWildfireMapSection() {
           locationsLayerRef={locationsRef}
           onSelect={setSelectedFire}
           clearSelectionRef={clearMapSelectionRef}
+          onReady={setIsMapReady}
         />
 
         <div

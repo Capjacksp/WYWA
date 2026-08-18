@@ -19,6 +19,8 @@ export function FusionSection() {
 
 export function DesktopFusionIntroSection() {
   const reduceMotion = useReducedMotion();
+  const sensorRef = useRef<HTMLDivElement>(null);
+  const isSensorInView = useInView(sensorRef, { amount: 0.1 });
 
   return (
     <Section
@@ -54,7 +56,12 @@ export function DesktopFusionIntroSection() {
         transition={{ duration: 0.9, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
       >
         <motion.div
-          animate={reduceMotion ? undefined : { y: -18, rotate: 0.4 }}
+          ref={sensorRef}
+          animate={
+            reduceMotion || !isSensorInView
+              ? undefined
+              : { y: -18, rotate: 0.4 }
+          }
           initial={{ y: 0, rotate: -0.4 }}
           transition={{
             duration: 3.5,

@@ -109,14 +109,17 @@ function DesktopMultimodalFusion() {
 }
 
 function MobileMultimodalFusion() {
+  const sectionRef = useRef<HTMLElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isSectionInView, setIsSectionInView] = useState(false);
   const isAutoScrolling = useRef(false);
   const scrollDebounce = useRef<number>();
   const intervalRef = useRef<number>();
 
   const restartAutoScroll = () => {
     if (intervalRef.current) window.clearInterval(intervalRef.current);
+    if (!isSectionInView) return;
 
     intervalRef.current = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % fusionCards.length);
@@ -150,12 +153,28 @@ function MobileMultimodalFusion() {
   }, [activeIndex]);
 
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || typeof IntersectionObserver === "undefined") {
+      setIsSectionInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsSectionInView(entry.isIntersecting),
+      { rootMargin: "200px 0px" },
+    );
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     restartAutoScroll();
 
     return () => {
       if (intervalRef.current) window.clearInterval(intervalRef.current);
     };
-  }, []);
+  }, [isSectionInView]);
 
   const handleScroll = () => {
     if (isAutoScrolling.current) return;
@@ -187,6 +206,7 @@ function MobileMultimodalFusion() {
 
   return (
     <section
+      ref={sectionRef}
       data-header-class=""
       className="relative min-h-[100svh] overflow-hidden bg-bg-dark pb-0 pt-[104px] text-white md:hidden"
     >

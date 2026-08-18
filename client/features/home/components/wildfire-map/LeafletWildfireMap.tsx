@@ -1,23 +1,138 @@
-import { type MutableRefObject, useLayoutEffect, useRef } from "react";
+import {
+  type MutableRefObject,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { wildfireCallouts } from "@/features/home/data/wildfireCallouts";
 import type { FireCalloutProps } from "@/features/home/components/wildfire-map/types";
+
+const LEAFLET_STYLESHEET_ID = "wywa-leaflet-stylesheet";
+const LEAFLET_SCRIPT_ID = "wywa-leaflet-script";
+const LEAFLET_STYLESHEET_URL =
+  "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+const LEAFLET_SCRIPT_URL = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+
+let leafletAssetsPromise: Promise<any> | null = null;
+
+function loadLeafletAssets() {
+  if (typeof window === "undefined") return Promise.reject();
+  if ((window as typeof window & { L?: any }).L) {
+    return Promise.resolve((window as typeof window & { L?: any }).L);
+  }
+
+  if (leafletAssetsPromise) return leafletAssetsPromise;
+
+  const loadStylesheet = new Promise<void>((resolve, reject) => {
+    let stylesheet = document.getElementById(
+      LEAFLET_STYLESHEET_ID,
+    ) as HTMLLinkElement | null;
+
+    if (!stylesheet) {
+      stylesheet = document.createElement("link");
+      stylesheet.id = LEAFLET_STYLESHEET_ID;
+      stylesheet.rel = "stylesheet";
+      stylesheet.href = LEAFLET_STYLESHEET_URL;
+      stylesheet.crossOrigin = "";
+      document.head.append(stylesheet);
+    }
+
+    if (stylesheet.sheet) {
+      resolve();
+      return;
+    }
+
+    stylesheet.addEventListener("load", () => resolve(), { once: true });
+    stylesheet.addEventListener("error", () => reject(), { once: true });
+  });
+
+  const loadScript = new Promise<any>((resolve, reject) => {
+    let script = document.getElementById(LEAFLET_SCRIPT_ID) as HTMLScriptElement | null;
+
+    if (!script) {
+      script = document.createElement("script");
+      script.id = LEAFLET_SCRIPT_ID;
+      script.src = LEAFLET_SCRIPT_URL;
+      script.crossOrigin = "";
+      document.body.append(script);
+    }
+
+    const resolveLeaflet = () => {
+      const leaflet = (window as typeof window & { L?: any }).L;
+      if (leaflet) resolve(leaflet);
+      else reject();
+    };
+
+    if ((window as typeof window & { L?: any }).L) {
+      resolveLeaflet();
+      return;
+    }
+
+    script.addEventListener("load", resolveLeaflet, { once: true });
+    script.addEventListener("error", () => reject(), { once: true });
+  });
+
+  leafletAssetsPromise = Promise.all([loadStylesheet, loadScript]).then(
+    ([, leaflet]) => leaflet,
+  );
+  return leafletAssetsPromise;
+}
 
 export function LeafletWildfireMap({
   locationsLayerRef,
   mapRef,
   onSelect,
   clearSelectionRef,
+  onReady,
 }: {
   locationsLayerRef: MutableRefObject<HTMLDivElement | null>;
   mapRef?: MutableRefObject<any | null>;
   onSelect?: (fire: FireCalloutProps | null) => void;
   clearSelectionRef?: MutableRefObject<(() => void) | null>;
+  onReady?: (isReady: boolean) => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [shouldInitialize, setShouldInitialize] = useState(false);
+  const [leaflet, setLeaflet] = useState<any | null>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || typeof IntersectionObserver === "undefined") {
+      setShouldInitialize(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setShouldInitialize(true);
+        observer.disconnect();
+      },
+      { rootMargin: "600px 0px" },
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!shouldInitialize) return;
+
+    let isCurrent = true;
+    void loadLeafletAssets()
+      .then((loadedLeaflet) => {
+        if (isCurrent) setLeaflet(loadedLeaflet);
+      })
+      .catch(() => undefined);
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [shouldInitialize]);
 
   useLayoutEffect(() => {
     const container = containerRef.current;
-    const leaflet = (window as typeof window & { L?: any }).L;
     if (!container || !leaflet) return;
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
@@ -53,6 +168,7 @@ export function LeafletWildfireMap({
     const locationsPane = map.createPane("wywaLocations");
     locationsPane.style.zIndex = "600";
     locationsLayerRef.current = locationsPane;
+    onReady?.(true);
 
     const incidentBounds = leaflet.latLngBounds(
       wildfireCallouts.map((fire) => fire.coordinates),
@@ -159,7 +275,7 @@ export function LeafletWildfireMap({
       if (mapRef) mapRef.current = null;
       map.remove();
     };
-  }, [clearSelectionRef, locationsLayerRef, mapRef, onSelect]);
+  }, [clearSelectionRef, leaflet, locationsLayerRef, mapRef, onReady, onSelect]);
 
   return (
     <div

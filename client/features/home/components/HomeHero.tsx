@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/common/Button";
 import { ScrambleLoadText } from "@/components/ui/scramble-load-text";
 import { RadioGlitchFilter } from "@/components/ui/radio-glitch-filter";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useRef } from "react";
 
 const HERO_TEXT_MOTION = {
   duration: 1.1,
@@ -18,9 +19,12 @@ function HomeHero({
   trackHeader?: boolean;
 }) {
   const reduceMotion = useReducedMotion();
+  const heroRef = useRef<HTMLElement>(null);
+  const isHeroInView = useInView(heroRef, { amount: 0.1 });
 
   return (
     <section
+      ref={heroRef}
       data-header-class={trackHeader ? "header-dark" : undefined}
       className={`home-hero radio-glitch-paint-boundary relative min-h-screen w-full overflow-hidden bg-[#FFFFFF] text-[#242425] ${embedded ? "" : "-mt-16"}`}
     >
@@ -55,7 +59,7 @@ function HomeHero({
               alt="WYWA wildfire detection sensor"
               className="block h-full w-auto object-contain "
               animate={
-                reduceMotion
+                reduceMotion || !isHeroInView
                   ? undefined
                   : { y: [0, -10, 0, 10, 0], rotate: [0, 0.45, 0, -0.45, 0] }
               }
