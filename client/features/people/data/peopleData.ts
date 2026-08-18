@@ -13,7 +13,7 @@ export const teamMembers: TeamMember[] = [
     name: "Navya Veeturi",
     count: 1,
     role: "Co-Founder",
-    image: "/images/navya.png",
+    image: "/images/navya.webp",
     linkedin: "https://www.linkedin.com/in/navya-v-72331332/",
   },
   {
@@ -21,7 +21,7 @@ export const teamMembers: TeamMember[] = [
     name: "Anirudh Sharma",
     count: 2,
     role: "Co-Founder",
-    image: "/images/anirudh.png",
+    image: "/images/anirudh.webp",
     linkedin: "https://www.linkedin.com/in/zwanderer/",
   },
 
@@ -38,19 +38,19 @@ export const advisors: Advisor[] = [
   {
     name: "Gabriel Donaldson",
     role: "COO, Great Basin Institute",
-    image: "/images/advisor-gabriel.png",
+    image: "/images/advisor-gabriel.webp",
     linkedin: "https://www.linkedin.com/company/wywa-ai",
   },
   {
     name: "Will Ramey",
     role: "Sr. Director, NVIDIA",
-    image: "/images/advisor-will.png",
+    image: "/images/advisor-will.webp",
     linkedin: "https://www.linkedin.com/company/wywa-ai",
   },
   {
     name: "Joel Wright",
     role: "Lorem Ipsum",
-    image: "/images/advisor-joel.png",
+    image: "/images/advisor-joel.webp",
     linkedin: "https://www.linkedin.com/company/wywa-ai",
   },
 ] as const;

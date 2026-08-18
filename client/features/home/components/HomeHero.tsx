@@ -55,7 +55,7 @@ function HomeHero({
             transition={{ duration: 1.15, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
             <motion.img
-              src="/images/home-hero-overlay-image.png"
+              src="/images/home-hero-overlay-image.webp"
               alt="WYWA wildfire detection sensor"
               className="block h-full w-auto object-contain "
               animate={
@@ -97,10 +97,10 @@ function HeroForestImage() {
     <picture className="pointer-events-none absolute inset-0 block">
       <source
         media="(max-width: 767px)"
-        srcSet="/images/home-hero-image-mobile.png"
+        srcSet="/images/home-hero-image-mobile.webp"
       />
       <img
-        src="/images/home-hero-image.png"
+        src="/images/home-hero-image.webp"
         alt=""
         aria-hidden="true"
         className="h-full w-full object-cover object-center"

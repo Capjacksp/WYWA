@@ -3,7 +3,7 @@ import type { FireCalloutProps } from "@/features/home/components/wildfire-map/t
 export const wildfireCallouts = [
   {
     label: "Tubbs Complex (2017)",
-    image: "/images/tubbs-complex.png",
+    image: "/images/tubbs-complex.webp",
     coordinates: [38.6, -122.5],
     stats: {
       scale: [
@@ -29,7 +29,7 @@ export const wildfireCallouts = [
   },
   {
     label: "Camp Fire (2018)",
-    image: "/images/camp-fire.png",
+    image: "/images/camp-fire.webp",
     coordinates: [39.8, -121.5],
     stats: {
       scale: [
@@ -55,7 +55,7 @@ export const wildfireCallouts = [
   },
   {
     label: "August Complex (2020)",
-    image: "/images/august-complex.png",
+    image: "/images/august-complex.webp",
     coordinates: [39.2, -122.2],
     stats: {
       scale: [
@@ -81,7 +81,7 @@ export const wildfireCallouts = [
   },
   {
     label: "Dixie Fire (2021)",
-    image: "/images/dixie-fire.png",
+    image: "/images/dixie-fire.webp",
     coordinates: [40.3, -121.3],
     stats: {
       scale: [
@@ -107,7 +107,7 @@ export const wildfireCallouts = [
   },
   {
     label: "Palisades Fire (2025*)",
-    image: "/images/palisades-fire.png",
+    image: "/images/palisades-fire.webp",
     coordinates: [34.1, -118.8],
     stats: {
       scale: [

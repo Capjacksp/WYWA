@@ -1,7 +1,7 @@
 const BLOG_API_URL =
   "https://public-api.wordpress.com/wp/v2/sites/wywaaiblog.wordpress.com/posts?per_page=100&_embed=1";
 const EXCERPT_CHARACTER_LIMIT = 180;
-const FALLBACK_IMAGE = "/images/blog-before-we-build.png";
+const FALLBACK_IMAGE = "/images/blog-before-we-build.webp";
 
 interface WordPressPost {
   id: number;
