@@ -77,7 +77,7 @@ export default function PageLayout({
 
       <main className="flex-1 p-0 m-0 relative">{children}</main>
 
-      <Footer />
+      <Footer onConnectClick={() => setConnectOpen(true)} />
 
       <ConnectPopup open={connectOpen} onOpenChange={setConnectOpen} />
     </div>

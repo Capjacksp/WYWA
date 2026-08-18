@@ -6,9 +6,10 @@ import {
   labTestCards,
   wildfireClassCards,
 } from "@/features/technology/data/technologyCards";
-import { ArrowHead } from "@/components/common/ArrowHead";
+import { NavigationArrowButton } from "@/components/common/NavigationArrowButton";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { scrollToSectionProgress } from "@/lib/scroll-to-section-progress";
 
 export function WildfireDetectionShowcase() {
   const isMobile = useIsMobile();
@@ -26,17 +27,7 @@ function DesktopWildfireDetectionShowcase() {
       slideCount: 2,
     });
   const scrollToSlide = (index: number) => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const scrollDistance = section.offsetHeight - window.innerHeight;
-    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-    const progress = index > 0 ? 1 : 0;
-
-    window.scrollTo({
-      top: sectionTop + scrollDistance * progress,
-      behavior: "smooth",
-    });
+    scrollToSectionProgress(sectionRef.current, index > 0 ? 1 : 0);
   };
 
   return (
@@ -61,7 +52,6 @@ function DesktopWildfireDetectionShowcase() {
             arrowLabel="Show lab tests"
             onArrowClick={() => scrollToSlide(1)}
             arrowPosition="above-cards"
-            arrowSize={12}
             width={slideWidth}
           >
             <div className="mt-auto grid grid-cols-3 items-end gap-4 max-lg:gap-3 max-md:grid-cols-1">
@@ -90,7 +80,6 @@ function DesktopWildfireDetectionShowcase() {
             arrowLabel="Show wildfire detection classes"
             onArrowClick={() => scrollToSlide(0)}
             arrowPosition="above-cards"
-            arrowSize={12}
             width={slideWidth}
             titleSpacingClassName="mb-[clamp(2.5rem,9vh,12rem)]"
           >
@@ -237,19 +226,15 @@ function MobileCardRail<T>({
   return (
     <div className={className}>
       <div className="mb-10 flex items-start gap-4 px-7">
-        <button
-          type="button"
-          className="shrink-0 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F55656] disabled:pointer-events-none"
+        <NavigationArrowButton
+          className="shrink-0 focus-visible:outline-[#F55656] disabled:pointer-events-none"
           onClick={() => goToCard(activeIndex + 1)}
           disabled={activeIndex + 1 >= cards.length}
           aria-label="Show next card"
-        >
-          <ArrowHead
-            direction="right"
-            size={16}
-            color={activeIndex + 1 < cards.length ? "#F55656" : "transparent"}
-          />
-        </button>
+          direction="right"
+          size={12}
+          color={activeIndex + 1 < cards.length ? "#F55656" : "transparent"}
+        />
 
         {animatedTitleLines ? (
           <ScrollTextLines
@@ -263,19 +248,15 @@ function MobileCardRail<T>({
           </h2>
         )}
 
-        <button
-          type="button"
-          className="shrink-0 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F55656] disabled:pointer-events-none"
+        <NavigationArrowButton
+          className="shrink-0 focus-visible:outline-[#F55656] disabled:pointer-events-none"
           onClick={() => goToCard(activeIndex - 1)}
           disabled={activeIndex <= 0}
           aria-label="Show previous card"
-        >
-          <ArrowHead
-            direction="left"
-            size={16}
-            color={activeIndex > 0 ? "#F55656" : "transparent"}
-          />
-        </button>
+          direction="left"
+          size={12}
+          color={activeIndex > 0 ? "#F55656" : "transparent"}
+        />
       </div>
 
       <div
@@ -411,7 +392,6 @@ function ShowcaseSlide({
   titleSpacingClassName = "mb-[clamp(2.5rem,9vh,7rem)]",
   animatedTitleLines,
   arrowPosition = "title",
-  arrowSize = 27,
   children,
 }: {
   title: ReactNode;
@@ -422,18 +402,16 @@ function ShowcaseSlide({
   titleSpacingClassName?: string;
   animatedTitleLines?: ReactNode[];
   arrowPosition?: "title" | "above-cards";
-  arrowSize?: number | { x: number; y: number };
   children: ReactNode;
 }) {
   const arrowButton = (
-    <button
-      type="button"
-      className="shrink-0 border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F15D59]"
+    <NavigationArrowButton
+      className="shrink-0 focus-visible:outline-[#F15D59]"
       onClick={onArrowClick}
       aria-label={arrowLabel}
-    >
-      <ArrowHead direction={arrowDirection} size={arrowSize} />
-    </button>
+      direction={arrowDirection}
+      size={12}
+    />
   );
 
   return (

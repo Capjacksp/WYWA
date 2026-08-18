@@ -5,7 +5,8 @@ import {
   LoadTextLines,
   ScrollTextLines,
 } from "@/components/ui/scroll-text-lines";
-import { ArrowHead } from "@/components/common/ArrowHead";
+import { NavigationArrowButton } from "@/components/common/NavigationArrowButton";
+import { LinkedInIcon } from "@/components/common/LinkedInIcon";
 import { useIsMobile, useMediaQuery } from "@/hooks/use-mobile";
 import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
 import { useScrollStepNavigation } from "@/hooks/use-scroll-step-navigation";
@@ -33,24 +34,24 @@ function TeamStageCard({
       className={`relative text-left transition duration-300 focus:outline-none ${className}`}
     >
       {isActive && !isLast && (
-        <button
-          type="button"
-          className="absolute right-[-74px] top-1/2 z-20 -translate-y-1/2 border-0 bg-transparent p-3 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425]"
+        <NavigationArrowButton
+          className="absolute right-[-74px] top-1/2 z-20 -translate-y-1/2 p-3"
           onClick={() => onNavigate(index + 1)}
           aria-label={`Show ${teamMembers[index + 1]?.name ?? "next team member"}`}
-        >
-          <ArrowHead size={20} color="#242425" />
-        </button>
+          direction="right"
+          size={12}
+          color="#242425"
+        />
       )}
       {isActive && !isFirst && (
-        <button
-          type="button"
-          className="absolute left-[-74px] top-1/2 z-20 -translate-y-1/2 border-0 bg-transparent p-3 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425]"
+        <NavigationArrowButton
+          className="absolute left-[-74px] top-1/2 z-20 -translate-y-1/2 p-3"
           onClick={() => onNavigate(index - 1)}
           aria-label={`Show ${teamMembers[index - 1]?.name ?? "previous team member"}`}
-        >
-          <ArrowHead size={20} color="#242425" direction="left" />
-        </button>
+          direction="left"
+          size={12}
+          color="#242425"
+        />
       )}
       {/* Image with thick border */}
       <div className="bg-[#242425]/85 backdrop-blur-[15px] p-6">
@@ -343,20 +344,6 @@ function MobileTeamStage() {
         />
       </div>
     </section>
-  );
-}
-
-function LinkedInIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-    </svg>
   );
 }
 

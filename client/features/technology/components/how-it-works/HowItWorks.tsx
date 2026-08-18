@@ -10,9 +10,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { howItWorksSteps } from "@/features/technology/data/howItWorksSteps";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 import { cn } from "@/lib/utils";
-import { ArrowHead } from "@/components/common/ArrowHead";
+import { NavigationArrowButton } from "@/components/common/NavigationArrowButton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useScrollStepNavigation } from "@/hooks/use-scroll-step-navigation";
+import { scrollToSectionProgress } from "@/lib/scroll-to-section-progress";
 
 // ─── shared spring config ─────────────────────────────────────────────────────
 const SPRING = {
@@ -287,36 +288,26 @@ function DesktopHowItWorks() {
                     </motion.p>
                   </AnimatePresence>
                   <div className="ml-[180px] mt-8 flex items-center gap-10">
-                    <button
-                      type="button"
-                      className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+                    <NavigationArrowButton
                       onClick={() => scrollToStep(activeStep - 1)}
                       aria-label="Show previous step"
                       disabled={activeStep === 0}
-                    >
-                      <ArrowHead
-                        direction="left"
-                        size={12}
-                        color={activeStep === 0 ? "#D5D5D5" : "#242425"}
-                      />
-                    </button>
-                    <button
-                      type="button"
-                      className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+                      direction="left"
+                      size={12}
+                      color={activeStep === 0 ? "#D5D5D5" : "#242425"}
+                    />
+                    <NavigationArrowButton
                       onClick={() => scrollToStep(activeStep + 1)}
                       aria-label="Show next step"
                       disabled={activeStep === howItWorksSteps.length - 1}
-                    >
-                      <ArrowHead
-                        direction="right"
-                        size={12}
-                        color={
-                          activeStep === howItWorksSteps.length - 1
-                            ? "#D5D5D5"
-                            : "#242425"
-                        }
-                      />
-                    </button>
+                      direction="right"
+                      size={12}
+                      color={
+                        activeStep === howItWorksSteps.length - 1
+                          ? "#D5D5D5"
+                          : "#242425"
+                      }
+                    />
                   </div>
                 </div>
               </div>
@@ -395,22 +386,14 @@ function MobileHowItWorks() {
   }, [scrollYProgress]);
 
   const scrollToStep = (targetStep: number) => {
-    const section = sectionRef.current;
-    if (!section) return;
-
     const nextStep = Math.max(
       0,
       Math.min(howItWorksSteps.length - 1, targetStep),
     );
-    const scrollDistance = section.offsetHeight - window.innerHeight;
-    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
     const targetProgress =
       (nextStep + STEP_PROGRESS_OFFSET) / howItWorksSteps.length;
 
-    window.scrollTo({
-      top: sectionTop + scrollDistance * targetProgress,
-      behavior: "smooth",
-    });
+    scrollToSectionProgress(sectionRef.current, targetProgress);
   };
 
   const step = howItWorksSteps[activeStep];
@@ -454,36 +437,26 @@ function MobileHowItWorks() {
           </div>
 
           <div className="mt-8 flex items-center gap-10">
-            <button
-              type="button"
-              className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+            <NavigationArrowButton
               onClick={() => scrollToStep(activeStep - 1)}
               aria-label="Show previous step"
               disabled={activeStep === 0}
-            >
-              <ArrowHead
-                direction="left"
-                size={12}
-                color={activeStep === 0 ? "#D5D5D5" : "#242425"}
-              />
-            </button>
-            <button
-              type="button"
-              className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+              direction="left"
+              size={12}
+              color={activeStep === 0 ? "#D5D5D5" : "#242425"}
+            />
+            <NavigationArrowButton
               onClick={() => scrollToStep(activeStep + 1)}
               aria-label="Show next step"
               disabled={activeStep === howItWorksSteps.length - 1}
-            >
-              <ArrowHead
-                direction="right"
-                size={12}
-                color={
-                  activeStep === howItWorksSteps.length - 1
-                    ? "#D5D5D5"
-                    : "#242425"
-                }
-              />
-            </button>
+              direction="right"
+              size={12}
+              color={
+                activeStep === howItWorksSteps.length - 1
+                  ? "#D5D5D5"
+                  : "#242425"
+              }
+            />
           </div>
 
           {/* Skyline — smooth fade and rise */}

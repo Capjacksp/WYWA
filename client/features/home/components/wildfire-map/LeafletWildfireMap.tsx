@@ -1,6 +1,6 @@
 import { type MutableRefObject, useLayoutEffect, useRef } from "react";
 import { wildfireCallouts } from "@/features/home/data/wildfireCallouts";
-import type { FireCalloutProps } from "@/features/home/components/wildfire-map/FireCallout";
+import type { FireCalloutProps } from "@/features/home/components/wildfire-map/types";
 
 export function LeafletWildfireMap({
   locationsLayerRef,

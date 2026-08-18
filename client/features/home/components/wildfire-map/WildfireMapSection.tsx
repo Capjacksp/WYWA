@@ -7,12 +7,12 @@ import { LeafletWildfireMap } from "@/features/home/components/wildfire-map/Leaf
 import { ArrowHead } from "@/components/common/ArrowHead";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 import { useIsMobile } from "@/hooks/use-mobile";
-import type { FireCalloutProps } from "@/features/home/components/wildfire-map/FireCallout";
+import type { FireCalloutProps } from "@/features/home/components/wildfire-map/types";
 import {
   ScrambleLoadText,
   useScrambleText,
 } from "@/components/ui/scramble-load-text";
-import type { FireStatValue } from "@/features/home/components/wildfire-map/FireCallout";
+import type { FireStatValue } from "@/features/home/components/wildfire-map/types";
 import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);

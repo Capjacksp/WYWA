@@ -1,4 +1,4 @@
-import type { FireCalloutProps } from "@/features/home/components/wildfire-map/FireCallout";
+import type { FireCalloutProps } from "@/features/home/components/wildfire-map/types";
 
 export const wildfireCallouts = [
   {

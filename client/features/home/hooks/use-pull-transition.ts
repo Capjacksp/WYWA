@@ -11,7 +11,6 @@ type ScrollOffset = NonNullable<Parameters<typeof useScroll>[0]>["offset"];
 
 const DEFAULT_PULL_PROGRESS: number[] = [0, 0.18, 0.42, 0.74, 1];
 const HERO_PULL_PROGRESS: number[] = [0, 0.08, 0.22, 0.38, 0.52];
-const PULL_Y: number[] = [0, 22, 118, 48, 0];
 const DEFAULT_EDGE_SCALE_PROGRESS: number[] = [0.1, 0.45, 0.9];
 const DEFAULT_EDGE_OPACITY_PROGRESS: number[] = [0.08, 0.28, 0.9];
 const HERO_EDGE_SCALE_PROGRESS: number[] = [0.08, 0.3, 0.5];

@@ -4,7 +4,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
 import { useScrollStepNavigation } from "@/hooks/use-scroll-step-navigation";
 import { Button } from "@/components/common/Button";
-import { ArrowHead } from "@/components/common/ArrowHead";
+import { NavigationArrowButton } from "@/components/common/NavigationArrowButton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { fetchBlogPosts, type BlogPost } from "@/data-access/blog-posts";
 
@@ -130,10 +130,7 @@ function DesktopBlog({
   });
   const indicatorWidth = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
   const {
-    activeIndex,
     hasMultipleItems: hasMultiplePosts,
-    isFirstItem: isFirstPost,
-    isLastItem: isLastPost,
     scrollToIndex: scrollToPost,
   } = useScrollStepNavigation({
     itemCount: blogPosts.length,
@@ -183,9 +180,7 @@ function DesktopBlog({
                         />
                         {hasMultiplePosts && (
                           <div className="absolute left-[calc(100vw-200px)] top-0 z-20 flex -translate-x-full items-start gap-8 max-lg:left-[calc(100vw-164px)]">
-                            <button
-                              type="button"
-                              className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+                            <NavigationArrowButton
                               onClick={() => scrollToPost(index - 1)}
                               aria-label={
                                 index === 1
@@ -193,16 +188,11 @@ function DesktopBlog({
                                   : "Show previous blog post"
                               }
                               disabled={index === 0}
-                            >
-                              <ArrowHead
-                                direction="left"
-                                size={12}
-                                color={index === 0 ? "#D5D5D5" : "#242425"}
-                              />
-                            </button>
-                            <button
-                              type="button"
-                              className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+                              direction="left"
+                              size={12}
+                              color={index === 0 ? "#D5D5D5" : "#242425"}
+                            />
+                            <NavigationArrowButton
                               onClick={() => scrollToPost(index + 1)}
                               aria-label={
                                 index === blogPosts.length - 2
@@ -210,17 +200,14 @@ function DesktopBlog({
                                   : "Show next blog post"
                               }
                               disabled={index === blogPosts.length - 1}
-                            >
-                              <ArrowHead
-                                direction="right"
-                                size={12}
-                                color={
-                                  index === blogPosts.length - 1
-                                    ? "#D5D5D5"
-                                    : "#242425"
-                                }
-                              />
-                            </button>
+                              direction="right"
+                              size={12}
+                              color={
+                                index === blogPosts.length - 1
+                                  ? "#D5D5D5"
+                                  : "#242425"
+                              }
+                            />
                           </div>
                         )}
                       </div>
@@ -341,36 +328,26 @@ function MobileBlogRail({
         <>
           {blogPosts.length > 1 && (
             <div className="mt-6 flex items-center gap-8 px-5">
-              <button
-                type="button"
-                className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+              <NavigationArrowButton
                 onClick={() => scrollToPost(activeIndex - 1)}
                 aria-label="Show previous blog post"
                 disabled={activeIndex === 0}
-              >
-                <ArrowHead
-                  direction="left"
-                  size={16}
-                  color={activeIndex === 0 ? "#D5D5D5" : "#242425"}
-                />
-              </button>
-              <button
-                type="button"
-                className="border-0 bg-transparent p-0 leading-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#242425] disabled:cursor-default"
+                direction="left"
+                size={12}
+                color={activeIndex === 0 ? "#D5D5D5" : "#242425"}
+              />
+              <NavigationArrowButton
                 onClick={() => scrollToPost(activeIndex + 1)}
                 aria-label="Show next blog post"
                 disabled={activeIndex === blogPosts.length - 1}
-              >
-                <ArrowHead
-                  direction="right"
-                  size={16}
-                  color={
-                    activeIndex === blogPosts.length - 1
-                      ? "#D5D5D5"
-                      : "#242425"
-                  }
-                />
-              </button>
+                direction="right"
+                size={12}
+                color={
+                  activeIndex === blogPosts.length - 1
+                    ? "#D5D5D5"
+                    : "#242425"
+                }
+              />
             </div>
           )}
 
@@ -381,7 +358,7 @@ function MobileBlogRail({
             aria-label="Blog posts"
           >
             <div className="flex">
-              {blogPosts.map((post, index) => (
+              {blogPosts.map((post) => (
                 <div
                   key={post.id}
                   data-blog-card-slot
