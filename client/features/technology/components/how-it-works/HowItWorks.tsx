@@ -197,24 +197,7 @@ function DesktopHowItWorks() {
                           step.customCSS,
                         )}
                       />
-                      {activeStep === 3 && (<>
-                        <div className="absolute inset-0 overflow-visible pointer-events-none">
-                          {/* Decorative squares */}
-                          <div className="absolute -top-6 -left-[6.5%] w-[6.5%] aspect-square bg-[#4101F5]" />
-                          <div className="absolute top-[45px] left-[20.3%] w-[6.5%] aspect-square bg-[#90E8FF]/50" />
-                          <div className="absolute top-[119px] left-[47.3%] w-[13.5%] aspect-square bg-[#90E8FF]/50" />
-                          {/* Horizontal grid lines */}
-                          <div className="absolute top-[223px] left-[23.5%] w-[108%] h-px bg-[#90E8FF]/70" />
-                          <div className="absolute top-[277px] left-[54%] w-[54%] h-px bg-[#90E8FF]/70" />
-                          <div className="absolute top-[55px] -left-[8.1%] w-[32.4%] h-px bg-[#90E8FF]/70" />
-                          {/* Vertical grid lines */}
-                          <div className="absolute -top-[45px] left-[23.5%] w-px h-[370px] bg-[#90E8FF]/90" />
-                          <div className="absolute -top-[45px] left-[9%] w-px h-[100px] bg-[#90E8FF]/90" />
-                          <div className="absolute -top-[45px] left-[54%] w-px h-[200px] bg-[#90E8FF]/90" />
-                          {/* Bottom-right square */}
-                          <div className="absolute -bottom-[35px] right-0 w-[10%] aspect-square bg-[#4101F5]" />
-                        </div>
-                      </>)}
+                      {activeStep === 3 && <ActStepDecorations />}
                     </div>
                   </motion.div>
                 </AnimatePresence>
@@ -436,29 +419,6 @@ function MobileHowItWorks() {
             </div>
           </div>
 
-          <div className="mt-8 flex items-center gap-10">
-            <NavigationArrowButton
-              onClick={() => scrollToStep(activeStep - 1)}
-              aria-label="Show previous step"
-              disabled={activeStep === 0}
-              direction="left"
-              size={12}
-              color={activeStep === 0 ? "#D5D5D5" : "#242425"}
-            />
-            <NavigationArrowButton
-              onClick={() => scrollToStep(activeStep + 1)}
-              aria-label="Show next step"
-              disabled={activeStep === howItWorksSteps.length - 1}
-              direction="right"
-              size={12}
-              color={
-                activeStep === howItWorksSteps.length - 1
-                  ? "#D5D5D5"
-                  : "#242425"
-              }
-            />
-          </div>
-
           {/* Skyline — smooth fade and rise */}
           <AnimatePresence mode="sync">
             <motion.div
@@ -513,7 +473,11 @@ function MobileHowItWorks() {
                 src={step.image}
                 alt=""
                 initial={{ y: 0, rotate: -0.4 }}
-                animate={reduceMotion ? undefined : { y: -18, rotate: 0.4 }}
+                animate={
+                  reduceMotion || activeStep === 3
+                    ? undefined
+                    : { y: -18, rotate: 0.4 }
+                }
                 transition={{
                   duration: 3.5,
                   repeat: Infinity,
@@ -525,6 +489,7 @@ function MobileHowItWorks() {
                   step.mobileImageClassName,
                 )}
               />
+              {activeStep === 3 && <ActStepDecorations mobile />}
             </motion.div>
           </AnimatePresence>
 
@@ -583,6 +548,29 @@ function MobileHowItWorks() {
                 {step.body}
               </motion.p>
             </AnimatePresence>
+
+            <div className="mt-8 flex items-center justify-center gap-10">
+              <NavigationArrowButton
+                onClick={() => scrollToStep(activeStep - 1)}
+                aria-label="Show previous step"
+                disabled={activeStep === 0}
+                direction="left"
+                size={12}
+                color={activeStep === 0 ? "#D5D5D5" : "#242425"}
+              />
+              <NavigationArrowButton
+                onClick={() => scrollToStep(activeStep + 1)}
+                aria-label="Show next step"
+                disabled={activeStep === howItWorksSteps.length - 1}
+                direction="right"
+                size={12}
+                color={
+                  activeStep === howItWorksSteps.length - 1
+                    ? "#D5D5D5"
+                    : "#242425"
+                }
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -604,6 +592,49 @@ const mobileBodyVariants = {
 };
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
+function ActStepDecorations({ mobile = false }: { mobile?: boolean }) {
+  const position = mobile
+    ? {
+      firstSquare: "-top-3 -left-[8%] w-[8%]",
+      secondSquare: "top-[30px] left-[20.3%] w-[8%]",
+      thirdSquare: "top-[74px] left-[47.3%] w-[15%]",
+      firstHorizontal: "top-[138px] left-[23.5%] w-[108%]",
+      secondHorizontal: "top-[172px] left-[54%] w-[54%]",
+      thirdHorizontal: "top-[38px] -left-[8.1%] w-[32.4%]",
+      firstVertical: "-top-[30px] left-[23.5%] h-[230px]",
+      secondVertical: "-top-[30px] left-[9%] h-[70px]",
+      thirdVertical: "-top-[30px] left-[54%] h-[130px]",
+      lastSquare: "-bottom-1 -right-[2%] w-[12%]",
+    }
+    : {
+      firstSquare: "-top-6 -left-[6.5%] w-[6.5%]",
+      secondSquare: "top-[45px] left-[20.3%] w-[6.5%]",
+      thirdSquare: "top-[119px] left-[47.3%] w-[13.5%]",
+      firstHorizontal: "top-[223px] left-[23.5%] w-[108%]",
+      secondHorizontal: "top-[277px] left-[54%] w-[54%]",
+      thirdHorizontal: "top-[55px] -left-[8.1%] w-[32.4%]",
+      firstVertical: "-top-[45px] left-[23.5%] h-[370px]",
+      secondVertical: "-top-[45px] left-[9%] h-[100px]",
+      thirdVertical: "-top-[45px] left-[54%] h-[200px]",
+      lastSquare: "-bottom-[35px] right-0 w-[10%]",
+    };
+
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-visible" aria-hidden="true">
+      <div className={`absolute aspect-square bg-[#4101F5] ${position.firstSquare}`} />
+      <div className={`absolute aspect-square bg-[#90E8FF]/50 ${position.secondSquare}`} />
+      <div className={`absolute aspect-square bg-[#90E8FF]/50 ${position.thirdSquare}`} />
+      <div className={`absolute h-px bg-[#90E8FF]/70 ${position.firstHorizontal}`} />
+      <div className={`absolute h-px bg-[#90E8FF]/70 ${position.secondHorizontal}`} />
+      <div className={`absolute h-px bg-[#90E8FF]/70 ${position.thirdHorizontal}`} />
+      <div className={`absolute w-px bg-[#90E8FF]/90 ${position.firstVertical}`} />
+      <div className={`absolute w-px bg-[#90E8FF]/90 ${position.secondVertical}`} />
+      <div className={`absolute w-px bg-[#90E8FF]/90 ${position.thirdVertical}`} />
+      <div className={`absolute aspect-square bg-[#4101F5] ${position.lastSquare}`} />
+    </div>
+  );
+}
+
 function MobileGridBackground() {
   return (
     <div

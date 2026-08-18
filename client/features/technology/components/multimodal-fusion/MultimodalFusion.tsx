@@ -364,19 +364,35 @@ function MobileFusionWave() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute left-[-24px] right-0 top-[490px] z-0 h-[140px] overflow-hidden"
+      className="pointer-events-none absolute left-[-24px] right-0 bottom-0 z-0 h-[140px] overflow-hidden"
     >
       <svg
-        className="absolute left-0 top-0 h-[130px] w-[340px] text-white/10"
-        viewBox="0 0 430 136"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
+        className="absolute bottom-[16px] left-0 h-[100vh] w-[32px]"
+        preserveAspectRatio="none"
+        viewBox="0 0 48 100"
       >
         <path
-          d="M-24 98V37C-24 17.7 -8.3 2 11 2C30.3 2 46 17.7 46 37V98C46 117.3 61.7 133 81 133C100.3 133 116 117.3 116 98V37C116 17.7 131.7 2 151 2C170.3 2 186 17.7 186 37V98C186 117.3 201.7 133 221 133C240.3 133 256 117.3 256 98V37C256 17.7 271.7 2 291 2C310.3 2 326 17.7 326 37V98C326 117.3 341.7 133 361 133C380.3 133 396 117.3 396 98V37C396 17.7 411.7 2 431 2"
-          stroke="currentColor"
-          strokeWidth="30"
+          d="M24 0V100"
+          fill="none"
+          stroke={FUSION_WAVE_STROKE}
+          strokeWidth="48"
         />
+      </svg>
+      <svg
+        className="absolute bottom-0 left-[-60px] h-[140px] w-[600px] overflow-visible"
+        viewBox="0 0 2650 339"
+        preserveAspectRatio="xMinYMin meet"
+      >
+        <g>
+          <path
+            d={fusionWavePath}
+            fill="none"
+            stroke={FUSION_WAVE_STROKE}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="48"
+          />
+        </g>
       </svg>
     </div>
   );

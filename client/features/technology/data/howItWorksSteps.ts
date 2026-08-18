@@ -4,7 +4,7 @@ export const howItWorksSteps = [
     title: "Deploy",
     image: "/images/home-hero-overlay-image.webp",
     customCSS: "ml-[40px]",
-    mobileImageClassName: "",
+    mobileImageClassName: "mr-[40px]",
     body: "Solar-powered sensor nodes detect real brush fire combustion while filtering out false triggers like diesel exhaust, dust, or fog. Battery-free, always-on, and connected over a secure LoRa mesh network for continuous wildfire monitoring.",
   },
   {
@@ -12,7 +12,7 @@ export const howItWorksSteps = [
     title: "Analyse",
     image: "/images/tecch-analyse.webp",
     customCSS: "w-[800px] -mt-[50px]",
-    mobileImageClassName: "",
+    mobileImageClassName: "w-[300px]",
     body: "Data is processed locally through a 10-mile edge network that works fully offline. On-device AI, software-defined radio (SDR), and satellite links ensure reliable monitoring even in remote terrain, while integrated cameras and edge analytics confirm fires in real time.",
   },
   {
@@ -28,7 +28,7 @@ export const howItWorksSteps = [
     title: "ACT",
     image: "/images/tecch-act.webp",
     customCSS: "w-[375px]",
-    mobileImageClassName: "",
+    mobileImageClassName: "w-[270px] -mt-[8px]",
     body: "A live dashboard provides real-time visibility across all nodes, tracking temperature, humidity, GPS location, and signal strength. When ignition is confirmed, alerts are broadcast instantly via SDR using text-to-speech transmission, no internet required.",
   },
 ] as const;

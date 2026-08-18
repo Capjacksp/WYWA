@@ -12,6 +12,23 @@ import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
 import { useScrollStepNavigation } from "@/hooks/use-scroll-step-navigation";
 import { type TeamMember, teamMembers, advisors } from "./data/peopleData";
 
+const teamIntroduction = (
+  <>
+    <p>
+      We're a team of engineers, scientists, and researchers from NVIDIA,
+      Amazon Lab126, CMU, and MIT, based in San Francisco and advised by
+      climate scientists and first responders.
+    </p>
+    <br />
+    <p>
+      Our sensors and AI deliver real-time environmental data at ground level,
+      processed locally, with alerts that reach communities and emergency
+      responders even where cell coverage doesn't. The result: faster wildfire
+      response, safer communities, and a network that's fully open source.
+    </p>
+  </>
+);
+
 function TeamStageCard({
   member,
   index,
@@ -139,13 +156,7 @@ function TeamHero() {
           />
 
           <div className="absolute bottom-[70px] left-[50px] max-w-[385px] font-figtree text-[18px] leading-[22px] tracking-normal text-bg-dark">
-            <p>
-              We're a team of engineers, scientists, and researchers from NVIDIA, Amazon Lab126, CMU, and MIT, based in San Francisco and advised by climate scientists and first responders.
-            </p>
-            <br />
-            <p>
-              Our sensors and AI deliver real-time environmental data at ground level, processed locally, with alerts that reach communities and emergency responders even where cell coverage doesn't. The result: faster wildfire response, safer communities, and a network that's fully open source.
-            </p>
+            {teamIntroduction}
           </div>
 
           <div
@@ -181,7 +192,7 @@ function TeamHero() {
 }
 
 function MobileTeamStage() {
-  const cardCount = teamMembers.length;
+  const cardCount = teamMembers.length + 1;
   const { sectionRef, sectionHeight } = useHorizontalScroll({
     slideCount: cardCount,
   });
@@ -318,21 +329,27 @@ function MobileTeamStage() {
         >
           <AnimatePresence mode="wait">
             <motion.div
-              key={teamMembers[activeIndex]?.id}
+              key={activeIndex === 0 ? "team-introduction" : teamMembers[activeIndex - 1]?.id}
               initial={{ opacity: 0, scale: 0.94, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.98, y: -8 }}
               transition={{ duration: 0.26, ease: "easeOut" }}
             >
-              <TeamStageCard
-                member={teamMembers[activeIndex]}
-                index={activeIndex}
-                isFirst={activeIndex === 0}
-                isLast={activeIndex === cardCount - 1}
-                isActive={false}
-                onNavigate={() => undefined}
-                className="w-[calc(100vw-40px)] max-w-[398px]"
-              />
+              {activeIndex === 0 ? (
+                <article className="w-[calc(100vw-40px)] max-w-[398px] p-6 font-figtree text-[18px] leading-[22px] tracking-normal text-bg-dark">
+                  {teamIntroduction}
+                </article>
+              ) : (
+                <TeamStageCard
+                  member={teamMembers[activeIndex - 1]}
+                  index={activeIndex - 1}
+                  isFirst={activeIndex === 1}
+                  isLast={activeIndex === cardCount - 1}
+                  isActive={false}
+                  onNavigate={() => undefined}
+                  className="w-[calc(100vw-40px)] max-w-[398px]"
+                />
+              )}
             </motion.div>
           </AnimatePresence>
         </div>

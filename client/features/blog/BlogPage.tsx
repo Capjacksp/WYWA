@@ -327,7 +327,7 @@ function MobileBlogRail({
       ) : (
         <>
           {blogPosts.length > 1 && (
-            <div className="mt-6 flex items-center gap-8 px-5">
+            <div className="mt-6 flex items-center justify-end gap-8 px-5">
               <NavigationArrowButton
                 onClick={() => scrollToPost(activeIndex - 1)}
                 aria-label="Show previous blog post"
