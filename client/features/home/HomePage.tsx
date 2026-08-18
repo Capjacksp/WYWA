@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Play } from "lucide-react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { LazyVideo } from "@/components/common/LazyVideo";
@@ -18,13 +18,61 @@ const VIDEO_POSTER_SRC = "/images/video-overlay.webp";
 export default function HomePage() {
   const isMobile = useIsMobile();
   const [isPlaying, setIsPlaying] = useState(false);
+  const wasPlayingRef = useRef(false);
+  const resumeAfterSeekRef = useRef(false);
+  const pauseTimerRef = useRef<number | undefined>(undefined);
   const videoSrc = useResponsiveVideoSource({
     desktop: DESKTOP_VIDEO_SRC,
     mobile: MOBILE_VIDEO_SRC,
   });
 
-  const handleVideoPlay = useCallback(() => setIsPlaying(true), []);
-  const handleVideoPause = useCallback(() => setIsPlaying(false), []);
+  useEffect(
+    () => () => {
+      if (pauseTimerRef.current !== undefined) {
+        window.clearTimeout(pauseTimerRef.current);
+      }
+    },
+    [],
+  );
+
+  const handleVideoPlay = useCallback(() => {
+    if (pauseTimerRef.current !== undefined) {
+      window.clearTimeout(pauseTimerRef.current);
+      pauseTimerRef.current = undefined;
+    }
+    wasPlayingRef.current = true;
+    resumeAfterSeekRef.current = false;
+    setIsPlaying(true);
+  }, []);
+  const handleVideoPause = useCallback(
+    (event: React.SyntheticEvent<HTMLVideoElement>) => {
+      const video = event.currentTarget;
+      if (pauseTimerRef.current !== undefined) {
+        window.clearTimeout(pauseTimerRef.current);
+      }
+      pauseTimerRef.current = window.setTimeout(() => {
+        pauseTimerRef.current = undefined;
+        if (resumeAfterSeekRef.current || video.seeking) {
+          void video.play().catch(() => undefined);
+          return;
+        }
+        wasPlayingRef.current = false;
+        setIsPlaying(false);
+      }, 80);
+    },
+    [],
+  );
+  const handleVideoSeeking = useCallback(() => {
+    resumeAfterSeekRef.current = wasPlayingRef.current;
+  }, []);
+  const handleVideoSeeked = useCallback(
+    (event: React.SyntheticEvent<HTMLVideoElement>) => {
+      if (resumeAfterSeekRef.current) {
+        void event.currentTarget.play().catch(() => undefined);
+      }
+    },
+    [],
+  );
   const handleVideoMetadata = useCallback(() => {
     // The video's intrinsic dimensions can change the page height in Chrome.
     // Recalculate the map pin after those dimensions are known.
@@ -54,6 +102,8 @@ export default function HomePage() {
                   onLoadedMetadata={handleVideoMetadata}
                   onPlay={handleVideoPlay}
                   onPause={handleVideoPause}
+                  onSeeking={handleVideoSeeking}
+                  onSeeked={handleVideoSeeked}
                 />
 
                 {!isPlaying && (
