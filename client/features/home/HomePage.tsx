@@ -99,6 +99,7 @@ export default function HomePage() {
                   playsInline
                   preload="metadata"
                   controls={isPlaying}
+                  pauseWhenHidden
                   onLoadedMetadata={handleVideoMetadata}
                   onPlay={handleVideoPlay}
                   onPause={handleVideoPause}

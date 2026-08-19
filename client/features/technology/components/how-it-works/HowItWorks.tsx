@@ -193,7 +193,7 @@ function DesktopHowItWorks() {
                           ease: "easeInOut",
                         }}
                         className={cn(
-                          "h-full w-full max-h-[400px] object-contain drop-shadow-2xl max-md:h-auto max-md:w-[92vw]",
+                          "h-full w-full object-contain drop-shadow-2xl max-md:h-auto max-md:w-[92vw]",
                           step.customCSS,
                         )}
                       />
@@ -251,46 +251,49 @@ function DesktopHowItWorks() {
                   </motion.div>
                 </AnimatePresence>
 
-                <div className="flex h-40 w-full flex-col items-start justify-center">
-                  <AnimatePresence mode="wait" custom={direction}>
-                    <motion.p
-                      key={step.body}
-                      custom={direction}
-                      variants={desktopBodyVariants}
-                      initial="enter"
-                      animate="center"
-                      exit="exit"
-                      transition={{
-                        duration: 0.5,
-                        ease: EASE_EXPO,
-                        delay: 0.08,
-                      }}
-                      className="ml-[180px] max-w-[300px] font-figtree text-body font-normal leading-snug text-bg-dark max-md:max-w-none"
-                    >
-                      {step.body}
-                    </motion.p>
-                  </AnimatePresence>
-                  <div className="ml-[180px] mt-8 flex items-center gap-10">
-                    <NavigationArrowButton
-                      onClick={() => scrollToStep(activeStep - 1)}
-                      aria-label="Show previous step"
-                      disabled={activeStep === 0}
-                      direction="left"
-                      size={12}
-                      color={activeStep === 0 ? "#D5D5D5" : "#242425"}
-                    />
-                    <NavigationArrowButton
-                      onClick={() => scrollToStep(activeStep + 1)}
-                      aria-label="Show next step"
-                      disabled={activeStep === howItWorksSteps.length - 1}
-                      direction="right"
-                      size={12}
-                      color={
-                        activeStep === howItWorksSteps.length - 1
-                          ? "#D5D5D5"
-                          : "#242425"
-                      }
-                    />
+                <div className="flex h-40 w-full flex-col items-center justify-center">
+                  <div className="ml-[20px]">
+
+                    <AnimatePresence mode="wait" custom={direction}>
+                      <motion.p
+                        key={step.body}
+                        custom={direction}
+                        variants={desktopBodyVariants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        transition={{
+                          duration: 0.5,
+                          ease: EASE_EXPO,
+                          delay: 0.08,
+                        }}
+                        className="max-w-[300px] font-figtree text-body font-normal leading-snug text-bg-dark max-md:max-w-none"
+                      >
+                        {step.body}
+                      </motion.p>
+                    </AnimatePresence>
+                    <div className="mt-8 flex items-start gap-10">
+                      <NavigationArrowButton
+                        onClick={() => scrollToStep(activeStep - 1)}
+                        aria-label="Show previous step"
+                        disabled={activeStep === 0}
+                        direction="left"
+                        size={12}
+                        color={activeStep === 0 ? "#D5D5D5" : "#242425"}
+                      />
+                      <NavigationArrowButton
+                        onClick={() => scrollToStep(activeStep + 1)}
+                        aria-label="Show next step"
+                        disabled={activeStep === howItWorksSteps.length - 1}
+                        direction="right"
+                        size={12}
+                        color={
+                          activeStep === howItWorksSteps.length - 1
+                            ? "#D5D5D5"
+                            : "#242425"
+                        }
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

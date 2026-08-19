@@ -146,11 +146,11 @@ function TeamHero() {
           />
 
           <LoadTextLines
-            className="pointer-events-none absolute left-[30px] top-[100px] z-0 font-body text-[clamp(6rem,11vw,12rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
+            className="pointer-events-none absolute left-[30px] top-[100px] z-0 font-body text-[clamp(6rem,11vw,12rem)] 2xl:text-[14rem] uppercase leading-[0.92] tracking-normal text-bg-dark"
             lines={["Our"]}
           />
           <LoadTextLines
-            className="pointer-events-none absolute bottom-[50px] right-[1.1%] z-0 font-body text-[clamp(6rem,11vw,12rem)] uppercase leading-[0.92] tracking-normal text-bg-dark"
+            className="pointer-events-none absolute bottom-[50px] right-[1.1%] z-0 font-body text-[clamp(6rem,11vw,12rem)] 2xl:text-[14rem] uppercase leading-[0.92] tracking-normal text-bg-dark"
             delay={0.12}
             lines={["Team"]}
           />

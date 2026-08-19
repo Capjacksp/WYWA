@@ -4,7 +4,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { LeafletWildfireMap } from "@/features/home/components/wildfire-map/LeafletWildfireMap";
-import { ArrowHead } from "@/components/common/ArrowHead";
 import { ScrollTextLines } from "@/components/ui/scroll-text-lines";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { FireCalloutProps } from "@/features/home/components/wildfire-map/types";
@@ -296,12 +295,6 @@ const WildfireMapIntro = ({
     </div>
 
     <div className="max-w-[800px] max-md:mb-20">
-      <ArrowHead
-        direction="right"
-        size={18}
-        color="white"
-        className="mb-10 ml-5 max-md:mb-8 max-md:ml-0"
-      />
       <p className="max-w-[780px] font-heading text-h3 font-[350] uppercase leading-[1.2] text-white">
         We detect at ignition,
         <br />

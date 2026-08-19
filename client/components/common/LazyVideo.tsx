@@ -9,12 +9,14 @@ interface LazyVideoProps
   extends Omit<VideoHTMLAttributes<HTMLVideoElement>, "autoPlay" | "src"> {
   src: string;
   playWhenVisible?: boolean;
+  pauseWhenHidden?: boolean;
   rootMargin?: string;
 }
 
 export function LazyVideo({
   src,
   playWhenVisible = false,
+  pauseWhenHidden = false,
   rootMargin = "400px 0px",
   preload = "metadata",
   ...props
@@ -47,15 +49,21 @@ export function LazyVideo({
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !shouldLoad || !playWhenVisible) return;
+    if (!video || !shouldLoad) return;
 
-    if (isVisible) {
-      void video.play().catch(() => undefined);
+    if (playWhenVisible) {
+      if (isVisible) {
+        void video.play().catch(() => undefined);
+      } else {
+        video.pause();
+      }
       return;
     }
 
-    video.pause();
-  }, [isVisible, playWhenVisible, shouldLoad]);
+    if (pauseWhenHidden && !isVisible && !video.paused) {
+      video.pause();
+    }
+  }, [isVisible, playWhenVisible, pauseWhenHidden, shouldLoad]);
 
   return (
     <video

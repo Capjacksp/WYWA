@@ -103,7 +103,7 @@ export default function Footer({ onConnectClick }: FooterProps) {
               </p>
               <span className="flex items-end lowercase text-xs tracking-[0.1em] text-white font-[300] font-body">
                 designed by
-                <img className="h-[18px]" src="/images/antkind-logo.webp" />
+                <a href="https://www.antkind.in/" target="_blank"><img className="h-[18px]" src="/images/antkind-logo.webp" /></a>
               </span>
             </div>
           </div>

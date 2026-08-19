@@ -29,10 +29,9 @@ function DesktopTechnologyHero() {
   return (
     <CursorRadialGlow
       as="section"
-      className="relative -mt-16 min-h-[calc(100vh-4rem)] overflow-hidden bg-bg-dark px-[50px] pb-20 pt-32 text-white max-md:hidden"
+      className="relative -mt-16 min-h-[100vh] overflow-hidden bg-bg-dark px-[50px] pb-20 pt-32 text-white max-md:hidden"
     >
-
-      <div className="relative z-10 max-w-[1340px]">
+      <div className="relative min-h-[100vh] z-10 max-w-[1340px]">
         <div className="w-fit cursor-default">
           <ScrambleLoadText
             as="h1"
@@ -79,9 +78,11 @@ function DesktopTechnologyHero() {
           </div>
         </div>
 
+      </div>
+      <div className="bg-bg-dark">
         <ScrollTextLines
           as="p"
-          className="mt-20 max-w-[1280px] font-body font-normal text-display font-light uppercase tracking-normal text-cta max-md:mt-14"
+          className="max-w-[1280px] font-body font-normal text-display font-light uppercase tracking-normal text-cta max-md:mt-14"
           lines={[
             "The result",
             "is a 20-60 minute",

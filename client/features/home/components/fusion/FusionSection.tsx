@@ -103,7 +103,7 @@ export function DesktopFusionRedSection() {
       />
       <JaggedRedBackground active={redAreaInView} />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1700px] items-start gap-32 px-[50px] max-lg:flex-col max-md:px-5">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1500px] items-start gap-32 px-[50px] max-lg:flex-col max-md:px-5">
         <div className="max-w-[850px] flex-[1.5]">
           <CharacterReveal
             className="text-justify text-h1-md uppercase text-white"
@@ -341,15 +341,9 @@ function FusionPixelMask({
   const tileWidth = width / columns;
   const tileHeight = height / rows;
   const pixelCount = columns * rows;
-  const randomDelayOrder = useMemo(() => {
-    const order = Array.from({ length: pixelCount }, (_, index) => index);
 
-    for (let index = order.length - 1; index > 0; index -= 1) {
-      const randomIndex = Math.floor(Math.random() * (index + 1));
-      [order[index], order[randomIndex]] = [order[randomIndex], order[index]];
-    }
-
-    return order;
+  const jitterMap = useMemo(() => {
+    return Array.from({ length: pixelCount }, () => Math.random() * 0.06);
   }, [pixelCount]);
 
   return (
@@ -357,9 +351,10 @@ function FusionPixelMask({
       {Array.from({ length: pixelCount }, (_, index) => {
         const row = Math.floor(index / columns);
         const column = index % columns;
-        const randomRank = randomDelayOrder[index];
-        const revealDelay =
-          pixelCount > 1 ? (randomRank / (pixelCount - 1)) * 0.80 : 0;
+
+        const rowProgress = rows > 1 ? (rows - 1 - row) / (rows - 1) : 0;
+        const revealDelay = rowProgress * 0.7 + jitterMap[index];
+
         const x = column * tileWidth;
         const y = row * tileHeight;
         const insetX = tileWidth * 0.425;
@@ -390,7 +385,7 @@ function FusionPixelMask({
             }}
             transition={{
               delay: active && !reduceMotion ? revealDelay : 0,
-              duration: reduceMotion ? 0 : active ? 0.35 : 0.12,
+              duration: reduceMotion ? 0 : active ? 0.4 : 0.12,
               ease: [0.22, 1, 0.36, 1],
             }}
           />
