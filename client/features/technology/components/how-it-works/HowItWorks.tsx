@@ -133,7 +133,7 @@ function DesktopHowItWorks() {
                 className="pointer-events-none absolute inset-x-0 left-8 bottom-[80px] min-h-[70%] overflow-hidden"
                 aria-hidden="true"
               >
-                <AnimatePresence mode="sync">
+                <AnimatePresence mode="wait">
                   <motion.svg
                     key={activeStep}
                     viewBox="0 0 1085 573"
@@ -149,8 +149,8 @@ function DesktopHowItWorks() {
                         : { opacity: 0, y: -8, scale: 1.01 }
                     }
                     transition={{
-                      duration: reduceMotion ? 0 : 0.48,
-                      ease: EASE_EXPO,
+                      duration: reduceMotion ? 0 : 0.5,
+                      ease: [0.25, 0.1, 0.25, 1],
                     }}
                     style={{ transformOrigin: "50% 100%" }}
                     className={"absolute h-full w-[60%]"}
@@ -423,12 +423,12 @@ function MobileHowItWorks() {
           </div>
 
           {/* Skyline — smooth fade and rise */}
-          <AnimatePresence mode="sync">
+          <AnimatePresence mode="wait">
             <motion.div
               key={`skyline-${activeStep}`}
               className={`absolute w-full pr-10 bottom-[40%] z-0 h-[200px] ${activeStep % 2 === 0 ? "text-cta" : "text-[#4101F5]"}`}
               initial={
-                reduceMotion ? false : { opacity: 0, y: 16, scale: 0.98 }
+                reduceMotion ? false : { opacity: 0, y: 18, scale: 0.98 }
               }
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={
@@ -437,8 +437,8 @@ function MobileHowItWorks() {
                   : { opacity: 0, y: -8, scale: 1.01 }
               }
               transition={{
-                duration: reduceMotion ? 0 : 0.45,
-                ease: EASE_EXPO,
+                duration: reduceMotion ? 0 : 0.5,
+                ease: [0.25, 0.1, 0.25, 1],
               }}
               style={{ transformOrigin: "50% 100%" }}
             >
