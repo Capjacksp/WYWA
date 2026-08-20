@@ -44,6 +44,7 @@ export default function Footer({ onConnectClick }: FooterProps) {
                   {link.label}
                 </Link>
               ))}
+              <div className="w-[1px] h-[20px] bg-white"></div>
               <button
                 onClick={onConnectClick}
                 className="text-body tracking-[0.15em] font-[300] text-white uppercase font-body hover:text-white/80 transition-colors cursor-pointer
