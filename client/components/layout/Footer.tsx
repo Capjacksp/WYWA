@@ -44,6 +44,14 @@ export default function Footer({ onConnectClick }: FooterProps) {
                   {link.label}
                 </Link>
               ))}
+              <button
+                onClick={onConnectClick}
+                className="text-body tracking-[0.15em] font-[300] text-white uppercase font-body hover:text-white/80 transition-colors cursor-pointer
+                max-md:font-heading max-md:font-[350] max-md:text-[12px]
+                "
+              >
+                CONNECT
+              </button>
             </nav>
 
             {/* Right — partners */}
@@ -85,15 +93,6 @@ export default function Footer({ onConnectClick }: FooterProps) {
               >
                 <LinkedInIcon className="h-6 w-6" />
               </a>
-
-              <button
-                onClick={onConnectClick}
-                className="text-body tracking-[0.15em] font-[300] text-white uppercase font-body hover:text-white/80 transition-colors cursor-pointer
-                max-md:font-heading max-md:font-[350] max-md:text-[12px]
-                "
-              >
-                CONNECT
-              </button>
             </div>
 
             {/* Right — copyright */}
