@@ -71,7 +71,7 @@ export function DesktopFusionIntroSection() {
           }}
         >
           <img
-            src="/images/sensor-mob.webp"
+            src="/images/sensor-mobile.webp"
             alt="Exploded view of the sensor"
             className="mx-auto block h-auto w-[min(700px,52vw)] object-contain"
           />
@@ -241,7 +241,7 @@ function MobileFusionSensorScreen() {
           }}
         >
           <img
-            src="/images/sensor-mob.webp"
+            src="/images/sensor-mobile.webp"
             alt="Exploded view of the WYWA sensor"
             className="w-full max-w-none object-contain"
           />

@@ -7,8 +7,8 @@ const footerNavLinks = [
 ] as const;
 
 const partners = [
-  { name: "GRAVIKY LABS", logo: "/images/graviky.png", link: "https://graviky.com/" },
-  { name: "AI KIRAN", logo: "/images/aikiran.png", link: "https://www.aikiran.org/" },
+  { name: "GRAVIKY LABS", logo: "/images/graviky-logo.png", link: "https://graviky.com/" },
+  { name: "AI KIRAN", logo: "/images/ai-kiran-logo.png", link: "https://www.aikiran.org/" },
 ] as const;
 
 interface FooterProps {

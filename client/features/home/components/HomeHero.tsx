@@ -55,7 +55,7 @@ function HomeHero({
             transition={{ duration: 1.15, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
             <motion.img
-              src="/images/home-hero-overlay-image.webp"
+              src="/images/home-hero-sensor.webp"
               alt="WYWA wildfire detection sensor"
               className="block h-full w-auto object-contain "
               animate={

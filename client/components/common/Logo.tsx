@@ -59,7 +59,7 @@ function LogoVideo({
     canvas.width = targetWidth;
     canvas.height = targetHeight;
 
-    video.src = "/videos/WYWA-logo-anim-cropped.mp4";
+    video.src = "/videos/wywa-logo-animation-cropped.mp4";
     video.muted = true;
     video.loop = true;
     video.playsInline = true;

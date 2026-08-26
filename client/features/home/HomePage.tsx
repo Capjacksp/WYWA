@@ -11,9 +11,9 @@ import {
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useResponsiveVideoSource } from "@/hooks/use-responsive-video-source";
 
-const MOBILE_VIDEO_SRC = "/videos/Wywa-480.mp4";
-const DESKTOP_VIDEO_SRC = "/videos/Wywa-720.mp4";
-const VIDEO_POSTER_SRC = "/images/video-overlay.webp";
+const MOBILE_VIDEO_SRC = "/videos/wywa-480.mp4";
+const DESKTOP_VIDEO_SRC = "/videos/wywa-720.mp4";
+const VIDEO_POSTER_SRC = "/images/home-video-poster.webp";
 
 export default function HomePage() {
   const isMobile = useIsMobile();

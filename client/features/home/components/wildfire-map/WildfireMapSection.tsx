@@ -144,7 +144,7 @@ function DesktopWildfireMapSection() {
 
         <div className="pointer-events-none absolute bottom-0 right-0 z-[510] hidden w-[400px] lg:block">
           <img
-            src="/images/wave-logo.png"
+            src="/images/wywa-logo.png"
             className="object-cover align-bottom"
             alt=""
           />
@@ -261,7 +261,7 @@ function MobileWildfireMapSection() {
           className="pointer-events-none absolute bottom-0 right-0 z-[510] w-[300px]"
         >
           <img
-            src="/images/wave-logo.png"
+            src="/images/wywa-logo.png"
             className="w-full object-cover align-bottom"
             alt=""
           />
